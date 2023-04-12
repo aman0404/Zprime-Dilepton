@@ -3,7 +3,7 @@ import pandas as pd
 
 from hist import Hist
 from config.variables import Variable
-from python.io import save_stage2_output_hists
+from copperhead.python.io import save_stage2_output_hists
 from numpy import array
 
 
@@ -92,16 +92,35 @@ def make_histograms(df, var_name, year, dataset, regions, channels, npart, param
                 var_name = var.name
             else:
                 continue
-        #if parameters["flavor"] == "mu":
-        slicer = (
-            (df.dataset == dataset)
-            & ((df.r == region) | (region == "inclusive"))
-            & (df.year == year)
-            & (df.dilepton_mass > 120)
-            & ((df["channel"] == channel) | (channel == "inclusive"))
-            & (~((df.dataset == "ttbar_lep_inclusive") & (df.dilepton_mass_gen > 500)))
-            & (~((df.dataset == "WWinclusive") & (df.dilepton_mass_gen > 200)))
-        )
+        if parameters["flavor"] == "mu":
+            slicer = (
+                (df.dataset == dataset)
+                & ((df.r == region) | (region == "inclusive"))
+                & (df.year == year)
+                & (df.dimuon_mass > 200)
+#                & (df.dimuon_mass_gen < 400)
+                & ((df["channel"] == channel) | (channel == "inclusive"))
+                & (~((df.dataset == "ttbar_lep_inclusive") & (df.dimuon_mass_gen > 500)))
+                & (~((df.dataset == "WWinclusive") & (df.dimuon_mass_gen > 200)))
+                & (df.bjet1_mb1_dR == False)
+                & (df.bjet1_mb2_dR == False)
+
+           )
+        else:
+            slicer = (
+                (df.dataset == dataset)
+                & ((df.r == region) | (region == "inclusive"))
+                & (df.year == year)
+                & (df.dielectron_mass > 200)
+#                & (df.dielectron_mass_gen < 400)
+                & ((df["channel"] == channel) | (channel == "inclusive"))
+                & (~((df.dataset == "ttbar_lep_inclusive") & (df.dielectron_mass_gen > 500)))
+                & (~((df.dataset == "WWinclusive") & (df.dielectron_mass_gen > 200)))
+                & (df.bjet1_mb1_dR == False)
+                & (df.bjet1_mb2_dR == False)
+          
+          )
+#        print (df["dielectron_mass"].loc[df["dielectron_mass"] > 120])
         data = df.loc[slicer, var_name]
         weight = df.loc[slicer, w]
         if var.norm_to_bin_width:
@@ -131,6 +150,9 @@ def make_histograms(df, var_name, year, dataset, regions, channels, npart, param
         if weight.sum() == 0:
             continue
         total_yield += weight.sum()
+
+        print("total_yield ",total_yield)
+
         if "return_hist" in parameters:
             if parameters["return_hist"]:
                 hist_info_row["hist"] = hist
@@ -231,15 +253,34 @@ def make_histograms2D(
         #                var_name = var.name
         #            else:
         #                continue
-        slicer = (
-            (df.dataset == dataset)
-            & ((df.r == region) | (region == "inclusive"))
-            & (df.year == year)
-            & (df.dilepton_mass > 120)
-            & ((df["channel"] == channel) | (channel == "inclusive"))
-            & (~((df.dataset == "ttbar_lep_inclusive") & (df.dilepton_mass_gen > 500)))
-            & (~((df.dataset == "WWinclusive") & (df.dilepton_mass_gen > 200)))
-        )
+        if str(parameters["flavor"]) == "mu":
+            slicer = (
+                (df.dataset == dataset)
+                & ((df.r == region) | (region == "inclusive"))
+                & (df.year == year)
+                & (df.dimuon_mass > 200)
+                & (df.dimuon_mass_gen < 400)
+                & ((df["channel"] == channel) | (channel == "inclusive"))
+                & (~((df.dataset == "ttbar_lep_inclusive") & (df.dimuon_mass_gen > 500)))
+                & (~((df.dataset == "WWinclusive") & (df.dimuon_mass_gen > 200)))
+                & (df.bjet1_mb1_dR == False)
+                & (df.bjet1_mb2_dR == False)
+
+           )
+        else:
+            slicer = (
+                (df.dataset == dataset)
+                & ((df.r == region) | (region == "inclusive"))
+                & (df.year == year)
+                & (df.dielectron_mass > 200)
+                & (df.dielectron_mass_gen < 400)
+                & ((df["channel"] == channel) | (channel == "inclusive"))
+                & (~((df.dataset == "ttbar_lep_inclusive") & (df.dielectron_mass_gen > 500)))
+                & (~((df.dataset == "WWinclusive") & (df.dielectron_mass_gen > 200)))
+                & (df.bjet1_mb1_dR == False)
+                & (df.bjet1_mb2_dR == False)
+
+           )
 
         data1 = df.loc[slicer, var_name1]
         data2 = df.loc[slicer, var_name2]

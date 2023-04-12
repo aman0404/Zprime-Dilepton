@@ -173,6 +173,8 @@ def make_templates(args, parameters={}):
         mkdir(out_dir)
         out_dir += "/" + parameters["label"]
         mkdir(out_dir)
+#        out_dir += "/" + "genlevel_below400"
+#        mkdir(out_dir)
         out_dir += "/" + "stage3_templates"
         mkdir(out_dir)
         out_dir += "/" + var.name

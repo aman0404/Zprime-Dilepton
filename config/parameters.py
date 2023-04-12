@@ -1,30 +1,25 @@
 def for_all_years(value):
-    out = {k: value for k in ["2016preVFP","2016postVFP", "2017", "2018"]}
+    out = {k: value for k in ["2016pre", "2016post", "2017", "2018"]}
+    #out = {k: value for k in ["2016preVFP","2016postVFP", "2017", "2018"]}
     return out
 
 parameters = {}
-lumis = {"2016preVFP": [19.12*1000,19.29*1000], "2016postVFP": [16.81*1000,17.01*1000], "2017": [41.48*1000,42.02*1000], "2018": [59.83*1000,61.31*1000]}
+lumis = {"2016pre": [19.12*1000,19.29*1000], "2016post": [16.81*1000, 17.01*1000], "2017": [41.48*1000,42.02*1000], "2018": [59.83*1000,61.31*1000]}
 parameters["lumimask_Pre-UL_mu"] = {
-    # "2016": "data/lumimasks/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt",
-    # "2017": "data/lumimasks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt",
-    # "2018": "data/lumimasks/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
     "2016": "data/lumimasks/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON_MuonPhys.txt",
     "2017": "data/lumimasks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_MuonPhys.txt",
     "2018": "data/lumimasks/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON_MuonPhys.txt",
 }
 
-parameters["lumimask_Pre-UL_el"] = {
-    "2018": "data/lumimasks/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
-}
 
 parameters["lumimask_UL_el"] = {
-    "2016preVFP": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
-    "2016postVFP": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+    "2016pre": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+    "2016post": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
     "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt",
-    "2018": "data/lumimasks/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt",
+    "2018": "data/lumimasks/UL18_json_GoldenJson.txt",
 }
 parameters["lumimask_UL_mu"] = {
-    "2018preVFP": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
+    "2016preVFP": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
     "2016postVFP": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
     "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_MuonJSON.txt",
     "2018": "data/lumimasks/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON_MuonPhys.txt",
@@ -37,7 +32,12 @@ parameters["mu_hlt"] = {
 }
 
 parameters["el_hlt"] = {
-    "2016": ["DoubleEle33_CaloIdL_MW","HLT_DoubleEle33_CaloIdL_GsfTrkIdVL"],
+    #"2016post": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    "2016pre": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    "2016post": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    #"2016post": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    #"2016pre": ["DoubleEle33_CaloIdL_MW","HLT_DoubleEle33_CaloIdL_GsfTrkIdVL"],
+#    "2016postVFP": ["DoubleEle33_CaloIdL_MW","HLT_DoubleEle33_CaloIdL_GsfTrkIdVL"],
     "2017": ["DoubleEle33_CaloIdL_MW"],
     "2018": ["DoubleEle25_CaloIdL_MW"],
 }
@@ -46,30 +46,35 @@ parameters["el_hlt"] = {
 parameters["btag_sf_pre_UL"] = {
     "2016": "data/b-tagging/DeepCSV_2016LegacySF_V1.csv",
     "2017": "data/b-tagging/DeepCSV_94XSF_V5_B_F.csv",
-    # "2018": "data/b-tagging/DeepCSV_102XSF_WP_V1.csv",
     "2018": "data/b-tagging/DeepJet_102XSF_WP_V1.csv",
 }
 
 parameters["btag_sf_UL"] = {
-    "2018": "data/b-tagging/btagSF_2018UL.json",
-    "2017": "data/b-tagging/btagSF_2018UL.json",
+    "2016pre": "data/b-tagging/btagging_UL2016preVFP.json",
+    "2016post": "data/b-tagging/btagging_UL2016postVFP.json",
+    "2018": "data/b-tagging/btagging_UL18.json",
+    "2017": "data/b-tagging/btagging_UL17.json",
 }
 
 parameters["btag_sf_eff"] = {
+    "2016pre": "data/b-tagging/UL2018_ttbar_eff.pickle",
+    "2016post": "data/b-tagging/UL2018_ttbar_eff.pickle",
     "2018": "data/b-tagging/UL2018_ttbar_eff.pickle",
     "2017": "data/b-tagging/UL2018_ttbar_eff.pickle",
 }
 
 parameters["pu_file_data"] = {
-    "2016": "data/pileup/PileupData_GoldenJSON_Full2016.root",
-    "2017": "data/pileup/puData2017_withVar.root",
-    "2018": "data/pileup/puData2018_withVar.root",
+    "2016pre": "data/pileup/puData2016PreVFP_new.root",
+    "2016post": "data/pileup/puData2016PostVFP_new.root",
+    "2017": "data/pileup/puData2017_new.root",
+    "2018": "data/pileup/puData2018_new.root",
 }
 
 parameters["pu_file_mc"] = {
-    "2016": "data/pileup/pileup_profile_Summer16.root",
-    "2017": "data/pileup/mcPileup2017.root",
-    "2018": "data/pileup/mcPileup2018.root",
+    "2016pre": "data/pileup/puMC2016PreVFP_new.root",
+    "2016post": "data/pileup/puMC2016PostVFP_new.root",
+    "2017": "data/pileup/puMC2017_new.root",
+    "2018": "data/pileup/puMC2018_new.root",
 }
 
 parameters["muSFFileList"] = {
@@ -168,6 +173,7 @@ parameters.update(
     {
         "event_flags": for_all_years(
             [
+                "BadPFMuonDzFilter",
                 "BadPFMuonFilter",
                 "EcalDeadCellTriggerPrimitiveFilter",
                 "HBHENoiseFilter",
@@ -175,9 +181,12 @@ parameters.update(
                 "globalSuperTightHalo2016Filter",
                 "goodVertices",
                 "BadChargedCandidateFilter",
+                "eeBadScFilter",
+                "ecalBadCalibFilter",
+
             ]
         ),
-        "do_l1prefiring_wgts": {"2016": True, "2017": True, "2018": True},
+        "do_l1prefiring_wgts": {"2016pre": True,"2016post":True,  "2017": True, "2018": False},
         "3dangle": for_all_years(-0.9998),
     }
 )
@@ -186,28 +195,27 @@ parameters.update(
     {
         "muon_pt_cut": for_all_years(53.0),
         "muon_eta_cut": for_all_years(2.4),
-        "muon_iso_cut": for_all_years(0.3),  # medium iso
-        "muon_id": for_all_years("highPtId"),
+        "muon_iso_cut": for_all_years(0.15),  # medium iso
+        "muon_id": for_all_years("looseId"),
         "muon_dxy": for_all_years(0.2),
         "muon_ptErr/pt": for_all_years(0.3),
         # "muon_flags": for_all_years(["isGlobal", "isTracker"]),
         "muon_flags": for_all_years([]),
-        "muon_leading_pt": {"2016": 53.0, "2017": 53.0, "2018": 53.0},
+        "electron_flags": for_all_years([]),
+        "muon_leading_pt": {"2016pre": 53.0,"2016post":53.0, "2017": 53.0, "2018": 53.0},
         "muon_trigmatch_iso": for_all_years(0.15),  # tight iso
         "muon_trigmatch_dr": for_all_years(0.1),
         "muon_trigmatch_id": for_all_years("tightId"),
         "electron_pt_cut": for_all_years(35.0),
         "electron_eta_cut": for_all_years(2.5),
         "electron_id": for_all_years("cutBased_HEEP"),
-        # "UL_btag_loose": {"2016": 0.1918, "2017": 0.1355, "2018": 0.1208},
-        # "UL_btag_medium": {"2016": 0.5848, "2017": 0.4506, "2018": 0.4168},
-        # "UL_btag_tight": {"2016": 0.8767, "2017": 0.7738, "2018": 0.7665},
-        "UL_btag_loose": {"2016": 0.1918, "2017": 0.1355, "2018": 0.0490},
-        "UL_btag_medium": {"2016": 0.5848, "2017": 0.4506, "2018": 0.2783},
-        "UL_btag_tight": {"2016": 0.8767, "2017": 0.7738, "2018": 0.7100},
-        "preUL_btag_loose": {"2018": 0.1241},
-        "preUL_btag_medium": {"2018": 0.4184},
-        "preUL_btag_tight": {"2018": 0.7527},
+
+        "UL_btag_loose":  {"2016pre": 0.0508, "2016post": 0.0480, "2017": 0.0532, "2018": 0.0490},
+        "UL_btag_medium": {"2016pre": 0.2598, "2016post": 0.2489, "2017": 0.3040, "2018": 0.2783},
+        "UL_btag_tight":  {"2016pre": 0.6502, "2016post": 0.6377, "2017": 0.7476, "2018": 0.7100},
+
+        "2018HEM_veto" : {"2016pre": 0, "2016post": 0,"2017": 0, "2018": 1},
+
     }
 )
 
@@ -275,6 +283,7 @@ muon_branches = [
     "phi_raw",
     "charge",
     "ptErr",
+    "looseId",
     "highPtId",
     "tkRelIso",
     "mass",
@@ -367,13 +376,16 @@ ele_branches = [
 ]
 other_branches = [
     "MET_pt",
+    "MET_phi",
     "HTXS_stage1_1_fine_cat_pTjet30GeV",
     "fixedGridRhoFastjetAll",
     "nLHEScaleWeight",
     "nLHEPdfWeight",
     "LHEPdfWeight",
 ]
+
 event_flags = [
+    "Flag_BadPFMuonDzFilter",
     "Flag_BadPFMuonFilter",
     "Flag_EcalDeadCellTriggerPrimitiveFilter",
     "Flag_HBHENoiseFilter",
@@ -381,6 +393,8 @@ event_flags = [
     "Flag_globalSuperTightHalo2016Filter",
     "Flag_goodVertices",
     "Flag_BadChargedCandidateFilter",
+    "Flag_eeBadScFilter",
+    "Flag_ecalBadCalibFilter",
 ]
 
 
@@ -425,7 +439,8 @@ proc_columns = (
     + event_flags
 )
 parameters["proc_columns"] = {
-    "2016": proc_columns + branches_2016,
+    "2016pre": proc_columns + branches_2016,
+    "2016post": proc_columns + branches_2016,
     "2017": proc_columns + branches_2017,
     "2018": proc_columns + branches_2018,
 }

@@ -13,16 +13,19 @@ from coffea.lumi_tools import LumiMask
 from processNano.timer import Timer
 from processNano.weights import Weights
 
-from config.parameters import parameters, ele_branches, jet_branches
+from config.parameters import parameters, ele_branches, jet_branches, muon_branches
 from copperhead.stage1.corrections.pu_reweight import pu_lookups, pu_evaluator
 from copperhead.stage1.corrections.l1prefiring_weights import l1pf_weights
 from processNano.electrons import find_dielectron, fill_electrons
 from processNano.jets import prepare_jets, fill_jets, fill_bjets, btagSF
 
 import copy
+from processNano.corrections.nnpdfWeight import NNPDFWeight
 from processNano.corrections.kFac import kFac
-from copperhead.stage1.corrections.jec import jec_factories, apply_jec
+from processNano.corrections.jec import jec_factories, apply_jec
+#from copperhead.stage1.corrections.jec import jec_factories, apply_jec
 
+from processNano.utils import overlap_removal
 
 class DielectronProcessor(processor.ProcessorABC):
     def __init__(self, **kwargs):
@@ -31,9 +34,14 @@ class DielectronProcessor(processor.ProcessorABC):
         self.apply_to_output = kwargs.pop("apply_to_output", None)
         self.pt_variations = kwargs.pop("pt_variations", ["nominal"])
 
-        self.year = self.samp_info.year
-        self.parameters = {k: v[self.year] for k, v in parameters.items()}
+        self.years = self.samp_info.years
 
+        if(self.years == '2016pre' or self.years == '2016post'):
+           self.year = '2016'
+        else:
+           self.year = self.years
+        self.parameters = {k: v.get(self.years, None) for k, v in parameters.items()}
+        print("Processing ", self.year, self.years)
         self.do_btag = True
 
         if self.samp_info is None:
@@ -43,11 +51,11 @@ class DielectronProcessor(processor.ProcessorABC):
         self._accumulator = processor.defaultdict_accumulator(int)
 
         self.applykFac = True
-        self.applyNNPDFWeight = True
+        self.applyNNPDFWeight = False
         self.do_pu = True
         self.auto_pu = False
-        self.do_l1pw = True  # L1 prefiring weights
-        self.do_jecunc = True
+        self.do_l1pw = False  # L1 prefiring weights
+        self.do_jecunc = False
         self.do_jerunc = False
         
         self.timer = Timer("global") if do_timer else None
@@ -181,13 +189,27 @@ class DielectronProcessor(processor.ProcessorABC):
             # For Data: apply Lumi mask
             lumi_info = LumiMask(self.parameters["lumimask_UL_el"])
             mask = lumi_info(df.run, df.luminosityBlock)
-
+            print(self.parameters["lumimask_UL_el"])
         # Apply HLT to both Data and MC
         hlt = ak.to_pandas(df.HLT[self.parameters["el_hlt"]])
         hlt = hlt[self.parameters["el_hlt"]].sum(axis=1)
 
         if self.timer:
             self.timer.add_checkpoint("Applied HLT and lumimask")
+
+##Aman edits
+        muon_branches_local = copy.copy(muon_branches)
+        df["Muon", "pt_raw"] = df.Muon.pt
+        df["Muon", "eta_raw"] = df.Muon.eta
+        df["Muon", "phi_raw"] = df.Muon.phi
+
+        muons = ak.to_pandas(df.Muon[muon_branches_local])
+        muons = muons.dropna()
+        muons = muons.loc[:, ~muons.columns.duplicated()]
+
+        muons["selection"] = 0
+
+        
 
         # Save raw variables before computing any corrections
 
@@ -211,6 +233,14 @@ class DielectronProcessor(processor.ProcessorABC):
             if self.timer:
                 self.timer.add_checkpoint("load electron data")
 
+            #Aman edits
+            muons["veto"] = 0
+            muons.loc[((muons.pt > 10.)
+                & (abs(muons.eta) < 2.4)
+                & (muons[self.parameters["muon_id"]] > 0)),
+                "veto",
+            ] = 1
+
             # --------------------------------------------------------#
             # Electron selection
             # --------------------------------------------------------#
@@ -219,15 +249,28 @@ class DielectronProcessor(processor.ProcessorABC):
             flags = ak.to_pandas(df.Flag)
             flags = flags[self.parameters["event_flags"]].product(axis=1)
 
-            # Define baseline muon selection (applied to pandas DF!)
+
+            
+            electrons["overlap"] = (overlap_removal(electrons, muons))
+
+            electrons["overlap"].fillna(1., inplace=True)
+
+            # Define baseline electron selection (applied to pandas DF!)
             electrons["selection"] = (
                 (electrons.pt > self.parameters["electron_pt_cut"])
                 & (abs(electrons.eta) < self.parameters["electron_eta_cut"])
                 & (electrons[self.parameters["electron_id"]] > 0)
             )
-
+      
             if dataset == "dyInclusive50":
                 electrons = electrons[electrons.genPartFlav == 15]
+            
+            electrons["pass_flags"] = True
+            if self.parameters["electron_flags"]:
+                electrons["pass_flags"] = electrons[self.parameters["electron_flags"]].product(
+                   axis=1
+                )
+
             # Count electrons
             nelectrons = (
                 electrons[electrons.selection]
@@ -235,13 +278,25 @@ class DielectronProcessor(processor.ProcessorABC):
                 .groupby("entry")["subentry"]
                 .nunique()
             )
+
+            good_pv = ak.to_pandas(df.PV).npvsGood > 0
+#            output["event_selection"] = (
+#                mask
+#                & (hlt > 0)
+#                & (flags>0)
+#                & (nelectrons >= 2)
+#                & (good_pv)
+#                )
+          
+
+           
             if is_mc:
-                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 2)
-                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 2)
+                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 2) & (good_pv)
+                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 2) & (good_pv)
             else:
-                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 4)
-                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 4)
-                
+                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 2) & (good_pv)
+                output["event_selection"] = mask & (hlt > 0) & (nelectrons >= 2) & (good_pv)
+               
             if self.timer:
                 self.timer.add_checkpoint("Selected events and electrons")
 
@@ -249,17 +304,25 @@ class DielectronProcessor(processor.ProcessorABC):
             # Initialize electron variables
             # --------------------------------------------------------#
 
+            electrons = electrons.join(muons["veto"])
+            electrons["veto"] = electrons["veto"].fillna(0)
+
+
             if is_mc:
-                electrons = electrons[electrons.selection & (nelectrons >= 2)]
+                electrons = electrons[electrons.selection & (nelectrons >= 2) & (hlt > 0) & (electrons.overlap)]
             else:
-                electrons = electrons[electrons.selection & (nelectrons >= 4)]
+                electrons = electrons[electrons.selection & (nelectrons >= 2) & (hlt > 0) & (electrons.overlap)]
+
+
+            nmuons = electrons.loc[:, "veto"].groupby("entry").sum()
+
 
             if self.timer:
                 self.timer.add_checkpoint("electron object selection")
 
             output["r"] = None
             output["dataset"] = dataset
-            output["year"] = int(self.year)
+            output["year"] = self.year
 
             if electrons.shape[0] == 0:
                 output = output.reindex(sorted(output.columns), axis=1)
@@ -273,7 +336,7 @@ class DielectronProcessor(processor.ProcessorABC):
             result = electrons.groupby("entry").apply(find_dielectron, is_mc=is_mc)
             if is_mc:
                 dielectron = pd.DataFrame(
-                    result.to_list(), columns=["idx1", "idx2", "mass"]
+                    result.to_list(), columns=["idx1", "idx2", "mass", "mass_gen"]
                 )
             else:
                 dielectron = pd.DataFrame(
@@ -290,6 +353,8 @@ class DielectronProcessor(processor.ProcessorABC):
                 self.timer.add_checkpoint("back back angle calculation")
             dielectron_mass = dielectron.mass
 
+
+            output["event_selection"] = ((output.event_selection) & (nmuons==0))
             # --------------------------------------------------------#
             # Select events with muons passing leading pT cut
             # and trigger matching
@@ -321,19 +386,19 @@ class DielectronProcessor(processor.ProcessorABC):
 
         jets = df.Jet
 
-        self.do_jec = False
+        self.do_jec = True
 
         # We only need to reapply JEC for 2018 data
         # (unless new versions of JEC are released)
-        if ("data" in dataset) and ("2018" in self.year):
-            self.do_jec = False
+#        if ("data" in dataset) and ("2018" in self.year):
+#            self.do_jec = False
 
         apply_jec(
             df,
             jets,
             dataset,
             is_mc,
-            self.year,
+            self.years,
             self.do_jec,
             self.do_jecunc,
             self.do_jerunc,
@@ -402,36 +467,38 @@ class DielectronProcessor(processor.ProcessorABC):
             ((abs(output.e1_eta) > 1.566) & (abs(output.e2_eta) > 1.566)), "r"
         ] = "ee"
 
-        for wgt in weights.df.columns:
+        output["year"] = int(self.year)
 
-            if wgt == "pu_wgt_off":
-                output["pu_wgt"] = weights.get_weight(wgt)
-            if wgt != "nominal":
-                output[f"wgt_{wgt}"] = weights.get_weight(wgt)
+#        for wgt in weights.df.columns:
+#
+#            if wgt == "pu_wgt_off":
+#                output["pu_wgt"] = weights.get_weight(wgt)
+#            if wgt != "nominal":
+#                output[f"wgt_{wgt}"] = weights.get_weight(wgt)
 
 
-        if is_mc and "dy" in dataset:
+        if is_mc and "dy" in dataset and self.applykFac:
             mass_bb = output[output["r"] == "bb"].dielectron_mass_gen.to_numpy()
             mass_be = output[output["r"] == "be"].dielectron_mass_gen.to_numpy()
             for key in output.columns:
                 if "wgt" not in key[0]:
                     continue
                 output.loc[
-                    ((abs(output.e1_eta) < 1.2) & (abs(output.e2_eta) < 1.2)),
+                    ((abs(output.e1_eta) < 1.442) & (abs(output.e2_eta) < 1.442)),
                     key[0],
                 ] = (
                     output.loc[
-                        ((abs(output.e1_eta) < 1.2) & (abs(output.e2_eta) < 1.2)),
+                        ((abs(output.e1_eta) < 1.442) & (abs(output.e2_eta) < 1.442)),
                         key[0],
                     ]
                     * kFac(mass_bb, "bb", "el")
                 ).values
                 output.loc[
-                    ((abs(output.e1_eta) > 1.2) | (abs(output.e2_eta) > 1.2)),
+                    ((abs(output.e1_eta) > 1.566) ^ (abs(output.e2_eta) > 1.566)),
                     key[0],
                 ] = (
                     output.loc[
-                        ((abs(output.e1_eta) > 1.2) | (abs(output.e2_eta) > 1.2)),
+                        ((abs(output.e1_eta) > 1.566) ^ (abs(output.e2_eta) > 1.566)),
                         key[0],
                     ]
                     * kFac(mass_be, "be", "el")
@@ -458,11 +525,11 @@ class DielectronProcessor(processor.ProcessorABC):
                     )
                 ).values
                 output.loc[
-                    ((abs(output.e1_eta) > 1.566) | (abs(output.e2_eta) > 1.566)),
+                    ((abs(output.e1_eta) > 1.566) ^ (abs(output.e2_eta) > 1.566)),
                     key[0],
                 ] = (
                     output.loc[
-                        ((abs(output.e1_eta) > 1.566) | (abs(output.e2_eta) > 1.566)),
+                        ((abs(output.e1_eta) > 1.566) ^ (abs(output.e2_eta) > 1.566)),
                         key[0],
                     ]
                     * NNPDFWeight(
@@ -474,6 +541,7 @@ class DielectronProcessor(processor.ProcessorABC):
             mass_be = output[output["r"] == "be"].dielectron_mass_gen.to_numpy()
             leadingPt_bb = output[output["r"] == "bb"].e1_pt_gen.to_numpy()
             leadingPt_be = output[output["r"] == "be"].e1_pt_gen.to_numpy()
+            
             for key in output.columns:
                 if "wgt" not in key[0]:
                     continue
@@ -490,11 +558,11 @@ class DielectronProcessor(processor.ProcessorABC):
                     )
                 ).values
                 output.loc[
-                    ((abs(output.e1_eta) > 1.566) | (abs(output.e2_eta) > 1.566)),
+                    ((abs(output.e1_eta) > 1.566) ^ (abs(output.e2_eta) > 1.566)),
                     key[0],
                 ] = (
                     output.loc[
-                        ((abs(output.e1_eta) > 1.566) | (abs(output.e2_eta) > 1.566)),
+                        ((abs(output.e1_eta) > 1.566) ^ (abs(output.e2_eta) > 1.566)),
                         key[0],
                     ]
                     * NNPDFWeight(
@@ -588,8 +656,8 @@ class DielectronProcessor(processor.ProcessorABC):
  
         if self.do_btag:
             if is_mc:
-                btagSF(jets, self.year, correction="shape", is_UL=True)
-                btagSF(jets, self.year, correction="wp", is_UL=True)
+                btagSF(jets, self.years, correction="shape", is_UL=True)
+                btagSF(jets, self.years, correction="wp", is_UL=True)
 
                 variables["wgt_nominal"] = (
                     jets.loc[jets.pre_selection == 1, "btag_sf_wp"]
@@ -633,9 +701,25 @@ class DielectronProcessor(processor.ProcessorABC):
             else:
                 variables["wgt_nominal"] = 1.0
 
+        jets["clean"] = clean
+
+#Aman edits
+        jets["HEMVeto"] = 1
+        jets.loc[
+            (
+                (jets.pt >= 20.0)
+                & (jets.eta >= -3.0)
+                & (jets.eta <= -1.3)
+                & (jets.phi >= -1.57)
+                & (jets.phi <= -0.87)
+            ),
+            "HEMVeto",
+        ] = 0
+
+        
         jets["selection"] = 0
         jets.loc[
-            ((jets.pt > 30.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2)),
+            ((jets.pt > 20.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2) & (jets.clean) & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])),
             "selection",
         ] = 1
  
@@ -645,10 +729,12 @@ class DielectronProcessor(processor.ProcessorABC):
         jets["bselection"] = 0
         jets.loc[
             (
-                (jets.pt > 30.0)
+                (jets.pt > 20.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.year])
+                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years])
                 & (jets.jetId >= 2)
+                & (jets.clean)
+                & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
             ),
             "bselection",
         ] = 1
@@ -659,16 +745,19 @@ class DielectronProcessor(processor.ProcessorABC):
         bjets = jets.query("bselection==1")
         bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
         bjet1 = bjets.groupby("entry").nth(0)
+#Aman edits
+        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
+
         bjet2 = bjets.groupby("entry").nth(1)
         bJets = [bjet1, bjet2]
         electrons = [e1, e2]
-        fill_bjets(output, variables, bJets, electrons, is_mc=is_mc)
+        fill_bjets(output, variables, bJets, electrons, flavor="el", is_mc=is_mc)
 
         jets = jets.sort_values(["entry", "pt"], ascending=[True, False])
         jet1 = jets.groupby("entry").nth(0)
         jet2 = jets.groupby("entry").nth(1)
         Jets = [jet1, jet2]
-        fill_jets(output, variables, Jets,  is_mc=is_mc)
+        fill_jets(output, variables, Jets, flavor="el",  is_mc=is_mc)
         if self.timer:
             self.timer.add_checkpoint("Filled jet variables")
 
@@ -694,7 +783,7 @@ class DielectronProcessor(processor.ProcessorABC):
     def prepare_lookups(self):
         # Pile-up reweighting
         self.pu_lookups = pu_lookups(self.parameters)
-        self.jec_factories, self.jec_factories_data = jec_factories(self.year)
+        self.jec_factories, self.jec_factories_data = jec_factories(self.years)
         # --- Evaluator
         #self.extractor = extractor()
 

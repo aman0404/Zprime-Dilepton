@@ -1,0 +1,411 @@
+20d19
+< from processNano.corrections.jec import jec_factories, apply_jec
+21a21
+> from processNano.corrections.jec import jec_factories, apply_jec
+24c24
+< from processNano.jets import fill_jets, fill_bjets, btagSF 
+---
+> from processNano.jets import fill_jets, fill_bjets, btagSF
+28,29c28
+< from processNano.electrons import fill_electrons
+< from processNano.electrons import find_dielectron
+---
+> from processNano.muons import find_dimuon
+30a30,32
+> from processNano.utils import bbangle
+> from processNano.utils import angle
+> from processNano.utils import overlap_removal
+32c34
+< from config.parameters import parameters, ele_branches, jet_branches
+---
+> from config.parameters import parameters, muon_branches, jet_branches
+35c37
+< class DielectronEffProcessor(processor.ProcessorABC):
+---
+> class DimuonEffProcessor(processor.ProcessorABC):
+69a72,73
+>         #self.parameters = {k: v[self.year] for k, v in parameters.items()}
+> 
+126,127d129
+< #        )
+< 
+131,132d132
+< 
+< 
+173c173
+<             lumi_info = LumiMask(self.parameters["lumimask_UL_el"])
+---
+>             lumi_info = LumiMask(self.parameters["lumimask_UL_mu"])
+177,178c177,178
+<         hlt = ak.to_pandas(df.HLT[self.parameters["el_hlt"]])
+<         hlt = hlt[self.parameters["el_hlt"]].sum(axis=1)
+---
+>         hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]])
+>         hlt = hlt[self.parameters["mu_hlt"]].sum(axis=1)
+190,196c190,195
+<         df["Electron", "pt_raw"] = df.Electron.pt
+<         df["Electron", "eta_raw"] = df.Electron.eta
+<         df["Electron", "phi_raw"] = df.Electron.phi
+<         df["Electron", "pt_gen"] = df.Electron.matched_gen.pt
+<         df["Electron", "eta_gen"] = df.Electron.matched_gen.eta
+<         df["Electron", "phi_gen"] = df.Electron.matched_gen.phi
+<         df["Electron", "idx"] = df.Electron.genPartIdx
+---
+>         df["Muon", "pt_raw"] = df.Muon.pt
+>         df["Muon", "eta_raw"] = df.Muon.eta
+>         df["Muon", "phi_raw"] = df.Muon.phi
+>         df["Muon", "pt_gen"] = df.Muon.matched_gen.pt
+>         df["Muon", "eta_gen"] = df.Muon.matched_gen.eta
+>         df["Muon", "phi_gen"] = df.Muon.matched_gen.phi
+202,206c201,214
+< 
+< 
+<             # if FSR was applied, 'pt_fsr' will be corrected pt
+<             # if FSR wasn't applied, just copy 'pt' to 'pt_fsr'
+<             # df["Muon", "pt_fsr"] = df.Muon.pt
+---
+>             # FSR recovery
+> #            if self.do_fsr:
+> #                has_fsr = fsr_recovery(df)
+> #                df["Muon", "pt"] = df.Muon.pt_fsr
+> #                df["Muon", "eta"] = df.Muon.eta_fsr
+> #                df["Muon", "phi"] = df.Muon.phi_fsr
+> #                df["Muon", "pfRelIso04_all"] = df.Muon.iso_fsr
+> #
+> #                if self.timer:
+> #                    self.timer.add_checkpoint("FSR recovery")
+> #
+> #            # if FSR was applied, 'pt_fsr' will be corrected pt
+> #            # if FSR wasn't applied, just copy 'pt' to 'pt_fsr'
+> #            df["Muon", "pt_fsr"] = df.Muon.pt
+209,210c217,218
+<             ele_branches_local = copy.copy(ele_branches)
+<             ele_branches_local += ["genPartIdx", "pt_gen", "eta_gen", "phi_gen", "idx"]
+---
+>             muon_branches_local = copy.copy(muon_branches)
+>             muon_branches_local += ["genPartIdx", "pt_gen", "eta_gen", "phi_gen"]
+223c231,233
+< 
+---
+>             df["Jet", "pt_reco"] = df.Jet.pt
+>             df["Jet", "eta_reco"] = df.Jet.eta
+>             # df["Jet", "flavor_reco"]=df.Jet.hadronFlavour
+228a239,240
+>                 "pt_reco",
+>                 "eta_reco",
+231,234c243,254
+<             genJets = ak.to_pandas(df.GenJet[["pt", "eta", "phi", "partonFlavour"]])
+<             # print("gen jet head")
+<             # print(genJets.head())
+<             electrons = ak.to_pandas(df.Electron[ele_branches_local])
+---
+>             # print(jets.hadronFlavour)
+>             # jets["hadronFlavour"] = jets["hadronFlavour"].astype(int)
+>             # jets = jets[(jets["hadronFlavour"]==0)|(jets["hadronFlavour"]==4)|(jets["hadronFlavour"]==5)]
+>             jets["flavor_reco"] = jets["hadronFlavour"]
+>             # print(jets[].flavor_reco)
+>             # jets["pt_reco"] = jets.pt
+>             # jets["eta_reco"] = jets.eta
+>             # jets["flavor_reco"] = jets.hadronFlavour
+>             genJets = ak.to_pandas(
+>                 df.GenJet[["pt", "eta", "phi", "partonFlavour", "hadronFlavour"]]
+>             )
+>             muons = ak.to_pandas(df.Muon[muon_branches_local])
+237,242c257,258
+<             electrons = electrons.dropna()
+<             electrons = electrons.loc[:, ~electrons.columns.duplicated()]
+<             if is_mc:
+<                 electrons.loc[electrons.idx == -1, "pt_gen"] = -999.0
+<                 electrons.loc[electrons.idx == -1, "eta_gen"] = -999.0
+<                 electrons.loc[electrons.idx == -1, "phi_gen"] = -999.0
+---
+>             muons = muons.dropna()
+>             muons = muons.loc[:, ~muons.columns.duplicated()]
+253,257c269,273
+<             electrons["pass_flags"] = True
+<             # if self.parameters["electron_flags"]:
+<             #    electrons["pass_flags"] = electrons[self.parameters["electron_flags"]].product(
+<             #        axis=1
+<             #    )
+---
+>             muons["pass_flags"] = True
+>             if self.parameters["muon_flags"]:
+>                 muons["pass_flags"] = muons[self.parameters["muon_flags"]].product(
+>                     axis=1
+>                 )
+260,267c276,284
+<             electrons["ID"] = (
+<                 electrons[self.parameters["electron_id"]]
+<                 > 0
+<                 # & (muons.dxy < self.parameters["muon_dxy"])
+<                 # & (
+<                 #    (muons.ptErr.values / muons.pt.values)
+<                 #    < self.parameters["muon_ptErr/pt"]
+<                 # )
+---
+>             muons["ID"] = (
+>                 (muons.tkRelIso < self.parameters["muon_iso_cut"])
+>                 & (muons[self.parameters["muon_id"]] > 0)
+>                 & (abs(muons.dxy) < self.parameters["muon_dxy"])
+>                 & (abs(muons.dz) < self.parameters["muon_dz"])
+>                 & (
+>                     (muons.ptErr.values / muons.pt.values)
+>                     < self.parameters["muon_ptErr/pt"]
+>                 )
+271c288
+<             # good_pv = ak.to_pandas(df.PV).npvsGood > 0
+---
+>             good_pv = ak.to_pandas(df.PV).npvsGood > 0
+334c351,353
+<             jets[["Jet_match", "Jet_ID", "btag"]], on=["entry", "subentry"], how="left"
+---
+>             jets[["Jet_match", "Jet_ID", "btag", "pt_reco", "eta_reco", "flavor_reco"]],
+>             on=["entry", "subentry"],
+>             how="left",
+337d355
+<         genJets = genJets[abs(genJets.partonFlavour) == 5]
+339c357,364
+<             columns={"pt": "Jet_pt", "eta": "Jet_eta", "phi": "Jet_phi"}, inplace=True
+---
+>             columns={
+>                 "pt": "Jet_pt",
+>                 "eta": "Jet_eta",
+>                 "phi": "Jet_phi",
+>                 "pt_reco": "Jet_pt_reco",
+>                 "eta_reco": "Jet_eta_reco",
+>             },
+>             inplace=True,
+340a366
+> 
+395,399c421,425
+<         electrons.set_index("genPartIdx", append=True, inplace=True)
+<         electrons.reset_index("subentry", inplace=True)
+<         electrons.drop("subentry", axis=1, inplace=True)
+<         electrons.index.names = ["entry", "subentry"]
+<         electrons["match"] = True
+---
+>         muons.set_index("genPartIdx", append=True, inplace=True)
+>         muons.reset_index("subentry", inplace=True)
+>         muons.drop("subentry", axis=1, inplace=True)
+>         muons.index.names = ["entry", "subentry"]
+>         muons["match"] = True
+402c428
+<         # good_pv = good_pv.to_frame("gpv")
+---
+>         good_pv = good_pv.to_frame("gpv")
+404c430
+<             electrons[["match", "pt_raw", "ID"]], on=["entry", "subentry"], how="left"
+---
+>             muons[["match", "pt_raw", "ID"]], on=["entry", "subentry"], how="left"
+410c436
+<             & (abs(genPart.pdgId) == 11)
+---
+>             & (abs(genPart.pdgId) == 13)
+413,414c439,440
+<         genPart.loc[genPart["pdgId"] == -11, "charge"] = -1
+<         genPart.loc[genPart["pdgId"] == 11, "charge"] = 1
+---
+>         genPart.loc[genPart["pdgId"] == -13, "charge"] = -1
+>         genPart.loc[genPart["pdgId"] == 13, "charge"] = 1
+419c445
+<             (genPart["status"] == 1) & (nGen >= 2)
+---
+>             (genPart["status"] == 1) & (nGen >= 2) & (abs(sum_sign) < nGen)
+422,449c448,456
+<         result = genPart.groupby("entry").apply(find_dielectron, is_mc=False)
+< 
+<         dielectron = pd.DataFrame(
+<              result.to_list(), columns=["idx1", "idx2", "dielectron_mass"]
+<          )
+<         dielectron = dielectron.reset_index()
+<         dielectron = dielectron.set_index(result.index)
+<         dielectron.index.name = "entry"
+<         #dielectron.set_index(["idx1", "idx2"], inplace=True)
+<         #dielectron = dielectron.reset_index()
+<         #dielectron = dielectron.set_index(["idx1", "idx2"])
+<         #dielectron = dielectron.reindex(genPart.index)
+<         #dielectron.index.name = "entry"
+<         #print(dielectron)
+<         #dielectron_mass = dielectron.dielectron_mass
+<        
+<         genPart = genPart.merge(dielectron[["dielectron_mass"]], left_index=True, right_index=True, how="left")
+<         dielectron_mass = genPart["dielectron_mass"]
+< 
+<         #e1 = genPart.loc[dielectron.idx1.values, :]
+<         #e2 = genPart.loc[dielectron.idx2.values, :]
+<         #e1.index = e1.index.droplevel("subentry")
+<         #e2.index = e2.index.droplevel("subentry")
+< 
+<         #ee = p4_sum(e1, e2, is_mc=False)
+<         #ee.rename(columns={"mass": "dielectron_mass"}, inplace=True)
+<         #ee.dropna()
+<         #ee_indexed = ee.reset_index()[["entry", "dielectron_mass"]]
+---
+>         # print(genPart.head())
+>         result = genPart.groupby("entry").apply(find_dimuon, is_mc=False)
+>         dimuon = pd.DataFrame(result.to_list(), columns=["idx1", "idx2", "dimuon_mass"])
+>         mu1 = genPart.loc[dimuon.idx1.values, :]
+>         mu2 = genPart.loc[dimuon.idx2.values, :]
+>         mu1.index = mu1.index.droplevel("subentry")
+>         mu2.index = mu2.index.droplevel("subentry")
+>         mm = p4_sum(mu1, mu2, is_mc=False)
+>         mm.rename(columns={"mass": "dimuon_mass"}, inplace=True)
+451c458
+<             genPart[genPart["pt"] > 35]
+---
+>             genPart[genPart["pt"] > 53]
+459c466
+<             genPart[(abs(genPart["eta"]) < 2.5) & (genPart["pt"] > 35)]
+---
+>             genPart[(abs(genPart["eta"]) < 2.4) & (genPart["pt"] > 53)]
+468c475
+<             genPart[(abs(genPart["eta"]) < 1.442) & (genPart["pt"] > 35)]
+---
+>             genPart[(abs(genPart["eta"]) < 1.2) & (genPart["pt"] > 53)]
+477c484
+<             genPart[(abs(genPart["eta"]) > 1.566) & (genPart["pt"] > 35)]
+---
+>             genPart[(abs(genPart["eta"]) > 1.2) & (genPart["pt"] > 53)]
+481c488
+<             ==1
+---
+>             >=1
+483a491
+> 
+503c511,523
+<                     ["Jet_match", "Jet_ID", "btag", "Jet_pt", "Jet_eta", "Jet_phi"]
+---
+>                     [
+>                         "Jet_match",
+>                         "Jet_ID",
+>                         "btag",
+>                         "Jet_pt",
+>                         "Jet_eta",
+>                         "Jet_phi",
+>                         "partonFlavour",
+>                         "hadronFlavour",
+>                         "flavor_reco",
+>                         "Jet_pt_reco",
+>                         "Jet_eta_reco",
+>                     ]
+552,559c572,576
+< #        print(genPart.columns)
+< #        print(genPart["dielectron_mass"])
+< #        genPart = (
+< #            genPart.reset_index("subentry")
+< #            .merge(genPart["dielectron_mass"] , on=["entry"], how="left")
+< #            .set_index("subentry", append=True)
+< #        )
+< #        print(genPart.columns)
+---
+>         genPart = (
+>             genPart.reset_index("subentry")
+>             .merge(mm["dimuon_mass"], on=["entry"], how="left")
+>             .set_index("subentry", append=True)
+>         )
+581a599
+> 
+592,596c610,614
+<         # genPart = (
+<         #    genPart.reset_index("subentry")
+<         #    .merge(good_pv["gpv"], on=["entry"], how="left")
+<         #    .set_index("subentry", append=True)
+<         # )
+---
+>         genPart = (
+>             genPart.reset_index("subentry")
+>             .merge(good_pv["gpv"], on=["entry"], how="left")
+>             .set_index("subentry", append=True)
+>         )
+610a629,632
+>         genPart["flavor_reco"] = genPart["flavor_reco"].astype(int)
+>         genPart["Jet_pt_reco"] = genPart["Jet_pt_reco"].astype(float)
+>         genPart["Jet_eta_reco"] = genPart["Jet_eta_reco"].astype(float)
+>         # print(genPart["flavor_reco"])
+624,626c646,648
+<         electrons,
+<         e1,
+<         e2,
+---
+>         muons,
+>         mu1,
+>         mu2,
+631d652
+<         #output,
+632a654
+>         #output,
+761c783
+<                 (jets.pt > 30.0)
+---
+>                 (jets.pt > 20.0)
+775a798,813
+> 
+>         bjets = jets.query("bselection==1")
+>         bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
+>         bjet1 = bjets.groupby("entry").nth(0)
+> #Aman edits
+>         bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
+> 
+>         bjet2 = bjets.groupby("entry").nth(1)
+>         bJets = [bjet1, bjet2]
+>         bmuons = [mu1, mu2]
+>         fill_bjets(genPart, variables, bJets, bmuons, is_mc=is_mc)
+>         #fill_bjets(output, variables, bJets, bmuons, is_mc=is_mc)
+> 
+> 
+> 
+> 
+898c936
+<         del electrons
+---
+>         del muons
+900,901c938,939
+<         del e1
+<         del e2
+---
+>         del mu1
+>         del mu2
+913c951
+<         #self.musf_lookup = musf_lookup(self.parameters)
+---
+> #        self.musf_lookup = musf_lookup(self.parameters)
+918c956
+<         #self.extractor = extractor()
+---
+>  #       self.extractor = extractor()
+921,934c959,972
+< #        zpt_filename = self.parameters["zpt_weights_file"]
+< #        self.extractor.add_weight_sets([f"* * {zpt_filename}"])
+< #        if "2016" in self.year:
+< #            self.zpt_path = "zpt_weights/2016_value"
+< #        else:
+< #            self.zpt_path = "zpt_weights/2017_value"
+< #
+< #        # Calibration of event-by-event mass resolution
+< #        for mode in ["Data", "MC"]:
+< #            label = f"res_calib_{mode}_{self.year}"
+< #            path = self.parameters["res_calib_path"]
+< #            file_path = f"{path}/{label}.root"
+< #            self.extractor.add_weight_sets([f"{label} {label} {file_path}"])
+< #
+---
+>  #       zpt_filename = self.parameters["zpt_weights_file"]
+>  #       self.extractor.add_weight_sets([f"* * {zpt_filename}"])
+>  #       if "2016" in self.year:
+>  #           self.zpt_path = "zpt_weights/2016_value"
+>  #       else:
+>  #           self.zpt_path = "zpt_weights/2017_value"
+> 
+>         # Calibration of event-by-event mass resolution
+>  #       for mode in ["Data", "MC"]:
+>  #           label = f"res_calib_{mode}_{self.year}"
+>  #           path = self.parameters["res_calib_path"]
+>  #           file_path = f"{path}/{label}.root"
+>  #           self.extractor.add_weight_sets([f"{label} {label} {file_path}"])
+> 
+937c975
+< #
+---
+> 
+943a982
+> 

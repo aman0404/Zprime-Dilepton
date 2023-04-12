@@ -2,7 +2,7 @@ import dask.dataframe as dd
 import pandas as pd
 
 from copperhead.python.workflow import parallelize
-from python.io import (
+from copperhead.python.io import (
     delete_existing_stage2_hists,
     delete_existing_stage2_parquet,
     save_stage2_output_parquet,
@@ -42,7 +42,7 @@ def process_partitions(client, parameters, df):
         argset["df"] = [(i, df.partitions[i]) for i in range(df.npartitions)]
 
     # perform categorization, evaluate mva models, fill histograms
-    hist_info_dfs = parallelize(on_partition, argset, client, parameters, seq=False)
+    hist_info_dfs = parallelize(on_partition, argset, client, parameters)
 
     # return info for debugging
     hist_info_df_full = pd.concat(hist_info_dfs).reset_index(drop=True)
@@ -81,7 +81,9 @@ def on_partition(args, parameters):
     regions = [r for r in parameters["regions"] if r in df.r.unique()]
     if "inclusive" in parameters["regions"]:
         regions.append("inclusive")
-    channels = [c for c in parameters["channels"] if c in df["channel"].unique()]
+#Aman
+    channels = parameters["channels"]
+#    channels = [c for c in parameters["channels"] if c in df["channel"].unique()]
     if "inclusive" in parameters["channels"]:
         channels.append("inclusive")
     # < convert desired columns to histograms >

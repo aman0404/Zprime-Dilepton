@@ -5,7 +5,7 @@ from config.variables import variables_lookup
 from produceResults.plotter import plotter
 
 # , plotter2D
-# from produceResults.make_templates import to_templates
+from produceResults.make_templates import to_templates
 
 __all__ = ["dask"]
 
@@ -16,7 +16,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-f", "--flavor", dest="flavor", help="lepton flavor", default="mu"
+    "-f", "--flavor", dest="flavor", help="lepton flavor", default="el"
 )
 
 
@@ -32,7 +32,7 @@ args = parser.parse_args()
 
 # Dask client settings
 use_local_cluster = args.slurm_port is None
-node_ip = "128.211.148.60"
+node_ip = "128.211.148.61"
 
 if use_local_cluster:
     ncpus_local = 1
@@ -47,50 +47,85 @@ parameters = {
     # < general settings >
     "slurm_cluster_ip": slurm_cluster_ip,
     "years": args.years,
-    "global_path": "/depot/cms/users/schul105/dilepton/Zprime-Dilepton/output/",
-    "label": "combinedTest",
-    "flavor": args.flavor,
-    "channels": ["inclusive", "0b", "1b", "2b"],
-    "regions": ["inclusive", "bb", "be"],
+    "global_path": "/depot/cms/private/users/kaur214/output/",
+    "label": "elec_channel_v1_overlap/unfolding",
+    #"label": "elec_channel_v1_overlap/ttbar_hardcut",
+    #"label": "elec_channel_v1_overlap/ttbar_hardcut_nocut",
+#    "label": "elec_channel_v1_overlap/all_categories",
+#    "channels": ["inclusive", "0b", "1b", "2b"],
+    "channels": ["inclusive"],
+    #"channels": ["1b", "2b"],
+#    "regions": ["inclusive"],
+    "regions": ["bb", "be"],
     "syst_variations": ["nominal"],
     #
     # < plotting settings >
     "plot_vars": [
-        "min_bl_mass",
-        "min_b1l_mass",
-        "min_b2l_mass",
-        "dilepton_mass",
-        "dilepton_mass_gen",
-        "njets",
-        "nbjets",
-        "dilepton_cos_theta_cs",
-    ],  # "dilepton_mass"],
-    "plot_vars_2d": [["dilepton_mass", "met"]],  # "dilepton_mass"],
+#        "min_bl_mass",
+#        "njets",
+#        "nbjets",
+#        "met",
+#        "lb_angle",
+#        "b1l1_dR",
+#        "b1l2_dR",
+#        "dielectron_dR",
+#        "bjet1_pt",
+#        "e1_pt",
+#        "e2_pt",
+#        "e1_eta",
+#        "e2_eta",
+#        "e1_phi",
+#        "bjet1_eta",
+        "dielectron_mass",
+        "dielectron_mass_gen",
+#        "dielectron_cos_theta_cs",
+    ],  # "dielectron_mass"],
+    "plot_vars_2d": [["dielectron_mass", "met"]],  # "dimuon_mass"],
     "variables_lookup": variables_lookup,
     "save_plots": True,
     "plot_ratio": True,
-    "plots_path": "./plots/Dielectron/",
+    "plots_path": "/depot/cms/private/users/kaur214/output/plots/elec_channel/ttbar_hardcut/2b",
     "dnn_models": {},
     "bdt_models": {},
     #
     # < templates and datacards >
     "save_templates": True,
     "templates_vars": [
-        "min_bl_mass",
-        "min_b1l_mass",
-        "min_b2l_mass",
-        "dilepton_mass",
-        "dilepton_mass_gen",
-    ],  # "dilepton_mass"],
+#        "min_bl_mass",
+#        "min_b1l_mass",
+#        "min_b2l_mass",
+        "dielectron_mass",
+        "dielectron_mass_gen",
+    ],  # "dielectron_mass"],
 }
 
-
+if args.flavor == "el":
+    parameters["plot_vars"] = [
+#        "min_bl_mass",
+#        "njets",
+#        "nbjets",
+#        "met",
+#        "lb_angle",
+#        "b1l1_dR",
+#        "b1l2_dR",
+#        "dielectron_dR",
+#        "bjet1_pt",
+#        "e1_pt",
+#        "e2_pt",
+#        "e1_eta",
+#   #     "e2_eta",
+#        "e1_phi",
+#        "bjet1_eta",
+        "dielectron_mass",
+        "dielectron_mass_gen",
+   #     "dielectron_cos_theta_cs",
+]
 
 parameters["grouping"] = {
-    "data_A": "Data",
-    "data_B": "Data",
-    "data_C": "Data",
-    "data_D": "Data",
+#    "data_A": "Data",
+#    "data_B": "Data",
+#    "data_C": "Data",
+#    "data_D": "Data",
     # "data_E": "Data",
     # "data_F": "Data",
     # "data_G": "Data",
@@ -103,6 +138,7 @@ parameters["grouping"] = {
     "dy0J_M3500to4500": "DY",
     "dy0J_M4500to6000": "DY",
     "dy0J_M6000toInf": "DY",
+
     "dy1J_M200to400": "DY",
     "dy1J_M400to800": "DY",
     "dy1J_M800to1400": "DY",
@@ -111,6 +147,7 @@ parameters["grouping"] = {
     "dy1J_M3500to4500": "DY",
     "dy1J_M4500to6000": "DY",
     "dy1J_M6000toInf": "DY",
+#
     "dy2J_M200to400": "DY",
     "dy2J_M400to800": "DY",
     "dy2J_M800to1400": "DY",
@@ -119,24 +156,48 @@ parameters["grouping"] = {
     "dy2J_M3500to4500": "DY",
     "dy2J_M4500to6000": "DY",
     "dy2J_M6000toInf": "DY",
+#
     "ttbar_lep_inclusive": "Top",
+#    #"ttbar_lep_inclusive": "Top",
     "ttbar_lep_M500to800": "Top",
-    "ttbar_lep_M800to1200": "Top",
-    "ttbar_lep_M1200to1800": "Top",
+#    "ttbar_lep_M800to1200": "Top",
+#    "ttbar_lep_M1200to1800": "Top",
     "ttbar_lep_M1800toInf": "Top",
     "tW": "Top",
     "Wantitop": "Top",
-    # "tW2" : "Top",
-    # "Wantitop2" : "Top",
-    "WWinclusive": "WW",
-    "WW200to600": "WW",
-    "WW600to1200": "WW",
-    "WW1200to2500": "WW",
-    "WW2500": "Other",
-    "WZ2L2Q": "Other",
-    "WZ3LNu": "Other",
-    "ZZ2L2Nu": "Other",
-    "ZZ4L": "Other",
+##
+    "WWinclusive": "Diboson",
+    "WW200to600": "Diboson",
+    "WW600to1200": "Diboson",
+    "WW1200to2500": "Diboson",
+    "WW2500": "Diboson",
+    "WZ2L2Q": "Diboson",
+    "WZ3LNu": "Diboson",
+    "ZZ2L2Nu": "Diboson",
+    "ZZ4L": "Diboson",
+#
+#    "bsll_lambda1TeV_M200to500" : "bsll_lambda1TeV",
+#    "bsll_lambda1TeV_M500to1000" : "bsll_lambda1TeV",
+#    "bsll_lambda1TeV_M1000to2000" : "bsll_lambda1TeV",
+#    "bsll_lambda1TeV_M2000toInf" : "bsll_lambda1TeV",
+#
+#    "bsll_lambda2TeV_M200to500" : "bsll_lambda2TeV",
+#    "bsll_lambda2TeV_M500to1000" : "bsll_lambda2TeV",
+#    "bsll_lambda2TeV_M1000to2000" : "bsll_lambda2TeV",
+#    "bsll_lambda2TeV_M2000toInf" : "bsll_lambda2TeV",
+#
+#    "bsll_lambda4TeV_M200to500" : "bsll_lambda4TeV",
+#    "bsll_lambda4TeV_M500to1000" : "bsll_lambda4TeV",
+#    "bsll_lambda4TeV_M1000to2000" : "bsll_lambda4TeV",
+#    "bsll_lambda4TeV_M2000toInf" : "bsll_lambda4TeV",
+#
+#    "bsll_lambda8TeV_M200to500" : "bsll_lambda8TeV",
+#    "bsll_lambda8TeV_M500to1000" : "bsll_lambda8TeV",
+#    "bsll_lambda8TeV_M1000to2000" : "bsll_lambda8TeV",
+#    "bsll_lambda8TeV_M2000toInf" : "bsll_lambda8TeV",
+
+
+
     # "bbll_4TeV_M400_posLL" : "bbll_4TeV_posLL",
     # "bbll_4TeV_M1000_posLL" : "bbll_4TeV_posLL",
     # "bbll_8TeV_M400_posLL" : "bbll_8TeV_posLL",
@@ -144,7 +205,10 @@ parameters["grouping"] = {
 }
 
 parameters["plot_groups"] = {
-    "stack": ["DY", "Top", "Other", "WW"],
+    "stack": ["DY", "Top", "Diboson", "Topinc"],
+    "step": ["bsll_lambda1TeV", "bsll_lambda2TeV", "bsll_lambda4TeV", "bsll_lambda8TeV"],
+    #"step": ["bsll_lambda1TeV"],
+   
     # "step": ["bbll_4TeV_posLL", "bbll_8TeV_posLL"],
     "errorbar": ["Data"],
     # "2D": ["Data","DY","Other","bbll_4TeV_posLL","bbll_8TeV_posLL"],
@@ -154,12 +218,16 @@ parameters["plot_groups"] = {
 parameters["color_dict"] = {
     "DY": "xkcd:water blue",
     "Top": "xkcd:pastel orange",
-    "Other": "xkcd:shamrock green",
-    "WW": "xkcd:red",
-    "DYTauTau": "xkcd:blue",
+    "Topinc": "xkcd:orange",
+    "Diboson": "xkcd:red",
+
     "Data": "xkcd:black",
-    "bbll_4TeV_posLL": "xkcd:red",
-    "bbll_8TeV_posLL": "xkcd:violet",
+
+    "bsll_lambda1TeV":"xkcd:blue",
+    "bsll_lambda2TeV":"xkcd:blue",
+    "bsll_lambda4TeV":"xkcd:blue",
+    "bsll_lambda8TeV":"xkcd:blue",
+
 }
 
 if __name__ == "__main__":
@@ -195,13 +263,13 @@ if __name__ == "__main__":
     parameters["datasets"] = parameters["grouping"].keys()
 
     # make 1D plots
-    yields = plotter(client, parameters)
+#    yields = plotter(client, parameters)
 
     # make 2D plots
     # yields2D = plotter2D(client, parameters)
 
     # save templates to ROOT files
-    # yield_df = to_templates(client, parameters)
+    yield_df = to_templates(client, parameters)
 
     # make datacards
     # build_datacards("score_pytorch_test", yield_df, parameters)

@@ -72,7 +72,8 @@ def p4(obj, is_mc=True):
     return result
 
 
-def p4_sum(obj1, obj2, is_mc=True,eScale="Nominal"):
+def p4_sum(obj1, obj2, is_mc=True):
+#def p4_sum(obj1, obj2, is_mc=True,eScale="Nominal"):
 
     result = pd.DataFrame(
         index=obj1.index.union(obj2.index),
@@ -97,31 +98,31 @@ def p4_sum(obj1, obj2, is_mc=True,eScale="Nominal"):
         ],
     ).fillna(0.0)
     
-    for obj in [obj1, obj2]:
-        #electron energy scale uncertainty, 2% for barrel electrons and 1% for endcap electrons (to be revisited for UL)
-        obj["eScaleFac"] = 1.0
-        if eScale == "Up":
-            if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
-                obj.loc[
-                     (abs(obj.eta < 1.442)),
-                    "eScaleFac",
-                ] = 1.02
-            if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
-                obj.loc[
-                     (abs(obj.eta > 1.442)),
-                    "eScaleFac",
-                ] = 1.01
-        elif eScale == "Down":
-            if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
-                obj.loc[
-                     (abs(obj.eta < 1.442)),
-                    "eScaleFac",
-                ] = 0.98
-            if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
-                obj.loc[
-                     (abs(obj.eta > 1.442)),
-                    "eScaleFac",
-                ] = 0.99
+#    for obj in [obj1, obj2]:
+#        #electron energy scale uncertainty, 2% for barrel electrons and 1% for endcap electrons (to be revisited for UL)
+#        obj["eScaleFac"] = 1.0
+#        if eScale == "Up":
+#            if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
+#                obj.loc[
+#                     (abs(obj.eta < 1.442)),
+#                    "eScaleFac",
+#                ] = 1.02
+#            if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
+#                obj.loc[
+#                     (abs(obj.eta > 1.442)),
+#                    "eScaleFac",
+#                ] = 1.01
+#        elif eScale == "Down":
+#            if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
+#                obj.loc[
+#                     (abs(obj.eta < 1.442)),
+#                    "eScaleFac",
+#                ] = 0.98
+#            if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
+#                obj.loc[
+#                     (abs(obj.eta > 1.442)),
+#                    "eScaleFac",
+#                ] = 0.99
         #else:
         #    if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
         #        obj.loc[
@@ -135,13 +136,12 @@ def p4_sum(obj1, obj2, is_mc=True,eScale="Nominal"):
         #        ] = 1.0
 
 
-
-
-
-        px_ = obj.pt * np.cos(obj.phi) * obj.eScaleFac
-        py_ = obj.pt * np.sin(obj.phi) * obj.eScaleFac
-        pz_ = obj.pt * np.sinh(obj.eta) * obj.eScaleFac
+    for obj in [obj1, obj2]:
+        px_ = obj.pt * np.cos(obj.phi)
+        py_ = obj.pt * np.sin(obj.phi)
+        pz_ = obj.pt * np.sinh(obj.eta)
         e_ = np.sqrt(px_ ** 2 + py_ ** 2 + pz_ ** 2 + obj.mass ** 2)
+
         result.px += px_
         result.py += py_
         result.pz += pz_
@@ -158,7 +158,8 @@ def p4_sum(obj1, obj2, is_mc=True,eScale="Nominal"):
             result.pz_gen += pz_gen_
             result.e_gen += e_gen_
 
-    result.pt = np.sqrt(result.py ** 2 + result.py ** 2)
+    result.pt = np.sqrt(result.px ** 2 + result.py ** 2)
+    #result.pt = np.sqrt(result.py ** 2 + result.py ** 2)
     result.eta = np.arcsinh(result.pz / result.pt)
     result.phi = np.arctan2(result.py, result.px)
     result.mass = np.sqrt(
@@ -229,7 +230,7 @@ def bbangle(objs1, objs2):
     arg = (px1 * px2 + py1 * py2 + pz1 * pz2) / np.sqrt(ptot2)
     arg[arg > 1.0] = 1.0
     arg[arg < -1.0] = -1.0
-    return arg
+    return np.arccos(arg)
 
 
 # https://root.cern.ch/doc/master/classTVector3
@@ -410,3 +411,27 @@ def delta_r(eta1, eta2, phi1, phi2):
     dphi = abs(np.mod(phi1 - phi2 + np.pi, 2 * np.pi) - np.pi)
     dr = np.sqrt(deta ** 2 + dphi ** 2)
     return deta, dphi, dr
+
+def overlap_removal(objs1, objs2):
+
+    eta1 = objs1.eta
+    phi1 = objs1.phi
+
+    if len(objs2) == 0:
+        # if there are no muons, return an empty array of zeros
+        return np.zeros_like(eta1)
+
+    eta2 = objs2.iloc[0].eta
+    phi2 = objs2.iloc[0].phi
+
+
+
+    deta = abs(eta1 - eta2)
+    dphi = abs(np.mod(phi1 - phi2 + np.pi, 2 * np.pi) - np.pi)
+    dr = np.sqrt(deta ** 2 + dphi ** 2)
+
+#    value_temp = dr.loc[dr <= 1.0]
+#    print("--testing-- ", value_temp)
+
+    return dr
+

@@ -410,7 +410,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
         genPart = genPart[
             (genPart.status == 1)
             & (abs(genPart.pdgId) == 13)
-            & (genPart.statusFlags == 8449)
+            #& (genPart.statusFlags == 8449)
         ]
         genPart.loc[genPart["pdgId"] == -13, "charge"] = -1
         genPart.loc[genPart["pdgId"] == 13, "charge"] = 1
@@ -422,6 +422,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
         ]
         # print("check if 2 particles in genpart")
         # print(genPart.head())
+        print(genPart[["ID", "status"]])
         result = genPart.groupby("entry").apply(find_dimuon, is_mc=False)
         dimuon = pd.DataFrame(result.to_list(), columns=["idx1", "idx2", "dimuon_mass"])
         mu1 = genPart.loc[dimuon.idx1.values, :]

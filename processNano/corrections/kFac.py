@@ -25,7 +25,6 @@ def calckFac(mass, region, flavor):
                 6.599e-08,
                 -9.657e-12,
             ]
-
         if mass < 150:
             correction = 1
         else:

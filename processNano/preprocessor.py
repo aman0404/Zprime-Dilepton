@@ -4,6 +4,7 @@ import glob
 import tqdm
 
 import uproot
+uproot.open.defaults["xrootd_handler"] = uproot.MultithreadedXRootDSource
 
 from config.parameters import parameters
 from config.parameters import lumis
@@ -71,6 +72,7 @@ def read_via_xrootd(server, path, from_das=False):
     proc = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
+    print(command)
     result = proc.stdout.readlines()
     if proc.stderr.readlines():
         print("Loading error! This may help:")
@@ -82,7 +84,7 @@ def read_via_xrootd(server, path, from_das=False):
 
 class SamplesInfo(object):
     def __init__(self, **kwargs):
-        self.year = kwargs.pop("year", "2016")
+        self.years = kwargs.pop("year", "2018")
         self.out_path = kwargs.pop("out_path", "/output/")
         self.xrootd = kwargs.pop("xrootd", True)
         self.server = kwargs.pop("server", "root://xrootd.rcac.purdue.edu/")
@@ -92,10 +94,10 @@ class SamplesInfo(object):
         self.parameters = {}
         for k, v in parameters.items():
             try:
-                if "2018" in self.year:
+                if "2018" in self.years:
                     self.parameters.update({k: v["2018"]})
                 else:
-                    self.parameters.update({k: v[self.year]})
+                    self.parameters.update({k: v.get(self.years, None)})
             except Exception:
                 print(k, v)
         self.is_mc = True
@@ -103,12 +105,12 @@ class SamplesInfo(object):
             from config.datasets_muon import datasets
         elif "el" in datasets_from:
             from config.datasets_electron import datasets
-        self.paths = datasets[self.year]
+        self.paths = datasets[self.years]
 
         if "mu" in datasets_from:
-            self.lumi = lumis[self.year][1]
+            self.lumi = lumis[self.years][1]
         else:
-            self.lumi = lumis[self.year][0]
+            self.lumi = lumis[self.years][0]
 
         #if "2016" in self.year:
         #    self.lumi = 35900.0
@@ -233,7 +235,7 @@ class SamplesInfo(object):
             N = self.metadata["sumGenWgts"]
             numevents = self.metadata["nGenEvts"]
             if isinstance(cross_sections[self.sample], dict):
-                xsec = cross_sections[self.sample][self.year]
+                xsec = cross_sections[self.sample][self.years]
             else:
                 xsec = cross_sections[self.sample]
             if N > 0:

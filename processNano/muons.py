@@ -8,7 +8,6 @@ from processNano.corrections.muonRecoUncert import muonRecoUncert
 
 def find_dimuon(objs, is_mc=False):
     is_mc = False
-
     objs1 = objs[objs.charge > 0]
     objs2 = objs[objs.charge < 0]
     objs1["mu_idx"] = objs1.index.to_numpy()
@@ -40,7 +39,7 @@ def find_dimuon(objs, is_mc=False):
                 idx1 = objs1.iloc[i].mu_idx
                 idx2 = objs2.iloc[j].mu_idx
 
-                dilepton_mass = mass
+                dimuon_mass = mass
                 if is_mc:
                     gpx1_ = objs1.iloc[i].pt_gen * np.cos(objs1.iloc[i].phi_gen)
                     gpy1_ = objs1.iloc[i].pt_gen * np.sin(objs1.iloc[i].phi_gen)
@@ -60,7 +59,7 @@ def find_dimuon(objs, is_mc=False):
                         - (gpy1_ + gpy2_) ** 2
                         - (gpz1_ + gpz2_) ** 2
                     )
-                    dilepton_mass_gen = math.sqrt(max(0, gm2))
+                    dimuon_mass_gen = math.sqrt(max(0, gm2))
 
     if dmass == 20:
         obj1 = objs1.loc[objs1.pt.idxmax()]
@@ -80,7 +79,7 @@ def find_dimuon(objs, is_mc=False):
             - (pz1_ + pz2_) ** 2
         )
         mass = math.sqrt(max(0, m2))
-        dilepton_mass = mass
+        dimuon_mass = mass
 
         if is_mc:
             gpx1_ = obj1.pt_gen * np.cos(obj1.phi_gen)
@@ -97,8 +96,7 @@ def find_dimuon(objs, is_mc=False):
                 - (gpy1_ + gpy2_) ** 2
                 - (gpz1_ + gpz2_) ** 2
             )
-            dilepton_mass_gen = math.sqrt(max(0, gm2))
-
+            dimuon_mass_gen = math.sqrt(max(0, gm2))
 
         obj1_selected = obj1
         obj2_selected = obj2
@@ -108,18 +106,18 @@ def find_dimuon(objs, is_mc=False):
         log1 = obj1_selected.to_numpy()
         log2 = obj2_selected.to_numpy()
         if log1[0] == -1 or log2[0] == -1:
-            dilepton_mass_gen = -999.0
+            dimuon_mass_gen = -999.0
 
     if obj1_selected.pt > obj2_selected.pt:
         if is_mc:
-            return [idx1, idx2, dilepton_mass, dilepton_mass_gen]
+            return [idx1, idx2, dimuon_mass, dimuon_mass_gen]
         else:
-            return [idx1, idx2, dilepton_mass]
+            return [idx1, idx2, dimuon_mass]
     else:
         if is_mc:
-            return [idx2, idx1, dilepton_mass, dilepton_mass_gen]
+            return [idx2, idx1, dimuon_mass, dimuon_mass_gen]
         else:
-            return [idx2, idx1, dilepton_mass]
+            return [idx2, idx1, dimuon_mass]
 
 
 def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
@@ -155,30 +153,30 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
         "mu2_ip3d",
         "mu2_sip3d",
     ]
-    dilepton_variable_names = [
-        "dilepton_mass",
-#        "dilepton_mass_gen",
-        "dilepton_mass_res",
-        "dilepton_mass_res_rel",
-        "dilepton_ebe_mass_res",
-        "dilepton_ebe_mass_res_rel",
-        "dilepton_pt",
-        "dilepton_pt_log",
-        "dilepton_eta",
-        "dilepton_phi",
-        # "dilepton_pt_gen",
-        # "dilepton_eta_gen",
-        # "dilepton_phi_gen",
-        "dilepton_dEta",
-        "dilepton_dPhi",
-        "dilepton_dR",
-        "dilepton_rap",
+    dimuon_variable_names = [
+        "dimuon_mass",
+        # "dimuon_mass_gen",
+        "dimuon_mass_res",
+        "dimuon_mass_res_rel",
+        "dimuon_ebe_mass_res",
+        "dimuon_ebe_mass_res_rel",
+        "dimuon_pt",
+        "dimuon_pt_log",
+        "dimuon_eta",
+        "dimuon_phi",
+        # "dimuon_pt_gen",
+        # "dimuon_eta_gen",
+        # "dimuon_phi_gen",
+        "dimuon_dEta",
+        "dimuon_dPhi",
+        "dimuon_dR",
+        "dimuon_rap",
         "bbangle",
-        "dilepton_cos_theta_cs",
-        "dilepton_phi_cs",
+        "dimuon_cos_theta_cs",
+        "dimuon_phi_cs",
         "wgt_nominal",
     ]
-    v_names = mu1_variable_names + mu2_variable_names + dilepton_variable_names
+    v_names = mu1_variable_names + mu2_variable_names + dimuon_variable_names
 
     # Initialize columns for muon variables
 
@@ -218,7 +216,7 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
         "mass",
         "rap",
     ]:
-        name = f"dilepton_{v}"
+        name = f"dimuon_{v}"
         try:
             output[name] = mm[v]
             output[name] = output[name].fillna(-999.0)
@@ -227,96 +225,96 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
 
     # create numpy arrays for reco and gen mass needed for mass variations
     recoMassBB = output.loc[
-        ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))), "dilepton_mass"
+        ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))), "dimuon_mass"
     ].to_numpy()
     recoMassBE = output.loc[
-        ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))), "dilepton_mass"
+        ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))), "dimuon_mass"
     ].to_numpy()
     genMassBB = output.loc[
-        ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))), "dilepton_mass_gen"
+        ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))), "dimuon_mass_gen"
     ].to_numpy()
     genMassBE = output.loc[
-        ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))), "dilepton_mass_gen"
+        ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))), "dimuon_mass_gen"
     ].to_numpy()
 
     # apply additional mass smearing for MC events in the BE category
     if is_mc:
         output.loc[
-            ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))), "dilepton_mass"
+            ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))), "dimuon_mass"
         ] = (
             output.loc[
                 ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-                "dilepton_mass",
+                "dimuon_mass",
             ]
             * smearMass(genMassBE, year, bb=False, forUnc=False)
         ).values
 
     # calculate mass values smeared by mass resolution uncertainty
-    output["dilepton_mass_resUnc"] = output.dilepton_mass.values
+    output["dimuon_mass_resUnc"] = output.dimuon_mass.values
     if is_mc:
 
         output.loc[
             ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))),
-            "dilepton_mass_resUnc",
+            "dimuon_mass_resUnc",
         ] = (
             output.loc[
                 ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))),
-                "dilepton_mass_resUnc",
+                "dimuon_mass_resUnc",
             ]
             * smearMass(genMassBB, year, bb=True)
         ).values
         output.loc[
             ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-            "dilepton_mass_resUnc",
+            "dimuon_mass_resUnc",
         ] = (
             output.loc[
                 ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-                "dilepton_mass_resUnc",
+                "dimuon_mass_resUnc",
             ]
             * smearMass(genMassBE, year, bb=False)
         ).values
 
     # calculate mass values shifted by mass scale uncertainty
-    output["dilepton_mass_scaleUncUp"] = output.dilepton_mass.values
-    output["dilepton_mass_scaleUncDown"] = output.dilepton_mass.values
+    output["dimuon_mass_scaleUncUp"] = output.dimuon_mass.values
+    output["dimuon_mass_scaleUncDown"] = output.dimuon_mass.values
     if is_mc:
         output.loc[
             ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))),
-            "dilepton_mass_scaleUncUp",
+            "dimuon_mass_scaleUncUp",
         ] = (
             output.loc[
                 ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))),
-                "dilepton_mass_scaleUncUp",
+                "dimuon_mass_scaleUncUp",
             ]
             * muonScaleUncert(recoMassBB, True, year)
         ).values
         output.loc[
             ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-            "dilepton_mass_scaleUncUp",
+            "dimuon_mass_scaleUncUp",
         ] = (
             output.loc[
                 ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-                "dilepton_mass_scaleUncUp",
+                "dimuon_mass_scaleUncUp",
             ]
             * muonScaleUncert(recoMassBE, False, year)
         ).values
         output.loc[
             ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))),
-            "dilepton_mass_scaleUncDown",
+            "dimuon_mass_scaleUncDown",
         ] = (
             output.loc[
                 ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))),
-                "dilepton_mass_scaleUncDown",
+                "dimuon_mass_scaleUncDown",
             ]
             * muonScaleUncert(recoMassBB, True, year, up=False)
         ).values
         output.loc[
             ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-            "dilepton_mass_scaleUncDown",
+            "dimuon_mass_scaleUncDown",
         ] = (
             output.loc[
                 ((abs(output.mu1_eta > 1.2)) | (abs(output.mu2_eta > 1.2))),
-                "dilepton_mass_scaleUncDown",
+                "dimuon_mass_scaleUncDown",
             ]
             * muonScaleUncert(recoMassBE, False, year, up=False)
         ).values
@@ -326,7 +324,7 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
     eta2 = output["mu2_eta"].to_numpy()
     pT1 = output["mu1_pt"].to_numpy()
     pT2 = output["mu2_pt"].to_numpy()
-    mass = output["dilepton_mass"].to_numpy()
+    mass = output["dimuon_mass"].to_numpy()
     isDimuon = output["two_muons"].to_numpy()
 
     recowgts = {}
@@ -341,30 +339,30 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
     )
     weights.add_weight("recowgt", recowgts, how="all")
 
-    output["mu1_pt_over_mass"] = output.mu1_pt.values / output.dilepton_mass.values
-    output["mu2_pt_over_mass"] = output.mu2_pt.values / output.dilepton_mass.values
-    output["dilepton_pt_log"] = np.log(output.dilepton_pt[output.dilepton_pt > 0])
-    output.loc[output.dilepton_pt < 0, "dilepton_pt_log"] = -999.0
+    output["mu1_pt_over_mass"] = output.mu1_pt.values / output.dimuon_mass.values
+    output["mu2_pt_over_mass"] = output.mu2_pt.values / output.dimuon_mass.values
+    output["dimuon_pt_log"] = np.log(output.dimuon_pt[output.dimuon_pt > 0])
+    output.loc[output.dimuon_pt < 0, "dimuon_pt_log"] = -999.0
 
     mm_deta, mm_dphi, mm_dr = delta_r(mu1.eta, mu2.eta, mu1.phi, mu2.phi)
-    output["dilepton_pt"] = mm.pt
-    output["dilepton_eta"] = mm.eta
-    output["dilepton_phi"] = mm.phi
-    output["dilepton_dEta"] = mm_deta
-    output["dilepton_dPhi"] = mm_dphi
-    output["dilepton_dR"] = mm_dr
+    output["dimuon_pt"] = mm.pt
+    output["dimuon_eta"] = mm.eta
+    output["dimuon_phi"] = mm.phi
+    output["dimuon_dEta"] = mm_deta
+    output["dimuon_dPhi"] = mm_dphi
+    output["dimuon_dR"] = mm_dr
 
-    # output["dilepton_ebe_mass_res"] = mass_resolution(
+    # output["dimuon_ebe_mass_res"] = mass_resolution(
     #    is_mc, processor.evaluator, output, processor.year
     # )
-    # output["dilepton_ebe_mass_res_rel"] = output.dilepton_ebe_mass_res / output.dilepton_mass
-    output["dilepton_cos_theta_cs"], output["dilepton_phi_cs"] = cs_variables(mu1, mu2)
+    # output["dimuon_ebe_mass_res_rel"] = output.dimuon_ebe_mass_res / output.dimuon_mass
+    output["dimuon_cos_theta_cs"], output["dimuon_phi_cs"] = cs_variables(mu1, mu2)
 
 
 def mass_resolution(is_mc, evaluator, df, year):
     # Returns absolute mass resolution!
-    dpt1 = (df.mu1_ptErr * df.dilepton_mass) / (2 * df.mu1_pt)
-    dpt2 = (df.mu2_ptErr * df.dilepton_mass) / (2 * df.mu2_pt)
+    dpt1 = (df.mu1_ptErr * df.dimuon_mass) / (2 * df.mu1_pt)
+    dpt2 = (df.mu2_ptErr * df.dimuon_mass) / (2 * df.mu2_pt)
 
     if is_mc:
         label = f"res_calib_MC_{year}"

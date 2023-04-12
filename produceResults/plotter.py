@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 from hist.intervals import poisson_interval
-from python.workflow import parallelize
-from python.io import load_stage2_output_hists, mkdir
+from copperhead.python.workflow import parallelize
+from copperhead.python.io import load_stage2_output_hists, mkdir
 from config.variables import Variable
 
 from produceResults.io import load_stage2_output_hists_2D
@@ -212,6 +212,11 @@ def plot(args, parameters={}):
             #        colors = ["r"]
 
             total_yield += sum([p.sum() for p in plottables])
+            print("Dataset ",[labels  for p in plottables])
+            print("yield ", [round(p.sum(),2)  for p in plottables])
+
+
+
             if len(plottables) == 0:
                 continue
             yerr = np.sqrt(sum(plottables).values()) if entry.yerr else None
@@ -226,6 +231,8 @@ def plot(args, parameters={}):
                 histtype=entry.histtype,
                 **entry.plot_opts,
             )
+            print("Dataset ",[labels  for p in plottables])
+            print("yield ", [round(p.sum(),2)  for p in plottables])
 
             # MC errors
             if entry.entry_type == "stack":

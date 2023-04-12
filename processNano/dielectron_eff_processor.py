@@ -15,15 +15,20 @@ from processNano.timer import Timer
 from processNano.weights import Weights
 
 from copperhead.stage1.corrections.pu_reweight import pu_lookups, pu_evaluator
-from copperhead.stage1.corrections.lepton_sf import musf_lookup
-from copperhead.stage1.corrections.fsr_recovery import fsr_recovery
-from copperhead.stage1.corrections.jec import jec_factories
+#from copperhead.stage1.corrections.lepton_sf import musf_lookup
+#from copperhead.stage1.corrections.fsr_recovery import fsr_recovery
+
+
+from processNano.corrections.jec import jec_factories, apply_jec
+
+#from copperhead.stage1.corrections.jec import jec_factories
 from copperhead.stage1.corrections.l1prefiring_weights import l1pf_weights
-from processNano.jets import fill_jets
+from processNano.jets import fill_jets, fill_bjets, btagSF 
 import copy
 
 # from python.jets import jet_id, jet_puid, gen_jet_pair_mass
-from processNano.electrons import find_dielectron
+from processNano.electrons import fill_electrons
+from processNano.new_electrons import find_dielectron
 from processNano.utils import p4_sum
 
 from config.parameters import parameters, ele_branches, jet_branches
@@ -41,18 +46,28 @@ class DielectronEffProcessor(processor.ProcessorABC):
             print("Samples info missing!")
             return
 
-        self._accumulator = processor.defaultdict_accumulator(int)
+        #self._accumulator = processor.defaultdict_accumulator(int)
 
         self.do_pu = False
         self.auto_pu = False
-        self.year = self.samp_info.year
         self.do_roccor = False
         self.do_fsr = False
         self.do_geofit = False
         self.do_l1pw = False  # L1 prefiring weights
         self.do_jecunc = False
         self.do_jerunc = False
-        self.parameters = {k: v[self.year] for k, v in parameters.items()}
+
+
+        self.years = self.samp_info.years
+
+        if(self.years == '2016pre' or self.years == '2016post'):
+           self.year = '2016'
+        else:
+           self.year = self.years
+        self.parameters = {k: v.get(self.years, None) for k, v in parameters.items()}
+
+        print("processing year ",self.year)
+
 
         self.timer = Timer("global") if do_timer else None
 
@@ -80,9 +95,9 @@ class DielectronEffProcessor(processor.ProcessorABC):
         #        self.vars_to_save = set([v.name for v in variables])
         self.prepare_lookups()
 
-    @property
-    def accumulator(self):
-        return self._accumulator
+#    @property
+#    def accumulator(self):
+#        return self._accumulator
 
     @property
     def columns(self):
@@ -108,18 +123,28 @@ class DielectronEffProcessor(processor.ProcessorABC):
 
         # All variables that we want to save
         # will be collected into the 'output' dataframe
-        output = pd.DataFrame(
+#        output = pd.DataFrame(
+#            {"run": df.run, "event": df.event, "luminosityBlock": df.luminosityBlock}
+#       )
+
+        genPart = pd.DataFrame(
             {"run": df.run, "event": df.event, "luminosityBlock": df.luminosityBlock}
         )
-        output.index.name = "entry"
-        output["npv"] = df.PV.npvs
-        output["met"] = df.MET.pt
+
+
+        genPart.index.name = "entry"
+        #output.index.name = "entry"
+        genPart["npv"] = df.PV.npvs
+        #output["npv"] = df.PV.npvs
+        genPart["met"] = df.MET.pt
+        #output["met"] = df.MET.pt
         if not is_mc:
             print("cannot calculate acceptance and efficiency with data")
             return
         # Separate dataframe to keep track on weights
         # and their systematic variations
-        weights = Weights(output)
+        weights = Weights(genPart)
+#        weights = Weights(output)
 
         if is_mc:
             # For MC: Apply gen.weights, pileup weights, lumi weights,
@@ -147,7 +172,7 @@ class DielectronEffProcessor(processor.ProcessorABC):
 
         else:
             # For Data: apply Lumi mask
-            lumi_info = LumiMask(self.parameters["lumimask_Pre-UL_mu"])
+            lumi_info = LumiMask(self.parameters["lumimask_UL_el"])
             mask = lumi_info(df.run, df.luminosityBlock)
 
         # Apply HLT to both Data and MC
@@ -170,21 +195,13 @@ class DielectronEffProcessor(processor.ProcessorABC):
         df["Electron", "pt_gen"] = df.Electron.matched_gen.pt
         df["Electron", "eta_gen"] = df.Electron.matched_gen.eta
         df["Electron", "phi_gen"] = df.Electron.matched_gen.phi
+        #df["Electron", "idx"] = df.Electron.genPartIdx
         if True:  # indent reserved for loop over muon pT variations
             # According to HIG-19-006, these variations have negligible
             # effect on significance, but it's better to have them
             # implemented in the future
 
-            # FSR recovery
-            if self.do_fsr:
-                has_fsr = fsr_recovery(df)
-                df["Electron", "pt"] = df.Muon.pt_fsr
-                df["Electron", "eta"] = df.Muon.eta_fsr
-                df["Electron", "phi"] = df.Muon.phi_fsr
-                # df["Electron", "pfRelIso04_all"] = df.Muon.iso_fsr
 
-                if self.timer:
-                    self.timer.add_checkpoint("FSR recovery")
 
             # if FSR was applied, 'pt_fsr' will be corrected pt
             # if FSR wasn't applied, just copy 'pt' to 'pt_fsr'
@@ -205,15 +222,28 @@ class DielectronEffProcessor(processor.ProcessorABC):
             genPart = ak.to_pandas(df.GenPart[gen_branches])
             # print("genPart shape")
             # print(genPart.shape)
+            df["Jet", "pt_reco"] = df.Jet.pt
+            df["Jet", "eta_reco"] = df.Jet.eta
 
             jet_branches_local = copy.copy(jet_branches)
             jet_branches_local += [
                 "partonFlavour",
                 "hadronFlavour",
                 "genJetIdx",
+                "pt_reco",
+                "eta_reco",
             ]
             jets = ak.to_pandas(df.Jet[jet_branches_local])
-            genJets = ak.to_pandas(df.GenJet[["pt", "eta", "phi", "partonFlavour"]])
+            jets["flavor_reco"] = jets["hadronFlavour"]
+
+
+
+
+
+
+
+
+            genJets = ak.to_pandas(df.GenJet[["pt", "eta", "phi", "partonFlavour", "hadronFlavour"]])
             # print("gen jet head")
             # print(genJets.head())
             electrons = ak.to_pandas(df.Electron[ele_branches_local])
@@ -221,6 +251,10 @@ class DielectronEffProcessor(processor.ProcessorABC):
                 self.timer.add_checkpoint("load muon data")
             electrons = electrons.dropna()
             electrons = electrons.loc[:, ~electrons.columns.duplicated()]
+            #if is_mc:
+            #    electrons.loc[electrons.idx == -1, "pt_gen"] = -999.0
+            #    electrons.loc[electrons.idx == -1, "eta_gen"] = -999.0
+            #    electrons.loc[electrons.idx == -1, "phi_gen"] = -999.0
             # --------------------------------------------------------#
             # Select muons that pass pT, eta, isolation cuts,
             # muon ID and quality flags
@@ -232,24 +266,19 @@ class DielectronEffProcessor(processor.ProcessorABC):
             flags = ak.to_pandas(df.Flag)
             flags = flags[self.parameters["event_flags"]].product(axis=1)
             electrons["pass_flags"] = True
-            # if self.parameters["electron_flags"]:
-            #    electrons["pass_flags"] = electrons[self.parameters["electron_flags"]].product(
-            #        axis=1
-            #    )
+            if self.parameters["electron_flags"]:
+               electrons["pass_flags"] = electrons[self.parameters["electron_flags"]].product(
+                   axis=1
+               )
 
             # Define baseline muon selection (applied to pandas DF!)
             electrons["ID"] = (
-                electrons[self.parameters["electron_id"]]
-                > 0
-                # & (muons.dxy < self.parameters["muon_dxy"])
-                # & (
-                #    (muons.ptErr.values / muons.pt.values)
-                #    < self.parameters["muon_ptErr/pt"]
-                # )
+                (electrons[self.parameters["electron_id"]]
+                > 0)
             )
 
             # Find events with at least one good primary vertex
-            # good_pv = ak.to_pandas(df.PV).npvsGood > 0
+            good_pv = ak.to_pandas(df.PV).npvsGood > 0
 
             # Define baseline event selection
 
@@ -299,7 +328,7 @@ class DielectronEffProcessor(processor.ProcessorABC):
             if wgt != "nominal":
                 continue
             wgt_list = weights.get_weight(wgt)
-        wgt = pd.DataFrame(wgt_list, columns=["pu_wgt"])
+        wgt = pd.DataFrame(wgt_list, columns=["wgt_nominal"])
         wgt.index.names = ["entry"]
 
         jets.set_index("genJetIdx", append=True, inplace=True)
@@ -307,17 +336,17 @@ class DielectronEffProcessor(processor.ProcessorABC):
         jets.drop("subentry", axis=1, inplace=True)
         jets.index.names = ["entry", "subentry"]
         jets.loc[
-            jets.btagDeepFlavB > parameters["UL_btag_medium"][self.year], "btag"
+            jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years], "btag"
         ] = True
         jets.loc[jets.jetId >= 2, "Jet_ID"] = True
         jets["Jet_match"] = True
         genJets = genJets.merge(
-            jets[["Jet_match", "Jet_ID", "btag"]], on=["entry", "subentry"], how="left"
+            jets[["Jet_match", "Jet_ID", "btag", "pt_reco", "eta_reco", "flavor_reco"]], on=["entry", "subentry"], how="left"
         )
         genJets.fillna(False, inplace=True)
-        genJets = genJets[abs(genJets.partonFlavour) == 5]
+#        genJets = genJets[abs(genJets.partonFlavour) == 5]
         genJets.rename(
-            columns={"pt": "Jet_pt", "eta": "Jet_eta", "phi": "Jet_phi"}, inplace=True
+            columns={"pt": "Jet_pt", "eta": "Jet_eta", "phi": "Jet_phi", "pt_reco": "Jet_pt_reco", "eta_reco": "Jet_eta_reco",}, inplace=True
         )
         nJets = genJets.reset_index().groupby("entry")["subentry"].nunique()
         jets = nJets.to_numpy()
@@ -332,25 +361,25 @@ class DielectronEffProcessor(processor.ProcessorABC):
         # print("2 jet events")
         # print(len(jets[jets>=2]))
         nJets_acc = (
-            genJets[(abs(genJets.Jet_eta) < 2.4) & (genJets.Jet_pt > 30)]
+            genJets[(abs(genJets.Jet_eta) < 2.4) & (genJets.Jet_pt > 20)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
         )
         nJets_pt = (
-            genJets[genJets.Jet_pt > 30]
+            genJets[genJets.Jet_pt > 20]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
         )
         nJets_match = (
-            genJets[(genJets.Jet_match) & (genJets.Jet_pt > 30)]
+            genJets[(genJets.Jet_match) & (genJets.Jet_pt > 20)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
         )
         nJets_ID = (
-            genJets[(genJets.Jet_ID) & (genJets.Jet_match) & (genJets.Jet_pt > 30)]
+            genJets[(genJets.Jet_ID) & (genJets.Jet_match) & (genJets.Jet_pt > 20)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
@@ -360,7 +389,7 @@ class DielectronEffProcessor(processor.ProcessorABC):
                 (genJets.btag)
                 & (genJets.Jet_ID)
                 & (genJets.Jet_match)
-                & (genJets.Jet_pt > 30)
+                & (genJets.Jet_pt > 20)
             ]
             .reset_index()
             .groupby("entry")["subentry"]
@@ -380,43 +409,69 @@ class DielectronEffProcessor(processor.ProcessorABC):
         electrons["match"] = True
         hlt = hlt.to_frame("hlt")
 
-        # good_pv = good_pv.to_frame("gpv")
+        good_pv = good_pv.to_frame("gpv")
+        
         genPart = genPart.merge(
             electrons[["match", "pt_raw", "ID"]], on=["entry", "subentry"], how="left"
         )
         genPart.pt_raw.fillna(-999.0, inplace=True)
         genPart.fillna(False, inplace=True)
+
         genPart = genPart[
-            (genPart.status == 1)
-            & (abs(genPart.pdgId) == 11)
-            & (genPart.statusFlags == 8449)
+            ((genPart.status == 1) | (genPart.status == 44)) & 
+            (abs(genPart.pdgId) == 11)
+            #& (genPart.statusFlags == 8449)
         ]
+
         genPart.loc[genPart["pdgId"] == -11, "charge"] = -1
         genPart.loc[genPart["pdgId"] == 11, "charge"] = 1
         sum_sign = genPart.loc[:, "charge"].groupby("entry").sum()
         nGen = genPart.reset_index().groupby("entry")["subentry"].nunique()
-        # print(nGen.head())
+
         genPart = genPart[
-            (genPart["status"] == 1) & (nGen >= 2) & (abs(sum_sign) < nGen)
+            ((genPart["status"] == 1) | (genPart["status"] == 44)) & (nGen >= 2) & (abs(sum_sign) < nGen)
         ]
+
+#        print(genPart[["status", "ID"]])
+        #print(genPart[["ID", "status", "statusFlags"]])
+        #print(electrons[["ID"]])
         # print("check if 2 particles in genpart")
-        # print(genPart.head())
+        #print(electrons.ID)
         result = genPart.groupby("entry").apply(find_dielectron, is_mc=False)
+
         dielectron = pd.DataFrame(
-            result.to_list(), columns=["idx1", "idx2", "dielectron_mass"]
-        )
+             result.to_list(), columns=["idx1", "idx2", "dielectron_mass"]
+         )
+#        dielectron = dielectron.reset_index()
+#        dielectron = dielectron.set_index(result.index)
+#        dielectron.index.name = "entry"
+
+
+        #dielectron.set_index(["idx1", "idx2"], inplace=True)
+        #dielectron = dielectron.reset_index()
+        #dielectron = dielectron.set_index(["idx1", "idx2"])
+        #dielectron = dielectron.reindex(genPart.index)
+        #dielectron.index.name = "entry"
+        #print(dielectron)
+        #dielectron_mass = dielectron.dielectron_mass
+       
+#        genPart = genPart.merge(dielectron[["dielectron_mass"]], left_index=True, right_index=True, how="left")
+#        dielectron_mass = genPart["dielectron_mass"]
+
         e1 = genPart.loc[dielectron.idx1.values, :]
         e2 = genPart.loc[dielectron.idx2.values, :]
         e1.index = e1.index.droplevel("subentry")
         e2.index = e2.index.droplevel("subentry")
-        mm = p4_sum(e1, e2, is_mc=False)
-        mm.rename(columns={"mass": "dielectron_mass"}, inplace=True)
+        ee = p4_sum(e1, e2, is_mc=False)
+        ee.rename(columns={"mass": "dielectron_mass"}, inplace=True)
+        #ee.dropna()
+        #ee_indexed = ee.reset_index()[["entry", "dielectron_mass"]]
         pt_pass = (
             genPart[genPart["pt"] > 35]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
-            >= 2
+            == 2
         )
         pt_pass = pt_pass.to_frame("pt_pass")
         acc = (
@@ -427,26 +482,45 @@ class DielectronEffProcessor(processor.ProcessorABC):
             >= 2
         )
         acc = acc.to_frame("accepted")
-        reco = (
-            genPart[genPart["match"]]
+
+        acc_bb = (
+            genPart[(abs(genPart["eta"]) < 1.442) & (genPart["pt"] > 35)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
             >= 2
         )
+        acc_bb = acc_bb.to_frame("bb_accepted")
+
+        acc_be = (
+            genPart[(abs(genPart["eta"]) > 1.566) & (genPart["pt"] > 35)]
+            .reset_index()
+            .groupby("entry")["subentry"]
+            .nunique()
+            ==1
+        )
+        acc_be = acc_be.to_frame("be_accepted")
+        reco = (
+            genPart[genPart["match"]]
+            .reset_index()
+            .groupby("entry")["subentry"]
+            .nunique()
+            == 2
+        )
         reco = reco.to_frame("reco")
         ID = (
             genPart[genPart["ID"]].reset_index().groupby("entry")["subentry"].nunique()
-            >= 2
+            >=2
         )
         ID = ID.to_frame("ID_pass")
 
-        genPart.drop(columns=["statusFlags", "status", "pdgId"], inplace=True)
+        genPart.drop(columns=["pdgId"], inplace=True)
+        #genPart.drop(columns=["statusFlags", "status", "pdgId"], inplace=True)
         genPart = pd.concat(
             [
                 genPart,
                 genJets[
-                    ["Jet_match", "Jet_ID", "btag", "Jet_pt", "Jet_eta", "Jet_phi"]
+                    ["Jet_match", "Jet_ID", "btag", "Jet_pt", "Jet_eta", "Jet_phi", "partonFlavour", "hadronFlavour", "flavor_reco", "Jet_pt_reco", "Jet_eta_reco",]
                 ],
             ],
             levels=0,
@@ -495,11 +569,20 @@ class DielectronEffProcessor(processor.ProcessorABC):
             .set_index("subentry", append=True)
         )
         genPart.fillna(0, inplace=True)
+#        print(genPart.columns)
+#        genPart = (
+#            genPart.reset_index("subentry")
+#            .merge(dielectron["dielectron_mass"] , on=["entry"], how="left")
+#            .set_index("subentry", append=True)
+#        )
+
         genPart = (
             genPart.reset_index("subentry")
-            .merge(mm["dielectron_mass"], on=["entry"], how="left")
+            .merge(ee["dielectron_mass"] , on=["entry"], how="left")
             .set_index("subentry", append=True)
         )
+
+        #print(genPart.dielectron_mass.loc[45683])
         genPart.fillna(-999.0, inplace=True)
         genPart = (
             genPart.reset_index("subentry")
@@ -513,6 +596,17 @@ class DielectronEffProcessor(processor.ProcessorABC):
         )
         genPart = (
             genPart.reset_index("subentry")
+            .merge(acc_bb["bb_accepted"], on=["entry"], how="left")
+            .set_index("subentry", append=True)
+        )
+        genPart = (
+            genPart.reset_index("subentry")
+            .merge(acc_be["be_accepted"], on=["entry"], how="left")
+            .set_index("subentry", append=True)
+        )
+
+        genPart = (
+            genPart.reset_index("subentry")
             .merge(reco["reco"], on=["entry"], how="left")
             .set_index("subentry", append=True)
         )
@@ -521,11 +615,11 @@ class DielectronEffProcessor(processor.ProcessorABC):
             .merge(ID["ID_pass"], on=["entry"], how="left")
             .set_index("subentry", append=True)
         )
-        # genPart = (
-        #    genPart.reset_index("subentry")
-        #    .merge(good_pv["gpv"], on=["entry"], how="left")
-        #    .set_index("subentry", append=True)
-        # )
+        genPart = (
+            genPart.reset_index("subentry")
+            .merge(good_pv["gpv"], on=["entry"], how="left")
+            .set_index("subentry", append=True)
+         )
         genPart.fillna(False, inplace=True)
         genPart = (
             genPart.reset_index("subentry")
@@ -534,12 +628,16 @@ class DielectronEffProcessor(processor.ProcessorABC):
         )
         genPart = (
             genPart.reset_index("subentry")
-            .merge(wgt["pu_wgt"], on=["entry"], how="left")
+            .merge(wgt["wgt_nominal"], on=["entry"], how="left")
             .set_index("subentry", append=True)
         )
         genPart.fillna(0, inplace=True)
 
         genPart["dataset"] = dataset
+        genPart["flavor_reco"] = genPart["flavor_reco"].astype(int)
+        genPart["Jet_pt_reco"] = genPart["Jet_pt_reco"].astype(float)
+        genPart["Jet_eta_reco"] = genPart["Jet_eta_reco"].astype(float)
+
         if self.apply_to_output is None:
             return genPart
         else:
@@ -560,13 +658,15 @@ class DielectronEffProcessor(processor.ProcessorABC):
         jet_branches,
         weights,
         numevents,
-        output,
+        #output,
+        genPart,
     ):
 
         if not is_mc and variation != "nominal":
             return
 
-        variables = pd.DataFrame(index=output.index)
+        variables = pd.DataFrame(index=genPart.index)
+#        variables = pd.DataFrame(index=output.index)
         jet_branches_local = copy.copy(jet_branches)
         if is_mc:
             jet_branches_local += [
@@ -688,9 +788,9 @@ class DielectronEffProcessor(processor.ProcessorABC):
         jets["selection"] = 0
         jets.loc[
             (
-                (jets.pt > 30.0)
+                (jets.pt > 20.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepB > parameters["UL_btag_medium"][self.year])
+                & (jets.btagDeepB > parameters["UL_btag_medium"][self.years])
                 & (jets.jetId >= 2)
             ),
             "selection",
@@ -701,7 +801,24 @@ class DielectronEffProcessor(processor.ProcessorABC):
         jet1 = jets.groupby("entry").nth(0)
         jet2 = jets.groupby("entry").nth(1)
         Jets = [jet1, jet2]
-        fill_jets(output, variables, Jets, is_mc=is_mc)
+        fill_jets(genPart, variables, Jets, is_mc=is_mc)
+
+        bjets = jets.query("bselection==1")
+        bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
+        bjet1 = bjets.groupby("entry").nth(0)
+#Aman edits
+        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
+
+        bjet2 = bjets.groupby("entry").nth(1)
+        bJets = [bjet1, bjet2]
+        bmuons = [mu1, mu2]
+        fill_bjets(genPart, variables, bJets, bmuons, is_mc=is_mc)
+        #fill_bjets(output, variables, bJets, bmuons, is_mc=is_mc)
+
+
+
+
+#        fill_jets(output, variables, Jets, is_mc=is_mc)
         if self.timer:
             self.timer.add_checkpoint("Filled jet variables")
         """
@@ -820,14 +937,16 @@ class DielectronEffProcessor(processor.ProcessorABC):
         # a jet may or may not be selected depending on pT variation.
 
         for key, val in variables.items():
-            output.loc[:, key] = val
+            genPart.loc[:, key] = val
+            #output.loc[:, key] = val
 
         del df
         del electrons
         del jets
         del e1
         del e2
-        return output
+        return genPart
+#        return output
 
     def prepare_lookups(self):
         # Rochester correction
@@ -835,35 +954,39 @@ class DielectronEffProcessor(processor.ProcessorABC):
         #    self.parameters["roccor_file"], loaduncs=True
         # )
         # self.roccor_lookup = rochester_lookup.rochester_lookup(rochester_data)
-        self.jec_factories, self.jec_factories_data = jec_factories(self.year)
+        self.jec_factories, self.jec_factories_data = jec_factories(self.years)
         # Muon scale factors
-        self.musf_lookup = musf_lookup(self.parameters)
+        #self.musf_lookup = musf_lookup(self.parameters)
         # Pile-up reweighting
         self.pu_lookups = pu_lookups(self.parameters)
 
         # --- Evaluator
-        self.extractor = extractor()
+        #self.extractor = extractor()
 
         # Z-pT reweigting (disabled)
-        zpt_filename = self.parameters["zpt_weights_file"]
-        self.extractor.add_weight_sets([f"* * {zpt_filename}"])
-        if "2016" in self.year:
-            self.zpt_path = "zpt_weights/2016_value"
-        else:
-            self.zpt_path = "zpt_weights/2017_value"
-
-        # Calibration of event-by-event mass resolution
-        for mode in ["Data", "MC"]:
-            label = f"res_calib_{mode}_{self.year}"
-            path = self.parameters["res_calib_path"]
-            file_path = f"{path}/{label}.root"
-            self.extractor.add_weight_sets([f"{label} {label} {file_path}"])
-
-        self.extractor.finalize()
-        self.evaluator = self.extractor.make_evaluator()
-
-        self.evaluator[self.zpt_path]._axes = self.evaluator[self.zpt_path]._axes[0]
+#        zpt_filename = self.parameters["zpt_weights_file"]
+#        self.extractor.add_weight_sets([f"* * {zpt_filename}"])
+#        if "2016" in self.year:
+#            self.zpt_path = "zpt_weights/2016_value"
+#        else:
+#            self.zpt_path = "zpt_weights/2017_value"
+#
+#        # Calibration of event-by-event mass resolution
+#        for mode in ["Data", "MC"]:
+#            label = f"res_calib_{mode}_{self.year}"
+#            path = self.parameters["res_calib_path"]
+#            file_path = f"{path}/{label}.root"
+#            self.extractor.add_weight_sets([f"{label} {label} {file_path}"])
+#
+#        self.extractor.finalize()
+#        self.evaluator = self.extractor.make_evaluator()
+#
+#        self.evaluator[self.zpt_path]._axes = self.evaluator[self.zpt_path]._axes[0]
         return
+
+    @property
+    def accumulator(self):
+        return processor.defaultdict_accumulator(int)
 
     def postprocess(self, accumulator):
         return accumulator
