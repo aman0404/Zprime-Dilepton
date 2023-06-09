@@ -1,4 +1,4 @@
-import sys
+mport sys
 
 sys.path.append("copperhead/")
 
@@ -15,21 +15,16 @@ from processNano.timer import Timer
 from processNano.weights import Weights
 
 from copperhead.stage1.corrections.pu_reweight import pu_lookups, pu_evaluator
-#from copperhead.stage1.corrections.lepton_sf import musf_lookup
-#from copperhead.stage1.corrections.fsr_recovery import fsr_recovery
-
-from processNano.corrections.jec import jec_factories, apply_jec
-#from copperhead.stage1.corrections.jec import jec_factories
+from copperhead.stage1.corrections.lepton_sf import musf_lookup
+from copperhead.stage1.corrections.fsr_recovery import fsr_recovery
+from copperhead.stage1.corrections.jec import jec_factories
 from copperhead.stage1.corrections.l1prefiring_weights import l1pf_weights
-from processNano.jets import fill_jets, fill_bjets, btagSF
+from processNano.jets import fill_jets
 import copy
 
 # from python.jets import jet_id, jet_puid, gen_jet_pair_mass
 from processNano.muons import find_dimuon
 from processNano.utils import p4_sum
-from processNano.utils import bbangle
-from processNano.utils import angle
-from processNano.utils import overlap_removal
 
 from config.parameters import parameters, muon_branches, jet_branches
 
@@ -46,30 +41,18 @@ class DimuonEffProcessor(processor.ProcessorABC):
             print("Samples info missing!")
             return
 
-        #self._accumulator = processor.defaultdict_accumulator(int)
+        self._accumulator = processor.defaultdict_accumulator(int)
 
         self.do_pu = False
         self.auto_pu = False
+        self.year = self.samp_info.year
         self.do_roccor = False
         self.do_fsr = False
         self.do_geofit = False
         self.do_l1pw = False  # L1 prefiring weights
         self.do_jecunc = False
         self.do_jerunc = False
-
-
-        self.years = self.samp_info.years
-
-        if(self.years == '2016pre' or self.years == '2016post'):
-           self.year = '2016'
-        else:
-           self.year = self.years
-        self.parameters = {k: v.get(self.years, None) for k, v in parameters.items()}
-
-        print("processing year ",self.year)
-
-
-        #self.parameters = {k: v[self.year] for k, v in parameters.items()}
+        self.parameters = {k: v[self.year] for k, v in parameters.items()}
 
         self.timer = Timer("global") if do_timer else None
 
@@ -97,9 +80,9 @@ class DimuonEffProcessor(processor.ProcessorABC):
         #        self.vars_to_save = set([v.name for v in variables])
         self.prepare_lookups()
 
-#    @property
-#    def accumulator(self):
-#        return self._accumulator
+    @property
+    def accumulator(self):
+        return self._accumulator
 
     @property
     def columns(self):
@@ -125,24 +108,18 @@ class DimuonEffProcessor(processor.ProcessorABC):
 
         # All variables that we want to save
         # will be collected into the 'output' dataframe
-#        output = pd.DataFrame(
-#            {"run": df.run, "event": df.event, "luminosityBlock": df.luminosityBlock}
-        genPart = pd.DataFrame(
+        output = pd.DataFrame(
             {"run": df.run, "event": df.event, "luminosityBlock": df.luminosityBlock}
         )
-        genPart.index.name = "entry"
-        #output.index.name = "entry"
-        genPart["npv"] = df.PV.npvs
-        #output["npv"] = df.PV.npvs
-        genPart["met"] = df.MET.pt
-        #output["met"] = df.MET.pt
+        output.index.name = "entry"
+        output["npv"] = df.PV.npvs
+        output["met"] = df.MET.pt
         if not is_mc:
             print("cannot calculate acceptance and efficiency with data")
             return
         # Separate dataframe to keep track on weights
         # and their systematic variations
-        weights = Weights(genPart)
-        #weights = Weights(output)
+        weights = Weights(output)
 
         if is_mc:
             # For MC: Apply gen.weights, pileup weights, lumi weights,
@@ -170,7 +147,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
 
         else:
             # For Data: apply Lumi mask
-            lumi_info = LumiMask(self.parameters["lumimask_UL_mu"])
+            lumi_info = LumiMask(self.parameters["lumimask_Pre-UL_mu"])
             mask = lumi_info(df.run, df.luminosityBlock)
 
         # Apply HLT to both Data and MC
@@ -199,19 +176,19 @@ class DimuonEffProcessor(processor.ProcessorABC):
             # implemented in the future
 
             # FSR recovery
-#            if self.do_fsr:
-#                has_fsr = fsr_recovery(df)
-#                df["Muon", "pt"] = df.Muon.pt_fsr
-#                df["Muon", "eta"] = df.Muon.eta_fsr
-#                df["Muon", "phi"] = df.Muon.phi_fsr
-#                df["Muon", "pfRelIso04_all"] = df.Muon.iso_fsr
-#
-#                if self.timer:
-#                    self.timer.add_checkpoint("FSR recovery")
-#
-#            # if FSR was applied, 'pt_fsr' will be corrected pt
-#            # if FSR wasn't applied, just copy 'pt' to 'pt_fsr'
-#            df["Muon", "pt_fsr"] = df.Muon.pt
+            if self.do_fsr:
+                has_fsr = fsr_recovery(df)
+                df["Muon", "pt"] = df.Muon.pt_fsr
+                df["Muon", "eta"] = df.Muon.eta_fsr
+                df["Muon", "phi"] = df.Muon.phi_fsr
+                df["Muon", "pfRelIso04_all"] = df.Muon.iso_fsr
+
+                if self.timer:
+                    self.timer.add_checkpoint("FSR recovery")
+
+            # if FSR was applied, 'pt_fsr' will be corrected pt
+            # if FSR wasn't applied, just copy 'pt' to 'pt_fsr'
+            df["Muon", "pt_fsr"] = df.Muon.pt
 
             # --- conversion from awkward to pandas --- #
             muon_branches_local = copy.copy(muon_branches)
@@ -276,8 +253,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
             muons["ID"] = (
                 (muons.tkRelIso < self.parameters["muon_iso_cut"])
                 & (muons[self.parameters["muon_id"]] > 0)
-                & (abs(muons.dxy) < self.parameters["muon_dxy"])
-                & (abs(muons.dz) < self.parameters["muon_dz"])
+                & (muons.dxy < self.parameters["muon_dxy"])
                 & (
                     (muons.ptErr.values / muons.pt.values)
                     < self.parameters["muon_ptErr/pt"]
@@ -343,7 +319,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
         jets.drop("subentry", axis=1, inplace=True)
         jets.index.names = ["entry", "subentry"]
         jets.loc[
-            jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years], "btag"
+            jets.btagDeepFlavB > parameters["UL_btag_medium"][self.year], "btag"
         ] = True
         jets.loc[jets.jetId >= 2, "Jet_ID"] = True
         jets["Jet_match"] = True
@@ -377,25 +353,25 @@ class DimuonEffProcessor(processor.ProcessorABC):
         # print("2 jet events")
         # print(len(jets[jets>=2]))
         nJets_acc = (
-            genJets[(abs(genJets.Jet_eta) < 2.4) & (genJets.Jet_pt > 20)]
+            genJets[(abs(genJets.Jet_eta) < 2.4) & (genJets.Jet_pt > 30)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
         )
         nJets_pt = (
-            genJets[genJets.Jet_pt > 20]
+            genJets[genJets.Jet_pt > 30]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
         )
         nJets_match = (
-            genJets[(genJets.Jet_match) & (genJets.Jet_pt > 20)]
+            genJets[(genJets.Jet_match) & (genJets.Jet_pt > 30)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
         )
         nJets_ID = (
-            genJets[(genJets.Jet_ID) & (genJets.Jet_match) & (genJets.Jet_pt > 20)]
+            genJets[(genJets.Jet_ID) & (genJets.Jet_match) & (genJets.Jet_pt > 30)]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
@@ -405,7 +381,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
                 (genJets.btag)
                 & (genJets.Jet_ID)
                 & (genJets.Jet_match)
-                & (genJets.Jet_pt > 20)
+                & (genJets.Jet_pt > 30)
             ]
             .reset_index()
             .groupby("entry")["subentry"]
@@ -426,7 +402,6 @@ class DimuonEffProcessor(processor.ProcessorABC):
         hlt = hlt.to_frame("hlt")
 
         good_pv = good_pv.to_frame("gpv")
-
         genPart = genPart.merge(
             muons[["match", "pt_raw", "ID"]], on=["entry", "subentry"], how="left"
         )
@@ -447,17 +422,12 @@ class DimuonEffProcessor(processor.ProcessorABC):
         ]
         # print("check if 2 particles in genpart")
         # print(genPart.head())
-
-        print(muons["ID"])
-        print(genPart["ID"])
         result = genPart.groupby("entry").apply(find_dimuon, is_mc=False)
         dimuon = pd.DataFrame(result.to_list(), columns=["idx1", "idx2", "dimuon_mass"])
         mu1 = genPart.loc[dimuon.idx1.values, :]
         mu2 = genPart.loc[dimuon.idx2.values, :]
         mu1.index = mu1.index.droplevel("subentry")
         mu2.index = mu2.index.droplevel("subentry")
-
-        print(mu1, mu2)
         mm = p4_sum(mu1, mu2, is_mc=False)
         mm.rename(columns={"mass": "dimuon_mass"}, inplace=True)
         pt_pass = (
@@ -465,7 +435,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
-            == 2
+            >= 2
         )
         pt_pass = pt_pass.to_frame("pt_pass")
         acc = (
@@ -473,39 +443,20 @@ class DimuonEffProcessor(processor.ProcessorABC):
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
-            == 2
+            >= 2
         )
         acc = acc.to_frame("accepted")
-
-        acc_bb = (
-            genPart[(abs(genPart["eta"]) < 1.2) & (genPart["pt"] > 53)]
-            .reset_index()
-            .groupby("entry")["subentry"]
-            .nunique()
-            == 2
-        )
-        acc_bb = acc_bb.to_frame("bb_accepted")
-
-        acc_be = (
-            genPart[(abs(genPart["eta"]) > 1.2) & (genPart["pt"] > 53)]
-            .reset_index()
-            .groupby("entry")["subentry"]
-            .nunique()
-            >=1
-        )
-        acc_be = acc_be.to_frame("be_accepted")
-
         reco = (
             genPart[genPart["match"]]
             .reset_index()
             .groupby("entry")["subentry"]
             .nunique()
-            == 2
+            >= 2
         )
         reco = reco.to_frame("reco")
         ID = (
             genPart[genPart["ID"]].reset_index().groupby("entry")["subentry"].nunique()
-            == 2
+            >= 2
         )
         ID = ID.to_frame("ID_pass")
 
@@ -593,18 +544,6 @@ class DimuonEffProcessor(processor.ProcessorABC):
         )
         genPart = (
             genPart.reset_index("subentry")
-            .merge(acc_bb["bb_accepted"], on=["entry"], how="left")
-            .set_index("subentry", append=True)
-        )
-        genPart = (
-            genPart.reset_index("subentry")
-            .merge(acc_be["be_accepted"], on=["entry"], how="left")
-            .set_index("subentry", append=True)
-        )
-
-
-        genPart = (
-            genPart.reset_index("subentry")
             .merge(reco["reco"], on=["entry"], how="left")
             .set_index("subentry", append=True)
         )
@@ -656,15 +595,13 @@ class DimuonEffProcessor(processor.ProcessorABC):
         jet_branches,
         weights,
         numevents,
-        genPart,
-        #output,
+        output,
     ):
 
         if not is_mc and variation != "nominal":
             return
 
-        variables = pd.DataFrame(index=genPart.index)
-        #variables = pd.DataFrame(index=output.index)
+        variables = pd.DataFrame(index=output.index)
         jet_branches_local = copy.copy(jet_branches)
         if is_mc:
             jet_branches_local += [
@@ -786,9 +723,9 @@ class DimuonEffProcessor(processor.ProcessorABC):
         jets["selection"] = 0
         jets.loc[
             (
-                (jets.pt > 20.0)
+                (jets.pt > 30.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepB > parameters["UL_btag_medium"][self.years])
+                & (jets.btagDeepB > parameters["UL_btag_medium"][self.year])
                 & (jets.jetId >= 2)
             ),
             "selection",
@@ -799,24 +736,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
         jet1 = jets.groupby("entry").nth(0)
         jet2 = jets.groupby("entry").nth(1)
         Jets = [jet1, jet2]
-        fill_jets(genPart, variables, Jets, is_mc=is_mc)
-        #fill_jets(output, variables, Jets, is_mc=is_mc)
-
-        bjets = jets.query("bselection==1")
-        bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
-        bjet1 = bjets.groupby("entry").nth(0)
-#Aman edits
-        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
-
-        bjet2 = bjets.groupby("entry").nth(1)
-        bJets = [bjet1, bjet2]
-        bmuons = [mu1, mu2]
-        fill_bjets(genPart, variables, bJets, bmuons, is_mc=is_mc)
-        #fill_bjets(output, variables, bJets, bmuons, is_mc=is_mc)
-
-
-
-
+        fill_jets(output, variables, Jets, is_mc=is_mc)
         if self.timer:
             self.timer.add_checkpoint("Filled jet variables")
         """
@@ -935,16 +855,14 @@ class DimuonEffProcessor(processor.ProcessorABC):
         # a jet may or may not be selected depending on pT variation.
 
         for key, val in variables.items():
-            genPart.loc[:, key] = val
-            #output.loc[:, key] = val
+            output.loc[:, key] = val
 
         del df
         del muons
         del jets
         del mu1
         del mu2
-        return genPart
-        #return output
+        return output
 
     def prepare_lookups(self):
         # Rochester correction
@@ -952,40 +870,36 @@ class DimuonEffProcessor(processor.ProcessorABC):
         #    self.parameters["roccor_file"], loaduncs=True
         # )
         # self.roccor_lookup = rochester_lookup.rochester_lookup(rochester_data)
-        self.jec_factories, self.jec_factories_data = jec_factories(self.years)
+        self.jec_factories, self.jec_factories_data = jec_factories(self.year)
         # Muon scale factors
-#        self.musf_lookup = musf_lookup(self.parameters)
+        self.musf_lookup = musf_lookup(self.parameters)
         # Pile-up reweighting
         self.pu_lookups = pu_lookups(self.parameters)
 
         # --- Evaluator
- #       self.extractor = extractor()
+        self.extractor = extractor()
 
         # Z-pT reweigting (disabled)
- #       zpt_filename = self.parameters["zpt_weights_file"]
- #       self.extractor.add_weight_sets([f"* * {zpt_filename}"])
- #       if "2016" in self.year:
- #           self.zpt_path = "zpt_weights/2016_value"
- #       else:
- #           self.zpt_path = "zpt_weights/2017_value"
+        zpt_filename = self.parameters["zpt_weights_file"]
+        self.extractor.add_weight_sets([f"* * {zpt_filename}"])
+        if "2016" in self.year:
+            self.zpt_path = "zpt_weights/2016_value"
+        else:
+            self.zpt_path = "zpt_weights/2017_value"
 
         # Calibration of event-by-event mass resolution
- #       for mode in ["Data", "MC"]:
- #           label = f"res_calib_{mode}_{self.year}"
- #           path = self.parameters["res_calib_path"]
- #           file_path = f"{path}/{label}.root"
- #           self.extractor.add_weight_sets([f"{label} {label} {file_path}"])
+        for mode in ["Data", "MC"]:
+            label = f"res_calib_{mode}_{self.year}"
+            path = self.parameters["res_calib_path"]
+            file_path = f"{path}/{label}.root"
+            self.extractor.add_weight_sets([f"{label} {label} {file_path}"])
 
-#        self.extractor.finalize()
-#        self.evaluator = self.extractor.make_evaluator()
+        self.extractor.finalize()
+        self.evaluator = self.extractor.make_evaluator()
 
-#        self.evaluator[self.zpt_path]._axes = self.evaluator[self.zpt_path]._axes[0]
+        self.evaluator[self.zpt_path]._axes = self.evaluator[self.zpt_path]._axes[0]
         return
-
-    @property
-    def accumulator(self):
-        return processor.defaultdict_accumulator(int)
-
 
     def postprocess(self, accumulator):
         return accumulator
+

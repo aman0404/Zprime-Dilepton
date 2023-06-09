@@ -4,12 +4,12 @@ import glob
 import tqdm
 
 import uproot
+
 uproot.open.defaults["xrootd_handler"] = uproot.MultithreadedXRootDSource
 
 from config.parameters import parameters
-from config.parameters import lumis
 from config.cross_sections import cross_sections
-
+from config.parameters import lumis
 
 def load_sample(dataset, parameters):
     xrootd = not (dataset == "test_file")
@@ -20,6 +20,7 @@ def load_sample(dataset, parameters):
         "datasets_from": parameters["channel"],
         "debug": False,
         "xrootd": xrootd,
+        #"timeout": 1,
         "timeout": 1200,
     }
     samp_info = SamplesInfo(**args)
@@ -36,6 +37,7 @@ def load_sample(dataset, parameters):
 
 
 def load_samples(datasets, parameters):
+    print(parameters["year"])
     args = {
         "year": parameters["year"],
         "out_path": parameters["out_path"],
@@ -63,16 +65,17 @@ def load_samples(datasets, parameters):
 
 def read_via_xrootd(server, path, from_das=False):
     if from_das:
+        print(path)
         if "USER" in path:
             command = f'dasgoclient --query=="file dataset={path} instance=prod/phys03"'
         else:
             command = f'dasgoclient --query=="file dataset={path}"'
     else:
         command = f"xrdfs {server} ls -R {path} | grep '.root'"
+    print(command)
     proc = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
-    print(command)
     result = proc.stdout.readlines()
     if proc.stderr.readlines():
         print("Loading error! This may help:")
@@ -84,7 +87,7 @@ def read_via_xrootd(server, path, from_das=False):
 
 class SamplesInfo(object):
     def __init__(self, **kwargs):
-        self.years = kwargs.pop("year", "2018")
+        self.years = kwargs.pop("year", "2017")
         self.out_path = kwargs.pop("out_path", "/output/")
         self.xrootd = kwargs.pop("xrootd", True)
         self.server = kwargs.pop("server", "root://xrootd.rcac.purdue.edu/")
@@ -101,23 +104,26 @@ class SamplesInfo(object):
             except Exception:
                 print(k, v)
         self.is_mc = True
+        print(datasets_from)
         if "mu" in datasets_from:
             from config.datasets_muon import datasets
+            #from config.datasets_muon import datasets
         elif "el" in datasets_from:
             from config.datasets_electron import datasets
         self.paths = datasets[self.years]
 
-        if "mu" in datasets_from:
-            self.lumi = lumis[self.years][1]
-        else:
-            self.lumi = lumis[self.years][0]
+        if "2016pre" in self.years:
+            self.lumi = 19120.0
+            #self.lumi = 19290.0
+        elif "2016post" in self.years:
+            self.lumi = 16810.0
+            #self.lumi = 17010.0
 
-        #if "2016" in self.year:
-        #    self.lumi = 35900.0
-        #elif "2017" in self.year:
-        #    self.lumi = 41530.0
-        #elif "2018" in self.year:
-        #    self.lumi = 59970.0
+        elif "2017" in self.years:
+            self.lumi = 41480.0
+        elif "2018" in self.years:
+            #self.lumi = 61310.0
+            self.lumi = 59830.0
 
         self.data_entries = 0
         self.sample = ""
@@ -162,6 +168,8 @@ class SamplesInfo(object):
         elif self.paths[sample].endswith(".root"):
             all_files = [self.paths[sample]]
         else:
+            print("check")
+            print(self.paths[sample])
             all_files = [
                 self.server + f for f in glob.glob(self.paths[sample] + "/**/**/*.root")
             ]
@@ -204,6 +212,7 @@ class SamplesInfo(object):
                         nGenEvts += tree["genEventCount"].array()[0]
         metadata["sumGenWgts"] = sumGenWgts
         metadata["nGenEvts"] = nGenEvts
+
         files = {"files": all_files, "treename": "Events"}
         return {
             "sample": sample,
@@ -242,6 +251,7 @@ class SamplesInfo(object):
                 self.lumi_weights[self.sample] = xsec * self.lumi / N
             else:
                 self.lumi_weights[self.sample] = 0
+            # print(f"{self.sample}: events={numevents}")
             return numevents
         else:
             return self.data_entries

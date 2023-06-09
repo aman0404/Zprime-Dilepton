@@ -73,11 +73,10 @@ class DimuonProcessor(processor.ProcessorABC):
             print("Samples info missing!")
             return
         self.applykFac = True
-        self.applyNNPDFWeight = True
+        self.applyNNPDFWeight = False
         self.do_pu = True
-        self.auto_pu = True
-        self.do_l1pw = False  # L1 prefiring weights
-        #self.do_l1pw = True  # L1 prefiring weights
+        self.auto_pu = False
+        self.do_l1pw = True  # L1 prefiring weights
         #jec_pars = {k: v[self.years] for k, v in jec_parameters.items()}
         self.do_jecunc = False
         self.do_jerunc = False
@@ -265,9 +264,6 @@ class DimuonProcessor(processor.ProcessorABC):
         df["Electron", "phi_raw"] = df.Electron.phi
 
         electrons = ak.to_pandas(df.Electron[ele_branches_local])
-        #print("----- electrons -----")
-        #print(electrons)
-
         electrons.pt = electrons.pt_raw * (electrons.scEtOverPt + 1.0)
         electrons.eta = electrons.eta_raw + electrons.deltaEtaSC
         electrons = electrons.dropna()
@@ -303,23 +299,10 @@ class DimuonProcessor(processor.ProcessorABC):
                     "idx",
                 ]
 
-            
+
             muons = ak.to_pandas(df.Muon[muon_branches_local])
-            #print("----- muons -------")
-            #print(muons)
             if self.timer:
                 self.timer.add_checkpoint("load muon data")
-
-##Aman edits
-            electrons["veto"] = 0
-            electrons.loc[((electrons.pt > 10.)
-                & (abs(electrons.eta) < 2.5)
-                & (electrons[self.parameters["electron_id"]] ==1)
-                & (abs(electrons.dxy) < self.parameters["electron_dxy"])
-                & (abs(electrons.dz) < self.parameters["electron_dz"])),
-                "veto",
-            ] = 1
-
             muons = muons.dropna()
             muons = muons.loc[:, ~muons.columns.duplicated()]
             # --------------------------------------------------------#
@@ -333,8 +316,8 @@ class DimuonProcessor(processor.ProcessorABC):
             output["r"] = None
             output["dataset"] = dataset
             output["year"] = int(self.year)
-            #if dataset == "dyInclusive50":
-            #    muons = muons[muons.genPartFlav == 15]
+            if dataset == "dyInclusive50":
+                muons = muons[muons.genPartFlav == 15]
             flags = ak.to_pandas(df.Flag)
             flags = flags[self.parameters["event_flags"]].product(axis=1)
             muons["pass_flags"] = True
@@ -343,13 +326,10 @@ class DimuonProcessor(processor.ProcessorABC):
                     axis=1
                 )
 
-            muons["overlap"] = (overlap_removal(muons, electrons))
 
-            muons["overlap"].fillna(1., inplace=True)
 
 
             # Define baseline muon selection (applied to pandas DF!)
-
             muons["selection"] = (
                 (muons.pt_raw > self.parameters["muon_pt_cut"])
                 & (abs(muons.eta_raw) < self.parameters["muon_eta_cut"])
@@ -361,7 +341,7 @@ class DimuonProcessor(processor.ProcessorABC):
                     (muons.ptErr.values / muons.pt.values)
                     < self.parameters["muon_ptErr/pt"]
                 )
-#                & muons.pass_flags
+                & muons.pass_flags
             )
 
             # Count muons
@@ -379,6 +359,8 @@ class DimuonProcessor(processor.ProcessorABC):
 
             # Define baseline event selection
 
+#            output["overlap"] = overlap_removal(muons, jets) 
+#            output["two_muons"] = (nmuons == 2)
             output["two_muons"] = (nmuons == 2) | (nmuons > 2)
             output["two_muons"] = output["two_muons"].fillna(False)
 
@@ -387,30 +369,50 @@ class DimuonProcessor(processor.ProcessorABC):
                 mask
                 & (hlt > 0)
                 & (flags > 0)
-                & (nmuons == 2)
+#                & (nmuons == 2)
+                & (nmuons >= 2)
                 & (abs(sum_charge) < nmuons)
                 & good_pv
+                #& (nelectrons == 0)
+                #& output.overlap > self.parameters["min_dr_overlap"]
 
             )
 
-
+#Aman edits
             if self.timer:
                 self.timer.add_checkpoint("Selected events and muons")
 
             # --------------------------------------------------------#
             # Initialize muon variables
             # --------------------------------------------------------#
-            muons = muons.join(electrons["veto"])
-            muons["veto"] = muons["veto"].fillna(0)
+
+
             # Find pT-leading and subleading muons
+            muons = muons[muons.selection & (nmuons >= 2) & (abs(sum_charge) < nmuons) & (hlt > 0)]
+ 
 
+            electrons.loc[
+                #muons.selection & (nmuons >= 2) 
+                #& (abs(sum_charge) < nmuons) 
+                #& (hlt > 0) 
+                #& 
+                ((electrons.pt > 10.)
+                & (abs(electrons.eta) < 2.5)
+                & (electrons[self.parameters["electron_id"]] ==1)
+                & (abs(electrons.dxy) < self.parameters["electron_dxy"])
+                & (abs(electrons.dz) < self.parameters["electron_dz"])),
+                "selection",
+        ] = 1
+            
+            #electrons["overlap"] = 0
+            #electrons.loc[(electrons.selection) & (overlap_removal(muons, electrons) > 0.3), "overlap", 
+            #] = 1
+            
+            #nelectrons = electrons.loc[:, "selection"].groupby("entry").sum()
 
-   
-            muons = muons[muons.selection & (nmuons >= 2) & (abs(sum_charge) < nmuons) & (hlt > 0)  ]
-            #muons = muons[muons.selection & (nmuons >= 2) & (abs(sum_charge) < nmuons) & (hlt > 0) & (muons.overlap) ]
+            #overlapEvents = muons[muons.selection & (nmuons >= 2) & (abs(sum_charge) < nmuons) & (hlt > 0) & (nelectrons > 0)]
 
-            nelectrons = muons.loc[:, "veto"].groupby("entry").sum()
-
+            #noverlap = muons.loc[:, "overlapEvents"].groupby("entry").sum()            
 
             if self.timer:
                 self.timer.add_checkpoint("muon object selection")
@@ -442,14 +444,12 @@ class DimuonProcessor(processor.ProcessorABC):
             if self.timer:
                 self.timer.add_checkpoint("dimuon pair selection")
 
-
             output["bbangle"] = bbangle(mu1, mu2)
 
-            output["event_selection"] = ((output.event_selection) & (nelectrons==0) & (
-             output.bbangle > self.parameters["3dangle"]
-                ))
 
-
+            output["event_selection"] = output.event_selection & (
+                output.bbangle > self.parameters["3dangle"]
+                ) 
 
             if self.timer:
                 self.timer.add_checkpoint("back back angle calculation")
@@ -556,9 +556,8 @@ class DimuonProcessor(processor.ProcessorABC):
 
         output["year"] = int(self.year)
 
-#Aman edits
-        for wgt in weights.df.columns:
-            output[f"wgt_{wgt}"] = weights.get_weight(wgt)
+        # for wgt in weights.df.columns:
+        #    output[f"wgt_{wgt}"] = weights.get_weight(wgt)
 
         if is_mc and "dy" in dataset and self.applykFac:
             mass_bb = output[output["r"] == "bb"].dimuon_mass_gen.to_numpy()
@@ -873,31 +872,10 @@ class DimuonProcessor(processor.ProcessorABC):
 
 #        jets["overlap"] = dr_clean
 
-#Aman edits
-        jets["HEMVeto"] = 1
-        jets.loc[
-            (
-                (jets.pt >= 20.0)
-                & (jets.eta >= -3.0)
-                & (jets.eta <= -1.3)
-                & (jets.phi >= -1.57)
-                & (jets.phi <= -0.87)
-            ),
-            "HEMVeto",
-        ] = 0
-
-
         jets["selection"] = 0
-#        jets.loc[
-#            ((jets.pt > 20.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2) & (jets.clean) & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
-#            
-#            ),
-#            "selection",
-#        ] = 1
-
         jets.loc[
-            ((jets.pt > 20.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2) & (jets.clean) & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
-
+            ((jets.pt > 30.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2) & (jets.clean)
+            
             ),
             "selection",
         ] = 1
@@ -908,72 +886,23 @@ class DimuonProcessor(processor.ProcessorABC):
         jets["bselection"] = 0
         jets.loc[
             (
-                (jets.pt > 20.0)
+                (jets.pt > 30.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years])
+                & (jets.btagDeepFlavB > parameters["UL_btag_tight"][self.years])
                 & (jets.jetId >= 2)
                 & (jets.clean)
-                & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
             ),
             "bselection",
         ] = 1
 
         #print(parameters["UL_btag_medium"][self.year])
-#        nbjets = jets.loc[:, "bselection"].groupby("entry").sum()
-#        variables["nbjets"] = nbjets
+        nbjets = jets.loc[:, "bselection"].groupby("entry").sum()
+        variables["nbjets"] = nbjets
 
-
-        print("hello")
-        
         bjets = jets.query("bselection==1")
-        bjets["new_btight"] = 0
-        bjets["sub_bmedium"] = 0
-
-        bjets.loc[
-           (bjets.btagDeepFlavB > parameters["UL_btag_tight"][self.years]),
-           "new_btight",
-         ] = 1
-
-        bjets.loc[
-           (bjets.btagDeepFlavB > parameters["UL_btag_medium"][self.years]),
-           "sub_bmedium",
-         ] = 1
-
-
-
         bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
-
         bjet1 = bjets.groupby("entry").nth(0)
         bjet2 = bjets.groupby("entry").nth(1)
-
-        bjet1 = bjet1[bjet1.new_btight == 1]
-#       print(bjet1)
-#       print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
-#        print(bjet1.index.values)
-        
-        bjets = bjets.loc[bjet1.index.values]
-        nbjets= bjets.loc[:, "sub_bmedium"].groupby("entry").sum()
-
-#        print(nbjets.to_string(), bjets["sub_bmedium"].to_string()) 
-
-#        print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
-
-#Aman edits
-#        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
-
-        #jindex = jets.groupby("entry").sum().index 
-#        jindex = jets.groupby("entry").sum().index  # Convert index to a list
-#        jindex = jindex.astype(bjets.index.dtype)  # Convert data type to match bjets index
-
-#        bjets = bjets.reindex(jindex)
-#        print(jets["btagDeepFlavB"].to_string())
-#        print(bjets["btagDeepFlavB"].to_string())
-       
-        variables["nbjets"] = nbjets
-        variables["nbjets"] = variables["nbjets"].fillna(0)
-        
-
-
         bJets = [bjet1, bjet2]
         muons = [mu1, mu2]
         fill_bjets(output, variables, bJets, muons, is_mc=is_mc)

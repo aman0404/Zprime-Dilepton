@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 from processNano.utils import p4_sum, delta_r, cs_variables
-#from processNano.corrections.electronMassScale import electronScaleUncert
+
 
 def find_dielectron(objs, is_mc=True):
 
@@ -53,18 +53,8 @@ def find_dielectron(objs, is_mc=True):
 
     if dmass == 20:
         objs = objs.sort_values(by="pt")
-
         obj1 = objs.iloc[-1]
         obj2 = objs.iloc[-2]
-
-        #if is_mc:
-        #   obj1 = objs.iloc[-1]
-        #   obj2 = objs.iloc[-2]
-        #else:
-        #   obj1 = objs.iloc[-1]
-        #   obj2 = objs.iloc[-2]
-           #obj2 = objs.iloc[-3]
- 
         px1_ = obj1.pt * np.cos(obj1.phi)
         py1_ = obj1.pt * np.sin(obj1.phi)
         pz1_ = obj1.pt * np.sinh(obj1.eta)
@@ -225,26 +215,3 @@ def fill_electrons(output, e1, e2, is_mc=True):
     output["dielectron_cos_theta_cs"], output["dielectron_phi_cs"] = cs_variables(
         e1, e2
     )
-
-
-    ee = p4_sum(e1, e2, is_mc,eScale="Up")
-    for v in [
-        "mass_scaleUncUp",
-    ]:
-        name = f"dielectron_{v}"
-        try:
-            output[name] = ee[v]
-            output[name] = output[name].fillna(-999.0)
-        except Exception:
-            output[name] = -999.0
-
-    ee = p4_sum(e1, e2, is_mc,eScale="Down")
-    for v in [
-        "mass_scaleUncDown",
-    ]:
-        name = f"dielectron_{v}"
-        try:
-            output[name] = ee[v]
-            output[name] = output[name].fillna(-999.0)
-        except Exception:
-            output[name] = -999.0
