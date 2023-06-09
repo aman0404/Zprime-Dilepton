@@ -1,118 +1,85 @@
-# from uncertainty import *
-import json
+import ROOT
+
+def makeSimpleDatacard():
+    '''make a binned datacard to match the 1D ML unfolding.
+    This are template datacards no syst.'''
+    #inputFile = ROOT.TFile("templates/tmp2016bb_multiBins.root")
+    inputFile = ROOT.TFile("templates/tmp2016be_multiBins.root")
+    hSR=inputFile.Get("mu_data_obs")
+    hCR=inputFile.Get("el_data_obs")
+    h_MC_mu = []
+    for i in range(11):
+        h_MC_mu.append(inputFile.Get("mu_DY_S%d"%i))
+    h_MC_el = []
+    for i in range(11):
+        h_MC_el.append(inputFile.Get("el_DY_S%d"%i))
+    h_SR_bkg = inputFile.Get("mu_Other")
+    h_CR_bkg = inputFile.Get("el_Other")
+    print(hSR.Integral())
+    #inputFile.Close()
+    print(hSR.Integral())
+    #global hGen,hReco,hResp,hBkg
+    datacard=open("datacard_templateBased_2016be.txt","w")
+    datacard.write("## Automatically generated. Simple C&C datacard model.\n")
+    datacard.write("## Original author: Andrea Carlo Marini\n##Adapted for Flavor ratio by Arnab \n")
+    datacard.write("* imax\n")
+    datacard.write("* jmax\n")
+    datacard.write("* kmax\n")
+    datacard.write("----------------\n")
+    datacard.write("shapes * control templates/tmp2016be_multiBins.root el_$PROCESS\n")
+    for i in range(11):
+        datacard.write("shapes el_DY_S%d control templates/tmp2016be_multiBins.root $PROCESS $PROCESS$SYSTEMATIC\n" %i)
+    datacard.write("shapes el_Other control templates/tmp2016be_multiBins.root $PROCESS $PROCESS$SYSTEMATIC\n")
+    datacard.write("shapes * signal templates/tmp2016be_multiBins.root mu_$PROCESS \n")
+    for i in range(11):
+        datacard.write("shapes mu_DY_S%d signal templates/tmp2016be_multiBins.root $PROCESS $PROCESS$SYSTEMATIC \n" %i)
+    datacard.write("shapes mu_Other signal templates/tmp2016be_multiBins.root $PROCESS $PROCESS$SYSTEMATIC \n")
+    datacard.write("bin ")
+    datacard.write("signal ")
+    datacard.write("control ")
+    datacard.write("\n")
+    datacard.write("observation ")
+    datacard.write("%d "%(hSR.Integral()))
+    datacard.write("%d "%(hCR.Integral()))
+    datacard.write("\n")
+    datacard.write("----------------\n")
+    datacard.write("bin ")
+    for ireco in range(12):
+        datacard.write("signal ")
+    for ireco in range(12):
+        datacard.write("control ")
+    datacard.write("\n")
+    datacard.write("process ")
+    for ireco in range(11):
+        datacard.write("mu_DY_S%d "%ireco)
+    datacard.write("mu_Other ")
+    for ireco in range(11):
+        datacard.write("el_DY_S%d "%ireco)
+    datacard.write("el_Other ")
+    datacard.write("\n")
+    datacard.write("process ")
+    for ireco in range(11):
+        if ireco==0:
+            datacard.write("1 ")
+        elif ireco==11:
+            datacard.write("2 ")
+        else:
+            datacard.write("%d "%(1-ireco))
+    datacard.write("3 ")
+    for ireco in range(12):
+        datacard.write("%d "%(1+ireco))
+    datacard.write("\n")
+    datacard.write("rate ")
+    for ireco in range(11):
+        datacard.write("%.2f "% (h_MC_mu[ireco].Integral()))
+    datacard.write("%.2f "%(h_SR_bkg.Integral()))##
+    for ireco in range(11):
+        datacard.write("%.2f "% (h_MC_el[ireco].Integral()))
+    datacard.write("%.2f "%(h_CR_bkg.Integral()))##
+    datacard.write("\n")
+    datacard.write("----------------\n")
 
 
-def buildDatacard(
-    ws, bkgmodel, sigmodel, mass, tag, Channels, uncert_file, datacardpath
-):
-    fout = open(
-        datacardpath
-        + "/datacard_%s_%s_%s_%s_%s.txt"
-        % (mass, sigmodel, bkgmodel, tag.split("_")[1], tag.split("_")[2]),
-        "w",
-    )
-    fout.write("imax *\n")
-    fout.write("jmax *\n")
-    fout.write("kmax *\n")
-    fout.write(("-" * 40) + "\n")
-    for Channel in Channels:
-        # print("shapes "+Channel+"_hmm "+tag.split("_")[2]+"_"+tag.split("_")[1]+" %s w:"% ("w.root")+Channel+"_cat0_ggh_pdf\n")
-        fout.write(
-            "shapes "
-            + Channel
-            + "_hmm cat"
-            + tag.split("_")[2]
-            + "_"
-            + tag.split("_")[1]
-            + " %s w:"
-            % (
-                "workspace_%s_%s_%s_cat%s.txt"
-                % (mass, sigmodel, tag.split("_")[1], tag.split("_")[2])
-            )
-            + Channel
-            + "_cat"
-            + tag.split("_")[2]
-            + "_"
-            + tag.split("_")[1]
-            + "_pdf\n"
-        )
-    fout.write(
-        "shapes bkg cat"
-        + tag.split("_")[2]
-        + "_"
-        + tag.split("_")[1]
-        + " %s w:bkg_cat"
-        % (
-            "workspace_%s_%s_%s_cat%s.txt"
-            % (mass, bkgmodel, tag.split("_")[1], tag.split("_")[2])
-        )
-        + tag.split("_")[2]
-        + "_"
-        + tag.split("_")[1]
-        + "_pdf\n"
-    )
-    fout.write(
-        "shapes data_obs cat"
-        + tag.split("_")[2]
-        + "_"
-        + tag.split("_")[1]
-        + " %s w:data_cat"
-        % (
-            "workspace_%s_%s_%s_cat%s.txt"
-            % (mass, bkgmodel, tag.split("_")[1], tag.split("_")[2])
-        )
-        + tag.split("_")[2]
-        + "_"
-        + tag.split("_")[1]
-        + "\n"
-    )
-    fout.write(("-" * 40) + "\n")
-    fout.write("bin cat%s\n" % (tag.split("_")[2] + "_" + tag.split("_")[1]))
-    fout.write("observation -1\n")
-    fout.write(("-" * 40) + "\n")
-    binstr = "bin "
-    p1str = "process "
-    p2str = "process "
-    ratestr = "rate "
-    isig = 1
-    for Channel in Channels:
-        processName = Channel
-        binstr += "cat%s " % (tag.split("_")[2] + "_" + tag.split("_")[1])
-        p1str += "%s_hmm " % processName
-        p2str += "%d " % (-len(Channels) + isig)
-        ratestr += "1 "
-        isig += 1
+if __name__ == "__main__" :
+    makeSimpleDatacard()
 
-    binstr += "cat%s\n" % (tag.split("_")[2] + "_" + tag.split("_")[1])
-    p1str += "bkg\n"
-    p2str += "1\n"
-    ratestr += "1\n"
-
-    unc_file = open(uncert_file)
-    uncertainties = json.load(unc_file)
-    uncStrings = []
-    for unc in uncertainties:
-        uncstr = unc + " " + uncertainties[unc]["type"]
-        for sName in Channels:
-            processName = sName
-            for key in uncertainties[unc].keys():
-                if processName in key:
-                    uncstr += " %s" % uncertainties[unc][processName]
-                if "bkg" in key:
-                    uncstr += " %s" % uncertainties[unc]["bkg"]
-
-        # append
-        uncStrings.append(uncstr)
-
-    #    binstr = "bin  %s  %s  %s\n" % (category, category, category)
-    #    p1str = "process  %s  %s  %s\n" % ("smodel1", "smodel2", "bmodel")
-    #    p2str = "process  -1  0  1\n"
-    #    ratestr = "rate  1  1  1\n"
-    fout.write(binstr)
-    fout.write(p1str)
-    fout.write(p2str)
-    fout.write(ratestr)
-    fout.write(("-" * 40) + "\n")
-    for x in uncStrings:
-        fout.write("%s\n" % x)
-    fout.close()

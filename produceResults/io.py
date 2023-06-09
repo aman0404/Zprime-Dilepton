@@ -14,7 +14,7 @@ def load_stage2_output_hists_2D(argset, parameters):
     if (global_path is None) or (label is None):
         return
 
-    path = f"{global_path}/{label}/stage2_histograms/{var_name1}_{var_name2}/{year}/"
+    path = f"{global_path}/{label}//stage2_histograms/{var_name1}_{var_name2}/{year}/"
     paths = glob.glob(f"{path}/{dataset}_*.pickle") + glob.glob(f"{path}.pickle")
     hist_df = pd.DataFrame()
     for path in paths:

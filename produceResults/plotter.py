@@ -89,8 +89,20 @@ def plotter(client, parameters, hist_df=None, timer=None):
             "var_name": parameters["plot_vars"],
             "dataset": parameters["datasets"],
         }
+    #    print(arg_load)
         hist_dfs = parallelize(load_stage2_output_hists, arg_load, client, parameters)
+        print("---------------")
+#        print(parameters)
+        print("---------------")
+#        print(*hist_dfs[0])
+
+        print("---------------")        
+
         hist_df = pd.concat(hist_dfs).reset_index(drop=True)
+        #print("=========================================")
+    #    print("size of the dataset ", hist_df.shape[0])
+    #    print("=========================================")
+
         if hist_df.shape[0] == 0:
             print("Nothing to plot!")
             return []
@@ -104,6 +116,7 @@ def plotter(client, parameters, hist_df=None, timer=None):
         ],
         "df": [hist_df],
     }
+#    yields = parallelize(plot, arg_plot, client, parameters)
     yields = parallelize(plot, arg_plot, client, parameters, seq=True)
 
     return yields
@@ -139,7 +152,8 @@ def plotter2D(client, parameters, hist_df=None, timer=None):
         ],
         "df": [hist_df],
     }
-    yields = parallelize(plot2D, arg_plot, client, parameters, seq=False)
+    print("plotting")
+    yields = parallelize(plot2D, arg_plot, client, parameters, seq=True)
     return yields
 
 
@@ -149,6 +163,8 @@ def plot(args, parameters={}):
     channel = args["channel"]
     var_name = args["var_name"]
     hist = args["df"].loc[(args["df"].var_name == var_name) & (args["df"].year == year)]
+    #print("======== ",hist)
+    #print("======== ",hist["hist"].values[0])
 
     if var_name in parameters["variables_lookup"].keys():
         var = parameters["variables_lookup"][var_name]
@@ -195,9 +211,13 @@ def plot(args, parameters={}):
                 continue
             plottables_df = get_plottables(hist, entry, year, var_name, slicer)
             plottables = plottables_df["hist"].values.tolist()
-            sumw2 = plottables_df["sumw2"].values.tolist()
+            sumw2  = plottables_df["sumw2"].values.tolist()
             labels = plottables_df["label"].values.tolist()
             colors = []
+
+#            print("many things ", entry, plottables)
+
+
             labels_new = []
             for label in labels:
                 colors.append(parameters["color_dict"][label])
@@ -211,9 +231,17 @@ def plot(args, parameters={}):
             #        labels_new = [label]
             #        colors = ["r"]
 
+            # print(labels_new)
+
+            #print("plottables", plottables)
             total_yield += sum([p.sum() for p in plottables])
             print("Dataset ",[labels  for p in plottables])
             print("yield ", [round(p.sum(),2)  for p in plottables])
+#Aman
+     #       print(" ================ ")
+            print(labels,"||","channel= ",channel,"||"," region= ",region,"||", " yield ", total_yield)
+       #     print(" ================ ")
+
 
 
 
@@ -231,8 +259,6 @@ def plot(args, parameters={}):
                 histtype=entry.histtype,
                 **entry.plot_opts,
             )
-            print("Dataset ",[labels  for p in plottables])
-            print("yield ", [round(p.sum(),2)  for p in plottables])
 
             # MC errors
             if entry.entry_type == "stack":
@@ -246,6 +272,7 @@ def plot(args, parameters={}):
                         y2=np.r_[err[1, :], err[1, -1]],
                         **stat_err_opts,
                     )
+    print(parameters["plot_vars"])
     if parameters["plot_vars"]:
         ax2 = fig.add_subplot(gs[1], sharex=ax1)
         num = den = []
@@ -285,7 +312,7 @@ def plot(args, parameters={}):
                         yerr=yerr,
                         color=["xkcd:black"],
                         histtype="errorbar",
-                        # **entries["errorbar"].plot_opts,
+                        ##**entries["errorbar"].plot_opts,
                     )
 
         ax2.axhline(1, ls="--")
@@ -330,7 +357,7 @@ def plot(args, parameters={}):
                 den_sumw2 = sum(den_sumw2).values()
 
         if len(num) * len(den) > 0:
-            # compute Data/MC ratio
+#             compute Data/MC ratio
             ratio = np.divide(num, den)
             ratio = np.nan_to_num(ratio)
             yerr = np.zeros_like(num)
@@ -410,10 +437,11 @@ def plot2D(args, parameters={}):
     variation = "nominal"
 
     slicer = {"region": region, "channel": channel}
-
     # stack, step, and errorbar entries
-    entries = {"2D": Entry("2D", parameters)}
 
+
+    entries = {"2D": Entry("2D", parameters)}
+    print("---", entries)
     total_yield = 0
     for entry in entries.values():
         if len(entry.entry_list) == 0:
@@ -421,14 +449,23 @@ def plot2D(args, parameters={}):
         plottables_df = get_plottables_2D(
             hist, entry, year, var_name1, var_name2, slicer
         )
-        plottables = plottables_df["hist"].values.tolist()
+        plottables = [[]]
+        plottables[0] = plottables_df["hist1"].values.tolist()
+        plottables.append(plottables_df["hist2"].values.tolist())
         sumw2 = plottables_df["sumw2"].values.tolist()
         labels = plottables_df["label"].values.tolist()
 
+        print("problem is here")
+        print(len(plottables))
+
         total_yield += sum([p.sum() for p in plottables])
+
+        print(total_yield, "yield is")
         if len(plottables) == 0:
             continue
         # plot each process on a seperate plot
+
+
         for i in range(0, len(plottables)):
             label = labels[i]
 
@@ -549,9 +586,20 @@ def get_plottables(hist, entry, year, var_name, slicer):
                 hist_values_group.append(h[slicer_value].project(var_name))
                 hist_sumw2_group.append(h[slicer_sumw2].project(var_name))
 
+                #print(h[slicer_value].project("b1l1_dR"))
+#        print(hist_values_group)
+        #print(hist_sumw2_group)
         if len(hist_values_group) == 0:
             continue
         nevts = sum(hist_values_group).sum()
+
+#        print("many things again", hist_values_group[-1], group, var_name)
+#        for i in range(len(hist_values_group)):
+#            if(hist_values_group[i].sum() < 0.1):
+#               print(i)
+
+	
+        print(nevts, "nevts")
         if nevts > 0:
             plottables_df = plottables_df.append(
                 pd.DataFrame(
@@ -566,43 +614,54 @@ def get_plottables(hist, entry, year, var_name, slicer):
                 ),
                 ignore_index=True,
             )
+#    print("AMAN || ",sum(hist_values_group).sum(), "|| ","label = ",group )
 
     plottables_df.sort_values(by="integral", inplace=True)
+
     return plottables_df
 
 
 def get_plottables_2D(hist, entry, year, var_name1, var_name2, slicer):
     slicer[var_name1] = slice(None)
     slicer[var_name2] = slice(None)
-    slicer_value = slicer.copy()
+    slicer_value1 = slicer.copy()
+    slicer_value2 = slicer.copy()
     slicer_sumw2 = slicer.copy()
-    slicer_value["val_sumw2"] = "value"
+    print("-----")
+    slicer_value1["val_sumw2"] = "value1"
+    slicer_value2["val_sumw2"] = "value2"
     slicer_sumw2["val_sumw2"] = "sumw2"
 
-    plottables_df = pd.DataFrame(columns=["label", "hist", "sumw2", "integral"])
+    plottables_df = pd.DataFrame(columns=["label", "hist1", "hist2",  "sumw2", "integral"])
     for group in entry.groups:
         group_entries = [e for e, g in entry.entry_dict.items() if (group == g)]
 
-        hist_values_group = []
+        hist1_values_group = []
+        hist2_values_group = []
         hist_sumw2_group = []
 
         for h in hist.loc[hist.dataset.isin(group_entries), "hist"].values:
-            if not pd.isna(h[slicer_value].project(var_name1).sum()):
-                hist_values_group.append(h[slicer_value])
-                hist_sumw2_group.append(h[slicer_sumw2])
 
-        if len(hist_values_group) == 0:
+            if not pd.isna(h.sum()):
+                hist1_values_group.append(h.project(var_name1))
+                hist2_values_group.append(h.project(var_name2))
+                hist_sumw2_group.append(h[slicer_sumw2])
+    
+        if len(hist1_values_group) == 0:
             continue
-        nevts = sum(hist_values_group).sum()
+        nevts = sum(hist1_values_group).sum()
+        print("events = ", nevts)
+
         if nevts > 0:
             plottables_df = plottables_df.append(
                 pd.DataFrame(
                     [
                         {
                             "label": group,
-                            "hist": sum(hist_values_group),
+                            "hist1": sum(hist1_values_group),
+                            "hist2": sum(hist2_values_group),
                             "sumw2": sum(hist_sumw2_group),
-                            "integral": sum(hist_values_group).sum(),
+                            "integral": sum(hist1_values_group).sum(),
                         }
                     ]
                 ),

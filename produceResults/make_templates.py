@@ -26,8 +26,11 @@ def to_templates(client, parameters, hist_df=None):
             print("No templates to create!")
             return []
 
+    print(hist_df)
     argset = {
         "year": parameters["years"],
+        #"region": [r for r in hist_df.r.unique() if r in parameters["regions"]
+        # ],
         "region": parameters["regions"],
         "channel": parameters["channels"],
         "var_name": [
@@ -137,7 +140,7 @@ def make_templates(args, parameters={}):
                 continue
 
             if group == "Data":
-                name = "data_obs"
+                name = "mu_data_obs"
             else:
                 name = group
 
@@ -173,14 +176,15 @@ def make_templates(args, parameters={}):
         mkdir(out_dir)
         out_dir += "/" + parameters["label"]
         mkdir(out_dir)
-#        out_dir += "/" + "genlevel_below400"
+#        out_dir += "/" + "data_samples"
 #        mkdir(out_dir)
         out_dir += "/" + "stage3_templates"
         mkdir(out_dir)
         out_dir += "/" + var.name
         mkdir(out_dir)
 
-        out_fn = f"{out_dir}/{channel}_{region}_{year}.root"
+        #out_fn = f"{out_dir}/{channel}_{region}_{year}.root"
+        out_fn = f"{out_dir}/dy_400_{channel}_{region}_{year}.root"
         save_template(templates, out_fn, parameters)
 
     yield_df = pd.DataFrame(yield_rows)
