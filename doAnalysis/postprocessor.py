@@ -25,6 +25,7 @@ def process_partitions(client, parameters, df):
 
     df = df[[c for c in df.columns if c not in ignore_columns]]
 
+    print("======= PROCESSING DATA ====== ")
     years = df.year.unique()
     datasets = df.dataset.unique()
     # delete previously generated outputs to prevent partial overwrite
@@ -41,9 +42,12 @@ def process_partitions(client, parameters, df):
     elif isinstance(df, dd.DataFrame):
         argset["df"] = [(i, df.partitions[i]) for i in range(df.npartitions)]
 
+    print("======= PROCESSING DATA ====== ")
     # perform categorization, evaluate mva models, fill histograms
     hist_info_dfs = parallelize(on_partition, argset, client, parameters)
+    #hist_info_dfs = parallelize(on_partition, argset, client, parameters, seq=True)
 
+    print("======= PROCESSING DATA ====== ")
     # return info for debugging
     hist_info_df_full = pd.concat(hist_info_dfs).reset_index(drop=True)
     return hist_info_df_full
@@ -78,12 +82,18 @@ def on_partition(args, parameters):
 
     # < categorization into channels (ggH, VBF, etc.) >
     split_into_channels(df, v="nominal")
-    regions = [r for r in parameters["regions"] if r in df.r.unique()]
+    #Aman
+    #regions = [r for r in parameters["regions"] if r in df.r.unique()]
+    regions = parameters["regions"] 
+
+    print("here is the region: ", regions)
+
     if "inclusive" in parameters["regions"]:
         regions.append("inclusive")
 #Aman
     channels = parameters["channels"]
-#    channels = [c for c in parameters["channels"] if c in df["channel"].unique()]
+    #channels = [c for c in parameters["channels"] if c in df["channel"].unique()]
+    print("channels ", channels)
     if "inclusive" in parameters["channels"]:
         channels.append("inclusive")
     # < convert desired columns to histograms >
@@ -93,7 +103,9 @@ def on_partition(args, parameters):
         hist_info_row = make_histograms(
             df, var_name, year, dataset, regions, channels, npart, parameters
         )
+        print(hist_info_row)
         if hist_info_row is not None:
+            print("it is okay")
             hist_info_rows.append(hist_info_row)
 
     try:
@@ -126,6 +138,7 @@ def on_partition(args, parameters):
         save_unbinned(df, dataset, year, npart, channels, parameters)
 
     # < return some info for diagnostics & tests >
+    print("end ", hist_info_df)
     return hist_info_df
 
 

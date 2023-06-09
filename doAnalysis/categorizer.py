@@ -16,7 +16,8 @@ def split_into_channels(df, v=""):
     df["nbjets"].fillna(0, inplace=True)
     df.loc[:, "channel"] = "none"
     df.loc[(df["nbjets"] == 0), "channel"] = "0b"
-    df.loc[(df["nbjets"] == 1), "channel"] = "1b"
+    df.loc[(df["nbjets"] >= 1), "channel"] = "1b"
+    #df.loc[(df["nbjets"] == 1), "channel"] = "1b"
     #df.loc[((df["nbjets"] == 1) & (df["min_bl_mass"] > 175)), "channel"] = "1b"
     df.loc[(df["nbjets"] >= 2), "channel"] = "2b"
     #df.loc[((df["nbjets"] >= 2) & (df["min_bl_mass"] > 175)), "channel"] = "2b"
