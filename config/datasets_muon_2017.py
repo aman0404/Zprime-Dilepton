@@ -1,21 +1,14 @@
 datasets = {
-    "2018": {
-        "data_A": "/EGamma/jschulte-Run2018A-UL2018_MiniAODv2_GT36-v1-NANOAOD-00000000000000000000000000000000/USER",
-	"data_B": "/EGamma/jschulte-Run2018B-UL2018_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
-        "data_C": "/EGamma/jschulte-Run2018C-UL2018_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
-	"data_D": "/EGamma/jschulte-Run2018D-UL2018_MiniAODv2-v2-NANOAOD-00000000000000000000000000000000/USER",
+    "2017": {
+	"data_B": "/SingleMuon/jschulte-Run2017B-UL2017_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
+	"data_C": "/SingleMuon/jschulte-Run2017C-UL2017_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
+        "data_D": "/SingleMuon/jschulte-Run2017D-UL2017_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
+	"data_E": "/SingleMuon/jschulte-Run2017E-UL2017_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
+        "data_F": "/SingleMuon/jschulte-Run2017F-UL2017_MiniAODv2-v1-NANOAOD-00000000000000000000000000000000/USER",
 
-##official
-#        "dyInclusive50": "",
 
-        #"dy0J_M200to400": "/DYJetsToLL_0J_MLL_200_400_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M400to800": "/DYJetsToLL_0J_MLL_400_800_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M800to1400": "/DYJetsToLL_0J_MLL_800_1400_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M1400to2300": "/DYJetsToLL_0J_MLL_1400_2300_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M2300to3500": "/DYJetsToLL_0J_MLL_2300_3500_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M3500to4500": "/DYJetsToLL_0J_MLL_3500_4500_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M4500to6000": "/DYJetsToLL_0J_MLL_4500_6000_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-        #"dy0J_M6000toInf": "/DYJetsToLL_0J_MLL_6000_Inf_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
+        "tZq1": "/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv2-106X_upgrade2018_realistic_v15_L1v1-v1/NANOAODSIM",
+        "tZq2": "/tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
 
 	"dyInclusive50": "/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/jschulte-RunIISummer20UL18-106X_upgrade2018_realistic_v16_L1v1-v3_NANOAOD-00000000000000000000000000000000/USER",
 #
