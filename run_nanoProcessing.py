@@ -252,15 +252,15 @@ if __name__ == "__main__":
             "Wantitop",
             "tW",
             # higgs
-            "TTWJetsToLNu,"
-            "TTZToLLNuNu,"
-            "ttHJetTobb,"
-            "ttHJetToNonbb,"
-            "GluGluHToZZTo4L,"
-            "VBF_HToZZTo4L,"
-            "ZH_HToBB_ZToLL,"
-            "ggZH_HToBB,"
-            "ttH_HToZZ,"
+            "TTWJetsToLNu",
+            "TTZToLLNuNu",
+            "ttHJetTobb",
+            "ttHJetToNonbb",
+            "GluGluHToZZTo4L",
+            "VBF_HToZZTo4L",
+            "ZH_HToBB_ZToLL",
+            "ggZH_HToBB",
+            "ttH_HToZZ",
             "GluGluHToZZTo2L2Q",
             "ZH_HToZZ",
             # triboson
