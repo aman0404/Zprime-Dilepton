@@ -1,9 +1,6 @@
 module load anaconda/5.3.1-py37
 source activate hmumu
-#module load anaconda/2021.05-py38
-#conda activate /depot/cms/conda_envs/spiperov/Coffea_DASK_pyROOT
-
-voms-proxy-init --voms cms --valid 192:0:0
+voms-proxy-init --voms cms --valid 72:0:0
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /cvmfs/cms.cern.ch/common/crab-setup.sh
 source /cvmfs/sft.cern.ch/lcg/app/releases/ROOT/6.24.00/x86_64-centos7-gcc48-opt/bin/thisroot.sh

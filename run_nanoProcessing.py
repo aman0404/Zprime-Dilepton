@@ -16,10 +16,13 @@ import dask
 from dask.distributed import Client
 import os
 
-user_name = os.getcwd().split("/")[5]
-dask.config.set({"temporary-directory": f"/depot/cms/users/{user_name}/dask-temp/"})
+# user_name = os.getcwd().split("/")[5]
+user_name = "yun79"
+# dask.config.set({"temporary-directory": f"/depot/cms/users/{user_name}/dask-temp/"})
+dask.config.set({"temporary-directory": f"/home/yun79/analysis/fork/Zprime-Dilepton/test/"})
+
 #global_path = os.getcwd() + "/output/"
-global_path = "/depot/cms/private/users/kaur214/output/"
+global_path = "/depot/cms/users/yun79/Zprime-Dilepton/output"
 parser = argparse.ArgumentParser()
 # Slurm cluster IP to use. If not specified, will create a local cluster
 parser.add_argument(
@@ -34,7 +37,7 @@ parser.add_argument(
     "-y",
     "--year",
     dest="year",
-    default="2016post",
+    default="2018",
     action="store",
     help="Year to process (2016pre, 2016post, 2017 or 2018)",
 )
@@ -42,10 +45,8 @@ parser.add_argument(
     "-l",
     "--label",
     dest="label",
-    #default="elec_channel_2018_jec",
-    default="elec_channel_2016_allCuts",
-    #default="elec_channel_2017",
-    #default="elec_channel_v1_overlap_newpu_nokFac_nonnpdf",
+    # default="test_amandeep_dimu",
+    default="test2023june_golden_data",
     action="store",
     help="Unique run label (to create output path)",
 )
@@ -70,7 +71,7 @@ parser.add_argument(
     "-cl",
     "--channel",
     dest="channel",
-    default="el",
+    default="emu",
     action="store",
     help="the flavor of the final state dilepton",
 )
@@ -113,8 +114,6 @@ parameters = {
     "global_path": global_path,
     "out_path": f"{args.year}_{args.label}_{local_time}",
     "server": "root://eos.cms.rcac.purdue.edu/",
-    #"server": "root://cmsxrootd.fnal.gov//",
-    #"server": "root://cms-xrd-global.cern.ch/",
     "xrootd": True,
     #"xrootd": False,
     #"server": "/mnt/hadoop/",
@@ -166,13 +165,14 @@ def submit_job(parameters):
     mkdir(out_dir)
     out_dir += "/" + parameters["label"]
     mkdir(out_dir)
-    out_dir += "/" + "stage1_output"
+    out_dir += "/" + "stage1_output" + "_" + parameters["channel"]
     mkdir(out_dir)
     out_dir += "/" + parameters["year"]
     mkdir(out_dir)
     executor_args = {"client": parameters["client"], "retries": 0}
     processor_args = {
         "samp_info": parameters["samp_infos"],
+        "channel": parameters["channel"],
         "do_timer": parameters["do_timer"],
         "do_btag_syst": parameters["do_btag_syst"],
         # "regions": parameters["regions"],
@@ -186,6 +186,8 @@ def submit_job(parameters):
         from processNano.dielectron_processor import (
             DielectronProcessor as event_processor,
         )
+    elif parameters["channel"] == "emu":
+        from processNano.emu_processor import EmuProcessor as event_processor
     elif parameters["channel"] == "eff_mu":
         from processNano.dimuon_eff_processor import (
             DimuonEffProcessor as event_processor,
@@ -213,6 +215,8 @@ def submit_job(parameters):
         )
 
     except Exception as e:
+        print(f"processor fail: {str(e)}")
+        print(traceback.format_exc())
         tb = traceback.format_exc()
         return "Failed: " + str(e) + " " + tb
 
@@ -247,49 +251,66 @@ if __name__ == "__main__":
             "ttbar_lep_M1800toInf",
             "Wantitop",
             "tW",
+            # higgs
+            "TTWJetsToLNu,"
+            "TTZToLLNuNu,"
+            "ttHJetTobb,"
+            "ttHJetToNonbb,"
+            "GluGluHToZZTo4L,"
+            "VBF_HToZZTo4L,"
+            "ZH_HToBB_ZToLL,"
+            "ggZH_HToBB,"
+            "ttH_HToZZ,"
+            "GluGluHToZZTo2L2Q",
+            "ZH_HToZZ",
+            # triboson
+            "WWW",
+            "WWZ",
+            "WZZ",
+            "ZZZ",
         ],
         "dy": [
             "dyInclusive50",
-            #"dy0J_M200to400",
-            #"dy0J_M400to800",
-            #"dy0J_M800to1400",
-            #"dy0J_M1400to2300",
-            #"dy0J_M2300to3500",
-            #"dy0J_M3500to4500",
-            #"dy0J_M4500to6000",
-            #"dy0J_M6000toInf",
+            "dy0J_M200to400",
+            "dy0J_M400to800",
+            "dy0J_M800to1400",
+            "dy0J_M1400to2300",
+            "dy0J_M2300to3500",
+            "dy0J_M3500to4500",
+            "dy0J_M4500to6000",
+            "dy0J_M6000toInf",
 
-	    #"dy1J_M200to400",
-            #"dy1J_M400to800",
-            #"dy1J_M800to1400",
-            #"dy1J_M1400to2300",
-            #"dy1J_M2300to3500",
-            #"dy1J_M3500to4500",
-            #"dy1J_M4500to6000",
-            #"dy1J_M6000toInf",
+	        "dy1J_M200to400",
+            "dy1J_M400to800",
+            "dy1J_M800to1400",
+            "dy1J_M1400to2300",
+            "dy1J_M2300to3500",
+            "dy1J_M3500to4500",
+            "dy1J_M4500to6000",
+            "dy1J_M6000toInf",
 
-            #"dy2J_M200to400",
-            #"dy2J_M400to800",
-            #"dy2J_M800to1400",
-            #"dy2J_M1400to2300",
-            #"dy2J_M2300to3500",
-            #"dy2J_M3500to4500",
-            #"dy2J_M4500to6000",
-            #"dy2J_M6000toInf",
+            "dy2J_M200to400",
+            "dy2J_M400to800",
+            "dy2J_M800to1400",
+            "dy2J_M1400to2300",
+            "dy2J_M2300to3500",
+            "dy2J_M3500to4500",
+            "dy2J_M4500to6000",
+            "dy2J_M6000toInf",
         ],
         "CI": [
-            "bsll_lambda1TeV_M200to500",
-            "bsll_lambda1TeV_M500to1000",
-            "bsll_lambda1TeV_M1000to2000",
-            "bsll_lambda1TeV_M2000toInf",
-            "bsll_lambda2TeV_M200to500",
-            "bsll_lambda2TeV_M500to1000",
-            "bsll_lambda2TeV_M1000to2000",
-            "bsll_lambda2TeV_M2000toInf",
-            "bsll_lambda4TeV_M200to500",
-            "bsll_lambda4TeV_M500to1000",
-            "bsll_lambda4TeV_M1000to2000",
-            "bsll_lambda4TeV_M2000toInf",
+            # "bsll_lambda1TeV_M200to500",
+            # "bsll_lambda1TeV_M500to1000",
+            # "bsll_lambda1TeV_M1000to2000",
+            # "bsll_lambda1TeV_M2000toInf",
+            # "bsll_lambda2TeV_M200to500",
+            # "bsll_lambda2TeV_M500to1000",
+            # "bsll_lambda2TeV_M1000to2000",
+            # "bsll_lambda2TeV_M2000toInf",
+            # "bsll_lambda4TeV_M200to500",
+            # "bsll_lambda4TeV_M500to1000",
+            # "bsll_lambda4TeV_M1000to2000",
+            # "bsll_lambda4TeV_M2000toInf",
 
  
             #"bbll_6TeV_M1300To2000_negLL",
@@ -384,15 +405,18 @@ if __name__ == "__main__":
             #    continue
             #if sample not in ["data_A"]:
             #    continue
-            if group != "dy":
-                continue
+            # if group != "dy":
+            #     continue
+            # if group == "dy":
+            #     continue
             if group == "data":
                 datasets_data.append(sample)
             else:
                 datasets_mc.append(sample)
 
     timings = {}
-
+    print(f"datasets_mc: {datasets_mc}")
+    print(f"datasets_data: {datasets_data}")
     to_process = {"MC": datasets_mc, "DATA": datasets_data}
     for lbl, datasets in to_process.items():
         if len(datasets) == 0:
