@@ -117,20 +117,20 @@ print(f"nbjet_cut equal to: {nbjet_cut}")
 # print(f"nbjet_cut greater than: {nbjet_cut}")
 
 df_dy   = df_dy[(df_dy["r"]==f"{parameters['regions']}") & (df_dy["dilepton_mass"] > 60.) & (df_dy["dilepton_mass"] < 500.) ]
-print(f"len(df_dy) b4 nbjets cut: {len(df_dy)}")
-df_dy   = df_dy[(df_dy["nbjets"] == nbjet_cut)]
-print(f"len(df_dy) after nbjets cut: {len(df_dy)}")
+# print(f"len(df_dy) b4 nbjets cut: {len(df_dy)}")
+df_dy   = df_dy[(df_dy["nbjets"] > nbjet_cut)]
+# print(f"len(df_dy) after nbjets cut: {len(df_dy)}")
 # print(f'df_dy["nbjets"]: {df_dy["nbjets"].compute().head()}')
 
 df_data   = df_data[(df_data["r"]==f"{parameters['regions']}") & (df_data["dilepton_mass"] > 60.) & (df_data["dilepton_mass"] < 500.)]
 df_data   = df_data[(df_data["nbjets"] == nbjet_cut)]
-print(f"len(df_data) : {len(df_data)}")
+# print(f"len(df_data) : {len(df_data)}")
 df_bkg   = df_bkg[(df_bkg["r"]==f"{parameters['regions']}") & (df_bkg["dilepton_mass"] > 60.) & (df_bkg["dilepton_mass"] < 500.)]
 df_bkg   = df_bkg[(df_bkg["nbjets"] == nbjet_cut)]
-print(f"len(df_bkg) : {len(df_bkg)}")
+# print(f"len(df_bkg) : {len(df_bkg)}")
 df_ttbar   = df_ttbar[(df_ttbar["r"]==f"{parameters['regions']}") & (df_ttbar["dilepton_mass"] > 60.) & (df_ttbar["dilepton_mass"] < 500.)]
 df_ttbar   = df_ttbar[(df_ttbar["nbjets"] == nbjet_cut)]
-print(f"len(df_ttbar) : {len(df_ttbar)}")
+# print(f"len(df_ttbar) : {len(df_ttbar)}")
 
 #df_dy   = df_dy[(df_dy["r"]==f"{parameters['regions']}") & (df_dy["dilepton_mass"] > 200.) & (df_dy["dilepton_mass_gen"] > 200) & (df_dy["nbjets"] == 0) & (df_dy["bjet1_mb1_dR"] == False) & (df_dy["bjet1_mb2_dR"] == False)]
 
@@ -169,7 +169,7 @@ for i in range(len(data_mass)):
 for i in range(len(bkg_mass)):
     h_bkg.Fill(bkg_mass[i], wgt_bkg[i])
 
-for i in range(len(bkg_mass)):
+for i in range(len(ttbar_mass)):
     h_ttbar.Fill(ttbar_mass[i], wgt_ttbar[i])
 
 file2 = TFile(f"dy_sys_BB.root","RECREATE")
@@ -182,6 +182,8 @@ print(f"total h_data entries: {h_data.Integral()}")
 print(f"total h_dy entries: {h_dy.Integral()}")
 print(f"total h_bkg entries: {h_bkg.Integral()}")
 print(f"total h_ttbar entries: {h_ttbar.Integral()}")
+SF_ttbar = (h_data.Integral() - h_dy.Integral() - h_bkg.Integral()) / h_ttbar.Integral()
+print(f"SF_ttbar: {SF_ttbar}")
 file2.Close()
 
 

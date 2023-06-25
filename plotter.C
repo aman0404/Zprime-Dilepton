@@ -26,9 +26,9 @@ TFile *f3 = TFile::Open("dy_sys_BB.root");
 f3->GetObject("h_bkg", h3);
 
 TFile *f4 = TFile::Open("dy_sys_BB.root");
-f3->GetObject("h_ttbar", h4);
+f4->GetObject("h_ttbar", h4);
 
-
+std::cout<< "flag" << std::endl;
 
  TPad *pad1 = new TPad("pad1", "pad1",0.05,0.03114206,0.99,0.39);
    pad1->Draw();
@@ -49,8 +49,11 @@ f3->GetObject("h_ttbar", h4);
 
         TH1F *hbkg = (TH1F*)h3->Clone("hbkg");
         TH1F *hdiv1 = (TH1F*)h2->Clone("hdiv1");
-        TH1F *hdiv2 = (TH1F*)h1->Clone("hdiv2");
+        TH1F *hdiv2 = (TH1F*)h1->Clone("hdiv2"); // dy
+        std::cout<< "flag2" << std::endl;
         TH1F *httbar = (TH1F*)h4->Clone("httbar");
+        std::cout<< "flag3" << std::endl;
+
 
 hdiv2->Add(hbkg); // adding hbkg and ttbar onto dy to make total mc
 hdiv2->Add(httbar);
@@ -131,8 +134,8 @@ hdiv1->SetMarkerStyle(20);
         TH1F *hs_ttbar = (TH1F*)h4->Clone("hs_ttbar");
 
 auto hs  = new THStack("hs", "");
-hs->Add(hs_bkg);
 hs->Add(hs_dy);
+hs->Add(hs_bkg);
 hs->Add(hs_ttbar);
 
 hs_data->SetStats(kFALSE);
@@ -147,8 +150,8 @@ hs_dy->SetFillColor(kBlue-10);
 hs_bkg->SetLineColor(kRed-10);
 hs_bkg->SetFillColor(kRed-10);
 
-hs_ttbar->SetLineColor(kOrange-10);
-hs_ttbar->SetFillColor(kOrange-10);
+hs_ttbar->SetLineColor(kOrange);
+hs_ttbar->SetFillColor(kOrange);
 
 
 hs_data->SetMarkerStyle(22);
@@ -172,13 +175,13 @@ hs->SetMaximum(1e12);
 
         legend->Draw();
 
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.png");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.pdf");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.root");
+c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.png");
+c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.pdf");
+c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.root");
 // c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_1.png");
 // c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_1.pdf");
 // c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_1.root");
-c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.png");
-c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.pdf");
-c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.root");
+// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.png");
+// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.pdf");
+// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.root");
 }
