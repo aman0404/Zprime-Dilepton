@@ -1,47 +1,45 @@
 def for_all_years(value):
     out = {k: value for k in ["2016pre", "2016post", "2017", "2018"]}
+    #out = {k: value for k in ["2016preVFP","2016postVFP", "2017", "2018"]}
     return out
 
-
 parameters = {}
-lumis = {"2016": 36.3, "2017": 42.1, "2018": 59.83}
-#parameters["lumimask_Pre-UL_mu"] = {
-    # "2016": "data/lumimasks/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt",
-    # "2017": "data/lumimasks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt",
-    # "2018": "data/lumimasks/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
-#    "2016": "data/lumimasks/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON_MuonPhys.txt",
-#    "2017": "data/lumimasks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_MuonPhys.txt",
-#    "2018": "data/lumimasks/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON_MuonPhys.txt",
-#}
+# for lumis, the 0th element is golden sample, the 1th element is muonphys
+lumis = {"2016pre": [19.12*1000,19.29*1000], "2016post": [16.81*1000, 17.01*1000], "2017": [41.48*1000,42.02*1000], "2018": [59.83*1000,61.31*1000]}
+parameters["lumimask_Pre-UL_mu"] = {
+    "2016": "data/lumimasks/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON_MuonPhys.txt",
+    "2017": "data/lumimasks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_MuonPhys.txt",
+    "2018": "data/lumimasks/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON_MuonPhys.txt",
+}
 
-#parameters["lumimask_Pre-UL_el"] = {
-#    "2018": "data/lumimasks/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt",
-#}
 
-#parameters["lumimask_UL_el"] = {
-#    "2018": "data/lumimasks/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt",
-#}
+parameters["lumimask_UL_el"] = {
+    "2016pre": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+    "2016post": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+    "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt",
+    "2018": "data/lumimasks/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt",
+}
 parameters["lumimask_UL_mu"] = {
-
-     "2016pre": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
-     "2016post": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
-     "2018": "data/lumimasks/UL18_json_GoldenJson.txt",
-     #"2018": "data/lumimasks/UL18_json_muonPhys.txt",
-     "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_MuonJSON.txt",
+    "2016pre": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+    "2016post": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+    "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt",
+    "2018": "data/lumimasks/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt",
 }
 
 parameters["mu_hlt"] = {
-    #"2016pre": ["Mu50"],
-    "2016pre": ["Mu50", "TkMu50"],
-    "2016post": ["Mu50", "TkMu50"],
-    #"2017": ["Mu50"],
-    "2017": ["Mu50", "TkMu100", "OldMu100"],
+    "2016": ["Mu50", "TkMu50"],
+    "2017": ["Mu50", "TkMu100", "OldMu100"], # this may have to be changed
     "2018": ["Mu50", "TkMu100", "OldMu100"],
 }
 
 parameters["el_hlt"] = {
-    "2016": ["Mu50", "TkMu50"],
-    "2017": ["Mu50", "TkMu100", "OldMu100"],
+    #"2016post": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    "2016pre": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    "2016post": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    #"2016post": ["DoubleEle33_CaloIdL_MW", "DoubleEle33_CaloIdL_GsfTrkIdVL", "DoubleEle33_CaloIdL_GsfTrkIdVL_MW"],
+    #"2016pre": ["DoubleEle33_CaloIdL_MW","HLT_DoubleEle33_CaloIdL_GsfTrkIdVL"],
+#    "2016postVFP": ["DoubleEle33_CaloIdL_MW","HLT_DoubleEle33_CaloIdL_GsfTrkIdVL"],
+    "2017": ["DoubleEle33_CaloIdL_MW"],
     "2018": ["DoubleEle25_CaloIdL_MW"],
 }
 
@@ -49,15 +47,14 @@ parameters["el_hlt"] = {
 parameters["btag_sf_pre_UL"] = {
     "2016": "data/b-tagging/DeepCSV_2016LegacySF_V1.csv",
     "2017": "data/b-tagging/DeepCSV_94XSF_V5_B_F.csv",
-    # "2018": "data/b-tagging/DeepCSV_102XSF_WP_V1.csv",
     "2018": "data/b-tagging/DeepJet_102XSF_WP_V1.csv",
 }
 
 parameters["btag_sf_UL"] = {
-    "2018" : "data/b-tagging/btagging_UL18.json",
-    "2016post": "data/b-tagging/btagging_UL2016postVFP.json",
     "2016pre": "data/b-tagging/btagging_UL2016preVFP.json",
-    "2017":  "data/b-tagging/btagging_UL17.json",
+    "2016post": "data/b-tagging/btagging_UL2016postVFP.json",
+    "2018": "data/b-tagging/btagging_UL18.json",
+    "2017": "data/b-tagging/btagging_UL17.json",
 }
 
 parameters["btag_sf_eff"] = {
@@ -72,7 +69,6 @@ parameters["pu_file_data"] = {
     "2016post": "data/pileup/puData2016PostVFP_new.root",
     "2017": "data/pileup/puData2017_new.root",
     "2018": "data/pileup/puData2018_new.root",
-    #"2018": "data/pileup/puData2018_withVar.root",
 }
 
 parameters["pu_file_mc"] = {
@@ -80,11 +76,10 @@ parameters["pu_file_mc"] = {
     "2016post": "data/pileup/puMC2016PostVFP_new.root",
     "2017": "data/pileup/puMC2017_new.root",
     "2018": "data/pileup/puMC2018_new.root",
-#    "2018": "data/pileup/mcPileup2018.root",
 }
 
 parameters["muSFFileList"] = {
-    "2016pre": [
+    "2016": [
         {
             "id": (
                 "data/muon_sf/year2016/RunBCDEF_SF_ID.root",
@@ -118,42 +113,6 @@ parameters["muSFFileList"] = {
             "scale": 16.3 / 36.4,
         },
     ],
-
-    "2016post": [
-        {
-            "id": (
-                "data/muon_sf/year2016/RunBCDEF_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_eta_pt",
-            ),
-            "iso": (
-                "data/muon_sf/year2016/RunBCDEF_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_eta_pt",
-            ),
-            "trig": (
-                "data/muon_sf/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunBtoF.root",
-                "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
-                "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
-            ),
-            "scale": 20.1 / 36.4,
-        },
-        {
-            "id": (
-                "data/muon_sf/year2016/RunGH_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_eta_pt",
-            ),
-            "iso": (
-                "data/muon_sf/year2016/RunGH_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_eta_pt",
-            ),
-            "trig": (
-                "data/muon_sf/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root",
-                "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
-                "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
-            ),
-            "scale": 16.3 / 36.4,
-        },
-    ],
-
     "2017": [
         {
             "id": (
@@ -224,10 +183,11 @@ parameters.update(
                 "goodVertices",
                 "BadChargedCandidateFilter",
                 "eeBadScFilter",
-                "ecalBadCalibFilter", 
+                "ecalBadCalibFilter",
+
             ]
         ),
-        "do_l1prefiring_wgts": {"2016pre": True, "2016post": True, "2017": True, "2018": False},
+        "do_l1prefiring_wgts": {"2016pre": True,"2016post":True,  "2017": True, "2018": False},
         "3dangle": for_all_years(-0.9998),
     }
 )
@@ -236,26 +196,27 @@ parameters.update(
     {
         "muon_pt_cut": for_all_years(53.0),
         "muon_eta_cut": for_all_years(2.4),
-        "muon_iso_cut": for_all_years(0.05),  # medium iso
-        "muon_id": for_all_years("highPtId"),
-        "muon_dz": for_all_years(0.1),
-        "muon_dxy": for_all_years(0.02),
+        "muon_iso_cut": for_all_years(0.15),  # medium iso
+        "muon_id": for_all_years("looseId"),
+        "muon_dxy": for_all_years(0.2),
         "muon_ptErr/pt": for_all_years(0.3),
+        # "muon_flags": for_all_years(["isGlobal", "isTracker"]),
         "muon_flags": for_all_years([]),
-        "muon_leading_pt": {"2016pre": 53.0, "2016post": 53.0, "2017": 53.0, "2018": 53.0},
+        "electron_flags": for_all_years([]),
+        "muon_leading_pt": {"2016pre": 53.0,"2016post":53.0, "2017": 53.0, "2018": 53.0},
         "muon_trigmatch_iso": for_all_years(0.15),  # tight iso
         "muon_trigmatch_dr": for_all_years(0.1),
         "muon_trigmatch_id": for_all_years("tightId"),
-        "electron_dxy": for_all_years(0.2),
-        "electron_dz": for_all_years(0.5),
         "electron_pt_cut": for_all_years(35.0),
         "electron_eta_cut": for_all_years(2.5),
-        "electron_id": for_all_years("cutBased"),
+        "electron_id": for_all_years("cutBased_HEEP"),
+
         "UL_btag_loose":  {"2016pre": 0.0508, "2016post": 0.0480, "2017": 0.0532, "2018": 0.0490},
         "UL_btag_medium": {"2016pre": 0.2598, "2016post": 0.2489, "2017": 0.3040, "2018": 0.2783},
         "UL_btag_tight":  {"2016pre": 0.6502, "2016post": 0.6377, "2017": 0.7476, "2018": 0.7100},
 
         "2018HEM_veto" : {"2016pre": 0, "2016post": 0,"2017": 0, "2018": 1},
+
     }
 )
 
@@ -323,13 +284,13 @@ muon_branches = [
     "phi_raw",
     "charge",
     "ptErr",
+    "looseId",
     "highPtId",
     "tkRelIso",
     "mass",
     "dxy",
     "dz",
     "ip3d",
-    "pfRelIso04_all",
     "sip3d",
 ]
 fsr_branches = [
@@ -411,11 +372,8 @@ ele_branches = [
     "phi",
     "phi_raw",
     "mass",
-    "cutBased",
     "cutBased_HEEP",
     "charge",
-    "dxy",
-    "dz",
 ]
 other_branches = [
     "MET_pt",
@@ -426,6 +384,7 @@ other_branches = [
     "nLHEPdfWeight",
     "LHEPdfWeight",
 ]
+
 event_flags = [
     "Flag_BadPFMuonDzFilter",
     "Flag_BadPFMuonFilter",
