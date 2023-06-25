@@ -4,15 +4,17 @@ import glob
 import tqdm
 
 import uproot
-
 uproot.open.defaults["xrootd_handler"] = uproot.MultithreadedXRootDSource
 
 from config.parameters import parameters
-from config.cross_sections import cross_sections
 from config.parameters import lumis
+from config.cross_sections import cross_sections
+
+import time
 
 def load_sample(dataset, parameters):
     xrootd = not (dataset == "test_file")
+    # print(f"xrootd: {xrootd}")
     args = {
         "year": parameters["year"],
         "out_path": parameters["out_path"],
@@ -20,7 +22,6 @@ def load_sample(dataset, parameters):
         "datasets_from": parameters["channel"],
         "debug": False,
         "xrootd": xrootd,
-        #"timeout": 1,
         "timeout": 1200,
     }
     samp_info = SamplesInfo(**args)
@@ -37,7 +38,6 @@ def load_sample(dataset, parameters):
 
 
 def load_samples(datasets, parameters):
-    print(parameters["year"])
     args = {
         "year": parameters["year"],
         "out_path": parameters["out_path"],
@@ -46,8 +46,10 @@ def load_samples(datasets, parameters):
         "debug": False,
     }
     samp_info_total = SamplesInfo(**args)
-    print("Loading lists of paths to ROOT files for these datasets:", datasets)
-    for d in tqdm.tqdm(datasets):
+    print("nano Loading lists of paths to ROOT files for these datasets:", datasets)
+    for d in tqdm.tqdm(datasets, disable=False):
+    # for d in datasets:
+        # print(f"d: {d}")
         if d in samp_info_total.samples:
             continue
         si = load_sample(d, parameters)[d]
@@ -60,19 +62,19 @@ def load_samples(datasets, parameters):
         samp_info_total.metadata.update(si.metadata)
         samp_info_total.lumi_weights.update(si.lumi_weights)
         samp_info_total.samples.append(si.sample)
+    print(f"samp_info_total: {samp_info_total}")
     return samp_info_total
 
 
 def read_via_xrootd(server, path, from_das=False):
     if from_das:
-        print(path)
         if "USER" in path:
             command = f'dasgoclient --query=="file dataset={path} instance=prod/phys03"'
         else:
             command = f'dasgoclient --query=="file dataset={path}"'
     else:
         command = f"xrdfs {server} ls -R {path} | grep '.root'"
-    print(command)
+    # print(f"command: {command}")    
     proc = subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
     )
@@ -82,12 +84,13 @@ def read_via_xrootd(server, path, from_das=False):
         print("    voms-proxy-init --voms cms")
         print("    source /cvmfs/cms.cern.ch/cmsset_default.sh")
     result = [server + r.rstrip().decode("utf-8") for r in result]
+    # print(f"result: {result}")
     return result
 
 
 class SamplesInfo(object):
     def __init__(self, **kwargs):
-        self.years = kwargs.pop("year", "2017")
+        self.year = kwargs.pop("year", "2016")
         self.out_path = kwargs.pop("out_path", "/output/")
         self.xrootd = kwargs.pop("xrootd", True)
         self.server = kwargs.pop("server", "root://xrootd.rcac.purdue.edu/")
@@ -97,33 +100,35 @@ class SamplesInfo(object):
         self.parameters = {}
         for k, v in parameters.items():
             try:
-                if "2018" in self.years:
+                if "2018" in self.year:
                     self.parameters.update({k: v["2018"]})
                 else:
-                    self.parameters.update({k: v.get(self.years, None)})
+                    self.parameters.update({k: v.get(self.year, None)})
             except Exception:
                 print(k, v)
         self.is_mc = True
-        print(datasets_from)
-        if "mu" in datasets_from:
+        print(f"datasets_from: {datasets_from}")
+        if "mu" == datasets_from:
             from config.datasets_muon import datasets
-            #from config.datasets_muon import datasets
+        elif "emu" == datasets_from:
+            from config.datasets_muon import datasets    
         elif "el" in datasets_from:
             from config.datasets_electron import datasets
-        self.paths = datasets[self.years]
+        self.paths = datasets[self.year]
 
-        if "2016pre" in self.years:
-            self.lumi = 19120.0
-            #self.lumi = 19290.0
-        elif "2016post" in self.years:
-            self.lumi = 16810.0
-            #self.lumi = 17010.0
+        if "mu" == datasets_from:
+            self.lumi = lumis[self.year][0] # using golden sample
+        elif "emu" == datasets_from:
+            self.lumi = lumis[self.year][0] # using golden sample
+        else:
+            self.lumi = lumis[self.year][0] # using golden sample
 
-        elif "2017" in self.years:
-            self.lumi = 41480.0
-        elif "2018" in self.years:
-            #self.lumi = 61310.0
-            self.lumi = 59830.0
+        #if "2016" in self.year:
+        #    self.lumi = 35900.0
+        #elif "2017" in self.year:
+        #    self.lumi = 41530.0
+        #elif "2018" in self.year:
+        #    self.lumi = 59970.0
 
         self.data_entries = 0
         self.sample = ""
@@ -168,19 +173,19 @@ class SamplesInfo(object):
         elif self.paths[sample].endswith(".root"):
             all_files = [self.paths[sample]]
         else:
-            print("check")
-            print(self.paths[sample])
             all_files = [
                 self.server + f for f in glob.glob(self.paths[sample] + "/**/**/*.root")
             ]
 
         if self.debug:
             all_files = [all_files[0]]
-
+        # print(f"all_files: {all_files}")
         sumGenWgts = 0
         nGenEvts = 0
         if use_dask:
             from dask.distributed import get_client
+            # print(f"type(client): {type(client)}")
+            # print(f"all_files: {all_files}")
 
             if not client:
                 client = get_client()
@@ -188,7 +193,11 @@ class SamplesInfo(object):
                 work = client.map(self.get_data, all_files, priority=100)
             else:
                 work = client.map(self.get_mc, all_files, priority=100)
+            # print(f"work: {work}")
+            # print(f"sample: {sample}")
+            # print(f"len(work): {len(work)}")
             for w in work:
+                # print(f"w: {w}")
                 ret = w.result()
                 if "data" in sample:
                     data_entries += ret["data_entries"]
@@ -212,7 +221,6 @@ class SamplesInfo(object):
                         nGenEvts += tree["genEventCount"].array()[0]
         metadata["sumGenWgts"] = sumGenWgts
         metadata["nGenEvts"] = nGenEvts
-
         files = {"files": all_files, "treename": "Events"}
         return {
             "sample": sample,
@@ -242,16 +250,19 @@ class SamplesInfo(object):
     def finalize(self):
         if self.is_mc:
             N = self.metadata["sumGenWgts"]
+            # print(f"N:  {N}")
+            
+            # print(f"self.lumi: {self.lumi}")
             numevents = self.metadata["nGenEvts"]
             if isinstance(cross_sections[self.sample], dict):
-                xsec = cross_sections[self.sample][self.years]
+                xsec = cross_sections[self.sample][self.year]
             else:
                 xsec = cross_sections[self.sample]
             if N > 0:
                 self.lumi_weights[self.sample] = xsec * self.lumi / N
             else:
                 self.lumi_weights[self.sample] = 0
-            # print(f"{self.sample}: events={numevents}")
+            # print(f"xsec: \n {xsec}")
             return numevents
         else:
             return self.data_entries
