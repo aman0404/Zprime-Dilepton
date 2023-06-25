@@ -1,8 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-#from ROOT import TLorentzVector
-#from ROOT import TVector3
+
 
 def mkdir(path):
     try:
@@ -73,7 +72,7 @@ def p4(obj, is_mc=True):
     return result
 
 
-def p4_sum(obj1, obj2, is_mc=True):
+def p4_sum(obj1, obj2, is_mc=True,eScale="Nominal"):
 
     result = pd.DataFrame(
         index=obj1.index.union(obj2.index),
@@ -97,15 +96,67 @@ def p4_sum(obj1, obj2, is_mc=True):
             "rap",
         ],
     ).fillna(0.0)
+    # print(f"early result: \n{result.to_string()}")
+    
     for obj in [obj1, obj2]:
-        px_ = obj.pt * np.cos(obj.phi)
-        py_ = obj.pt * np.sin(obj.phi)
-        pz_ = obj.pt * np.sinh(obj.eta)
+       #electron energy scale uncertainty, 2% for barrel electrons and 1% for endcap electrons (to be revisited for UL)
+       obj["eScaleFac"] = 1.0
+       if eScale == "Up":
+           if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
+               obj.loc[
+                    (abs(obj.eta < 1.442)),
+                   "eScaleFac",
+               ] = 1.02
+           if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
+               obj.loc[
+                    (abs(obj.eta > 1.442)),
+                   "eScaleFac",
+               ] = 1.01
+       elif eScale == "Down":
+           if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
+               obj.loc[
+                    (abs(obj.eta < 1.442)),
+                   "eScaleFac",
+               ] = 0.98
+           if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
+               obj.loc[
+                    (abs(obj.eta > 1.442)),
+                   "eScaleFac",
+               ] = 0.99
+        #else:
+        #    if not len(obj.loc[abs(obj.eta < 1.442)]) == 0:
+        #        obj.loc[
+        #             (abs(obj.eta < 1.442)),
+        #            "eScaleFac",
+        #        ] = 1.0
+        #    if not len(obj.loc[abs(obj.eta > 1.442)]) == 0:
+        #        obj.loc[
+        #             (abs(obj.eta > 1.442)),
+        #            "eScaleFac",
+        #        ] = 1.0
+
+    # print(f"early result 2: \n{result.to_string()}")
+    # print(f"obj1: \n {obj1.to_string()}")
+    # print(f"obj2: \n {obj2.to_string()}")
+
+    for obj in [obj1, obj2]:
+        px_ = obj.pt * np.cos(obj.phi)*obj.eScaleFac
+        py_ = obj.pt * np.sin(obj.phi)*obj.eScaleFac
+        pz_ = obj.pt * np.sinh(obj.eta)*obj.eScaleFac
         e_ = np.sqrt(px_ ** 2 + py_ ** 2 + pz_ ** 2 + obj.mass ** 2)
-        result.px += px_
-        result.py += py_
-        result.pz += pz_
-        result.e += e_
+
+        # print(f"px_.fillna(0.0): {px_.fillna(0.0).to_string()}")
+        # print(f"py_.fillna(0.0): {py_.fillna(0.0).to_string()}")
+        # print(f"result.px.isnull().values.any() b4: {result.px.isnull().values.any()}")
+        # print(f"result.py.isnull().values.any() b4: {result.py.isnull().values.any()}")
+        result.px += px_.reindex(result.index).fillna(0.0)
+        result.py += py_.reindex(result.index).fillna(0.0)
+        result.pz += pz_.reindex(result.index).fillna(0.0)
+        result.e += e_.reindex(result.index).fillna(0.0)
+        # print(f"result.px.isnull().values.any() after: {result.px.isnull().values.any()}")
+        # print(f"result.py.isnull().values.any() after: {result.py.isnull().values.any()}")
+        # print(f"result.px: \n{result.px.to_string()}")
+        # print(f"result.py: \n{result.py.to_string()}")
         if is_mc:
             px_gen_ = obj.pt_gen * np.cos(obj.phi_gen)
             py_gen_ = obj.pt_gen * np.sin(obj.phi_gen)
@@ -113,31 +164,24 @@ def p4_sum(obj1, obj2, is_mc=True):
             e_gen_ = np.sqrt(px_gen_ ** 2 + py_gen_ ** 2 + pz_gen_ ** 2 + obj.mass ** 2)
 
         if is_mc:
-            result.px_gen += px_gen_
-            result.py_gen += py_gen_
-            result.pz_gen += pz_gen_
-            result.e_gen += e_gen_
+            result.px_gen += px_gen_.reindex(result.index).fillna(0.0)
+            result.py_gen += py_gen_.reindex(result.index).fillna(0.0)
+            result.pz_gen += pz_gen_.reindex(result.index).fillna(0.0)
+            result.e_gen += e_gen_.reindex(result.index).fillna(0.0)
 
-
-    result.pt = np.sqrt(result.py.astype(float) ** 2 + result.px.astype(float) ** 2)
-    result.eta = np.arcsinh(result.pz.astype(float) / result.pt.astype(float))
-#    result.eta = np.arcsinh(result.pz / result.pt)
-    result.phi = np.arctan2(result.py.astype(float), result.px.astype(float))
-#    result.phi = np.arctan2(result.py, result.px)
-
-    result.e = result.e.astype(float)
-    result.px = result.px.astype(float)
-    result.py = result.py.astype(float)
-    result.pz = result.pz.astype(float)
-
+    # print(f"result.px type: {result.px.dtype}")
+    # print(f"result after: \n{result.to_string()}")
+    # print(f"result.px: \n  {result.px.to_string()}")
+    # print(f"result.py: \n  {result.py.to_string()}")
+    
+    result.pt = np.sqrt(result.px ** 2 + result.py ** 2)
+    #result.pt = np.sqrt(result.py ** 2 + result.py ** 2)
+    result.eta = np.arcsinh(result.pz / result.pt)
+    result.phi = np.arctan2(result.py, result.px)
     result.mass = np.sqrt(
         result.e ** 2 - result.px ** 2 - result.py ** 2 - result.pz ** 2
     )
     if is_mc:
-        result.px_gen = result.px_gen.astype(float)
-        result.py_gen = result.py_gen.astype(float)
-        result.pz_gen = result.pz_gen.astype(float)
-        result.e_gen  = result.e_gen.astype(float)
         result.pt_gen = np.sqrt(result.px_gen ** 2 + result.py_gen ** 2)
         result.eta_gen = np.arcsinh(result.pz_gen / result.pt_gen)
         result.phi_gen = np.arctan2(result.py_gen, result.px_gen)
@@ -181,54 +225,6 @@ def angle(vec1, vec2):
     arg[arg < -1.0] = -1.0
     return np.arccos(arg)
 
-#def angle(vect1, vect2):
-#   
-#    result = pd.DataFrame(
-#        index = vect1.index.union(vect2.index),
-#        columns=[
-#            "v1",
-#            "v2",
-#            "lb_angle",
-#        ],
-#    ).fillna(0.0)
-#
-#    px1 = vect1.pt * np.cos(vect1.phi)
-#    py1 = vect1.pt * np.sin(vect1.phi)
-#    pz1 = vect1.pt * np.sinh(vect1.eta)
-#    e1 = np.sqrt(px1 ** 2 + py1 ** 2 + pz1 ** 2 + vect1.mass ** 2)
-#
-#    px2 = vect2.pt * np.cos(vect2.phi)
-#    py2 = vect2.pt * np.sin(vect2.phi)
-#    pz2 = vect2.pt * np.sinh(vect2.eta)
-#    e2 = np.sqrt(px2 ** 2 + py2 ** 2 + pz2 ** 2 + vect2.mass ** 2)
-#
-#    pl1  = TLorentzVector()
-#    pl2  = TLorentzVector()
-#
-#    for i in range(len(px1)):
-#        pl1.SetPxPyPzE(px1[i], py1[i], pz1[i], e1[i]) 
-#        v1_ = TVector3()
-#        v1_ = pl1.Vect()
-#
-#        result.v1 += v1_
-
-#    for i in range(len(px2)):
-#        pl2.SetPxPyPzE(px2[i], py2[i], pz2[i], e2[i])
-#        v2_ = TVector3()
-#        v2_ = pl2.Vect()  
-#
-#        result.v2 += v2_
-#
-#    ptot2_1 = v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2]
-#    ptot2_2 = v2[0] * v2[0] + v2[1] * v2[1] + v2[2] * v2[2]
-#    ptot2 = ptot2_1 * ptot2_2
-#    ptot2[ptot2 <= 0] = 0.0
-#    arg = (v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]) / np.sqrt(ptot2)
-#    arg[arg > 1.0] = 1.0
-#    arg[arg < -1.0] = -1.0
-#    result.lb_angle = np.arccos(arg)
-#        
-#    return result
 
 def bbangle(objs1, objs2):
     pt1 = objs1.pt
@@ -248,10 +244,10 @@ def bbangle(objs1, objs2):
     ptot2 = ptot2_1 * ptot2_2
     ptot2[ptot2 <= 0] = 0.0
     arg = (px1 * px2 + py1 * py2 + pz1 * pz2) / np.sqrt(ptot2)
-    #arg[arg > 1.0] = 1.0
-    #arg[arg < -1.0] = -1.0
+    arg[arg > 1.0] = 1.0
+    arg[arg < -1.0] = -1.0
     return np.arccos(arg)
-#    return arg
+
 
 # https://root.cern.ch/doc/master/classTVector3
 # .html#a4d0080544bc4d4ac669fa5e3bada8e25
@@ -393,14 +389,14 @@ def cs_variables(mu1, mu2):
     mu2_kin = boost(mu2_kin, boost_vector)
     pf = boost(pf, boost_vector)
     pw = boost(pw, boost_vector)
-#    angle_filter = angle([px, py, pz], [pf[0], pf[1], pf[2]]) < angle(
-#        [px, py, pz], [pw[0], pw[1], pw[2]]
-#    )
-#    for i in range(4):
-#        pw[i][angle_filter] = -multiplier[angle_filter] * pw[i][angle_filter]
-#        pf[i][angle_filter] = multiplier[angle_filter] * pf[i][angle_filter]
-#        pf[i][~angle_filter] = -multiplier[~angle_filter] * pf[i][~angle_filter]
-#        pw[i][~angle_filter] = multiplier[~angle_filter] * pw[i][~angle_filter]
+    angle_filter = angle([px, py, pz], [pf[0], pf[1], pf[2]]) < angle(
+        [px, py, pz], [pw[0], pw[1], pw[2]]
+    )
+    for i in range(4):
+        pw[i][angle_filter] = -multiplier[angle_filter] * pw[i][angle_filter]
+        pf[i][angle_filter] = multiplier[angle_filter] * pf[i][angle_filter]
+        pf[i][~angle_filter] = -multiplier[~angle_filter] * pf[i][~angle_filter]
+        pw[i][~angle_filter] = multiplier[~angle_filter] * pw[i][~angle_filter]
 
     pf_mag = np.sqrt(pf[0] * pf[0] + pf[1] * pf[1] + pf[2] * pf[2])
     pw_mag = np.sqrt(pw[0] * pw[0] + pw[1] * pw[1] + pw[2] * pw[2])
@@ -432,17 +428,18 @@ def delta_r(eta1, eta2, phi1, phi2):
     dr = np.sqrt(deta ** 2 + dphi ** 2)
     return deta, dphi, dr
 
-def overlap_removal(obj1, obj2):
+def overlap_removal(objs1, objs2):
 
-    eta1 = obj1.eta
-    phi1 = obj1.phi   
+    eta1 = objs1.eta
+    phi1 = objs1.phi
 
-    if len(obj2) == 0:
-        # if there are no electrons, return an empty array of zeros
+    if len(objs2) == 0:
+        # if there are no muons, return an empty array of zeros
         return np.zeros_like(eta1)
 
-    eta2 = obj2.iloc[0].eta  
-    phi2 = obj2.iloc[0].phi
+    eta2 = objs2.iloc[0].eta
+    phi2 = objs2.iloc[0].phi
+
 
 
     deta = abs(eta1 - eta2)
@@ -453,3 +450,4 @@ def overlap_removal(obj1, obj2):
 #    print("--testing-- ", value_temp)
 
     return dr
+
