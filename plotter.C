@@ -58,25 +58,26 @@ std::cout<< "flag" << std::endl;
 hdiv1->Add(hbkg, -1); // substract dy and bkg from data
 hdiv1->Add(hdy, -1);
 //hdiv1->Add(hbkg, -1);
+
 //error calculation
 double err1;
 double err2;
 double val1 = hdiv1->IntegralAndError(1, -1, err1);
 double val2 = hdiv2->IntegralAndError(1, -1, err2);
+// double val1 = hdiv1->IntegralAndError(1, total_nbins, err1);
+// double val2 = hdiv2->IntegralAndError(1, total_nbins, err2);
 
-double err_test;
-double val_test = hdiv1->IntegralAndError(1, 390, err_test);
 
 
 std::cout<<"data total yield: "<<val1<<" error = "<<err1<<std::endl;
-std::cout<<"data test total yield: "<<val_test<<" error = "<<err_test<<std::endl;
 
 
 std::cout<<"ttbar MC   = "<<val2<<" error = "<<err2<<std::endl;
 
 std::cout<<"GetNbins center: "<<hdiv1->GetXaxis()->GetNbins()<<std::endl;
 
-std::cout<<"last bin center: "<<hdiv1->GetXaxis()->GetBinCenter(390)<<std::endl;
+int total_nbins = hdiv1->GetXaxis()->GetNbins();
+std::cout<<"last bin center: "<<hdiv1->GetXaxis()->GetBinCenter(total_nbins)<<std::endl; // -1 instead of total_nbins doesn't work
 
 double ratio = val1/val2;
 double e1 = (err1/val1);
