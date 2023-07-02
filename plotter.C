@@ -16,7 +16,7 @@ TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
 
 TH1 *h1, *h2, *h3, *h4;
 
-TFile *f1 = TFile::Open("dy_sys_BB.root");
+TFile *f1 = TFile::Open("dy_sys_BB.root"); // not sure why we need multiple file instances ... -> sth to try fix later
 f1->GetObject("h_dy", h1);
 
 TFile *f2 = TFile::Open("dy_sys_BB.root");
@@ -48,33 +48,43 @@ std::cout<< "flag" << std::endl;
    pad1->SetFrameBorderMode(0);
 
         TH1F *hbkg = (TH1F*)h3->Clone("hbkg");
-        TH1F *hdiv1 = (TH1F*)h2->Clone("hdiv1");
-        TH1F *hdiv2 = (TH1F*)h1->Clone("hdiv2"); // dy
-        std::cout<< "flag2" << std::endl;
-        TH1F *httbar = (TH1F*)h4->Clone("httbar");
-        std::cout<< "flag3" << std::endl;
+        TH1F *hdiv1 = (TH1F*)h2->Clone("hdiv1"); // data
+        TH1F *hdy = (TH1F*)h1->Clone("hdy"); // dy
+      //   std::cout<< "flag2" << std::endl;
+        TH1F *hdiv2 = (TH1F*)h4->Clone("hdiv2"); // ttbar
+      //   std::cout<< "flag3" << std::endl;
 
-
-hdiv2->Add(hbkg); // adding hbkg and ttbar onto dy to make total mc
-hdiv2->Add(httbar);
+// get ttbar SF and error
+hdiv1->Add(hbkg, -1); // substract dy and bkg from data
+hdiv1->Add(hdy, -1);
 //hdiv1->Add(hbkg, -1);
 //error calculation
 double err1;
 double err2;
-double val1 = hdiv1->IntegralAndError(1, 12, err1);
-double val2 = hdiv2->IntegralAndError(1, 12, err1);
+double val1 = hdiv1->IntegralAndError(1, -1, err1);
+double val2 = hdiv2->IntegralAndError(1, -1, err2);
 
-std::cout<<"data = "<<hdiv1->IntegralAndError(1, 12, err1)<<" error = "<<err1<<std::endl;
-std::cout<<"MC   = "<<hdiv2->IntegralAndError(1, 12, err2)<<" error = "<<err2<<std::endl;
+double err_test;
+double val_test = hdiv1->IntegralAndError(1, 390, err_test);
 
 
-double ratio = hdiv1->IntegralAndError(1, 12, err1)/hdiv2->IntegralAndError(1, 12, err2);
-double d1 = (err1/val1);
-double d2 = (err2/val2);
+std::cout<<"data total yield: "<<val1<<" error = "<<err1<<std::endl;
+std::cout<<"data test total yield: "<<val_test<<" error = "<<err_test<<std::endl;
 
-double dr    = ratio*sqrt((d1*d1) + (d2*d2));
 
-std::cout<<ratio<<'\t'<<dr<<std::endl;
+std::cout<<"ttbar MC   = "<<val2<<" error = "<<err2<<std::endl;
+
+std::cout<<"GetNbins center: "<<hdiv1->GetXaxis()->GetNbins()<<std::endl;
+
+std::cout<<"last bin center: "<<hdiv1->GetXaxis()->GetBinCenter(390)<<std::endl;
+
+double ratio = val1/val2;
+double e1 = (err1/val1);
+double e2 = (err2/val2);
+
+double er = ratio*sqrt((e1*e1) + (e2*e2));
+
+std::cout<<"ttbar SF: "<< ratio<<". err SF: "<<er<<std::endl;
 
 //plotting results
 
@@ -93,6 +103,7 @@ hdiv1->SetMarkerStyle(20);
    hdiv1->SetLineColor(kBlue+2);
    hdiv1->SetLineWidth(2);
    hdiv1->GetYaxis()->SetRangeUser(0,2);
+   hdiv1->GetXaxis()->SetRangeUser(100,1000);
    hdiv1->GetXaxis()->SetTitle("M_{emu} [GeV]");
    hdiv1->GetYaxis()->SetTitle("#frac{Data}{#sum MC}");
 
@@ -103,9 +114,11 @@ hdiv1->SetMarkerStyle(20);
       hdiv1->GetXaxis()->SetLabelSize(0.08);
 
    hdiv1->GetYaxis()->CenterTitle(true);
-//   hdiv1->GetXaxis()->SetRangeUser(200,3490);
+
+std::cout<< "flag2" << std::endl;
+
 //line
-   TLine *line = new TLine(60, 1,500, 1);
+   TLine *line = new TLine(100, 1,1000, 1);
    line->SetLineColor(kRed);
    line->Draw();
 
@@ -133,26 +146,31 @@ hdiv1->SetMarkerStyle(20);
         TH1F *hs_dy = (TH1F*)h1->Clone("hs_dy");
         TH1F *hs_ttbar = (TH1F*)h4->Clone("hs_ttbar");
 
+std::cout<< "flag3" << std::endl;
+
 auto hs  = new THStack("hs", "");
 hs->Add(hs_dy);
 hs->Add(hs_bkg);
 hs->Add(hs_ttbar);
-
+// hs->GetXaxis()->SetRangeUser(100,1000); 
+std::cout<< "flag4" << std::endl;
 hs_data->SetStats(kFALSE);
+// hs_data->GetXaxis()->SetRangeUser(100,1000); 
+
 hs->Draw("hist");
 hs_data->Draw("lep, same");
 
 hs->SetTitle("");
 
-hs_dy->SetLineColor(kBlue-10);
-hs_dy->SetFillColor(kBlue-10);
+hs_dy->SetLineColor(kBlue+7);
+hs_dy->SetFillColor(kBlue+7);
 
-hs_bkg->SetLineColor(kRed-10);
-hs_bkg->SetFillColor(kRed-10);
+hs_bkg->SetLineColor(kGreen);
+hs_bkg->SetFillColor(kGreen);
 
-hs_ttbar->SetLineColor(kOrange);
-hs_ttbar->SetFillColor(kOrange);
-
+hs_ttbar->SetFillColor(kRed);
+hs_ttbar->SetLineColor(kRed);
+std::cout<< "flag5" << std::endl;
 
 hs_data->SetMarkerStyle(22);
 hs_data->SetMarkerSize(1.0);
@@ -161,7 +179,9 @@ hs->GetYaxis()->SetTitleSize(0.045);
 hs->GetYaxis()->SetLabelSize(0.045);
 
 hs->SetMinimum(2.);
-hs->SetMaximum(1e12);
+// hs->SetMaximum(1e12);
+hs->SetMaximum(1e4);
+
 
         TLegend *legend = new TLegend(0.57,0.650899,0.94,0.8843167,NULL,"brNDC");
 
@@ -184,4 +204,4 @@ c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.root");
 // c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.png");
 // c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.pdf");
 // c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.root");
-}
+// }
