@@ -18,6 +18,7 @@ from ROOT import RooArgList
 from array import array
 import sys
 import argparse
+import copy
 
 parser = argparse.ArgumentParser()
 
@@ -115,8 +116,13 @@ if __name__ == '__main__':
     paths_w_rest = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/W*/*parquet" 
 
     #other bkdgs with no need for inclusive data cut
-    paths_z = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/Z*/*parquet" # includes ZZZ, WZZ, ZH_HToZZ, ttH_HToZZ
+    paths_z = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/Z*/*parquet" # includes ZZZ, ZH_HToZZ, ttH_HToZZ
 
+    paths_Higgs = list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/TT*/*parquet")))
+    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/tt*/*parquet")))
+    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/gg*/*parquet")))
+    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/GluGlu*/*parquet")))
+    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/VBF_HToZZTo4L/*parquet")))
 
     data_files = glob.glob(paths_data)
     df_data_temp = dd.read_parquet(data_files)
@@ -126,26 +132,41 @@ if __name__ == '__main__':
     df_dy_incl_temp = dd.read_parquet(dy_incl_files)
 
     dy_rest_files = list(set(glob.glob(paths_dy_rest)) - set(glob.glob(paths_dy_incl)))
-    # print(f"dy_rest_files: {dy_rest_files}")
+    print(f"dy_rest_files: {dy_rest_files}")
     df_dy_rest_temp = dd.read_parquet(dy_rest_files)
 
     ttbar_incl_files = glob.glob(paths_ttbar_incl)
     df_ttbar_incl_temp = dd.read_parquet(ttbar_incl_files)
 
     ttbar_rest_files = list(set(glob.glob(paths_ttbar_rest)) - set(glob.glob(paths_ttbar_incl)))
-    # print(f"ttbar_rest_files: {ttbar_rest_files}")
+    print(f"ttbar_rest_files: {ttbar_rest_files}")
     df_ttbar_rest_temp = dd.read_parquet(ttbar_rest_files)
 
     w_incl_files = glob.glob(paths_w_incl)
     df_w_incl_temp = dd.read_parquet(w_incl_files)
 
     w_rest_files = list(set(glob.glob(paths_w_rest)) - set(glob.glob(paths_w_incl)))
-    # print(f"w_rest_files: {w_rest_files}")
+    print(f"w_rest_files: {w_rest_files}")
     df_w_rest_temp = dd.read_parquet(w_rest_files)
 
     z_files = glob.glob(paths_z)
+    print(f"z_files: {z_files}")
     df_z_temp = dd.read_parquet(z_files)
 
+    Higgs_files = paths_Higgs
+    print(f"Higgs_files: {Higgs_files}")
+    df_Higgs_temp = dd.read_parquet(Higgs_files)
+
+    #check if we are double counting any files
+    print("checking for double counting")
+    double_count_suspects = [z_files, w_rest_files, Higgs_files]
+    for file_idx in range(len(double_count_suspects)):
+        suspect = double_count_suspects[file_idx]
+        comp_files = copy.deepcopy(double_count_suspects).pop(file_idx)
+        for comp_file in comp_files :
+            overlap = list(set(suspect) & set(comp_file))
+            if len(overlap) != 0 :
+                print(f"overlap by : {len(overlap)}")
 
 
     df_data = df_data_temp[load_fields]
@@ -159,9 +180,10 @@ if __name__ == '__main__':
     df_w_rest = df_w_rest_temp[load_fields]
 
     df_z = df_z_temp[load_fields]
+    df_Higgs = df_Higgs_temp[load_fields]
 
     # bkg_dfs = [df_ttbar, df_ww, df_zz]
-    bkg_l = [df_w_rest, df_z]
+    bkg_l = [df_w_rest, df_z, df_Higgs]
     df_bkg = dd.concat(bkg_l)
 
     print("computation complete")
