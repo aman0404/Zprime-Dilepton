@@ -128,8 +128,7 @@ datasets = {
    
 
     },
-    "2017": {
-        "data_B": "/SingleMuon/Run2017B-UL2017_MiniAODv2_NanoAODv9_GT36-v1/NANOAOD",
+    "2017": { # data_B is moved to a seperate 2017_B dictionary
         "data_C": "/SingleMuon/Run2017C-UL2017_MiniAODv2_NanoAODv9_GT36-v1/NANOAOD",
         "data_D": "/SingleMuon/Run2017D-UL2017_MiniAODv2_NanoAODv9_GT36-v1/NANOAOD",
         "data_E": "/SingleMuon/Run2017E-UL2017_MiniAODv2_NanoAODv9_GT36-v2/NANOAOD",
@@ -232,6 +231,9 @@ datasets = {
         "bbll_8TeV_M400_negLR": "/bbll_4FermionCI_M-400To1000_Lambda-8TeV_negLR/minxi-crab_bbll_4FermionCI_M-400To1000_Lambda-8TeV_negLRv3-ffc269a4a7db36b6df65b38ccc7bcc0e/USER",
         "bbll_8TeV_M400_posLL": "/bbll_4FermionCI_M-400To1000_Lambda-8TeV_posLL/minxi-crab_bbll_4FermionCI_M-400To1000_Lambda-8TeV_posLLv3-ffc269a4a7db36b6df65b38ccc7bcc0e/USER",
         "bbll_8TeV_M400_posLR": "/bbll_4FermionCI_M-400To1000_Lambda-8TeV_posLR/minxi-crab_bbll_4FermionCI_M-400To1000_Lambda-8TeV_posLRv3-ffc269a4a7db36b6df65b38ccc7bcc0e/USER",
+    },
+    "2017_B" : { # 2017 data B uses a different Trigger to the rest, thus this distinction is made
+        "data_B": "/SingleMuon/Run2017B-UL2017_MiniAODv2_NanoAODv9_GT36-v1/NANOAOD",
     },
     "2016post" : {
 

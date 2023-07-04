@@ -68,8 +68,15 @@ class EmuProcessor(processor.ProcessorABC):
             print("Samples info missing!")
             return
         print(f"self.samp_info: {self.samp_info}")
-        self.year = self.samp_info.year
+        print(f"self.samp_info.year: {self.samp_info.year}")
+        self.era_2017_B = self.samp_info.year == "2017_B"
+        if self.era_2017_B:
+            self.year = "2017"
+        else:
+            self.year = self.samp_info.year
         self.parameters = {k: v.get(self.year, None) for k, v in parameters.items()}
+        if self.era_2017_B: # override Trigger if data_B of 2017
+            self.parameters['mu_hlt'] = ['Mu50'] 
 
         self.do_btag = True
 
@@ -224,10 +231,13 @@ class EmuProcessor(processor.ProcessorABC):
 
         # Apply HLT to both Data and MC
 
-        # hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]+self.parameters["el_hlt"]])
-        hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]]) # HLT for el doesn't exist, so just mu_HLT
-        # hlt = hlt[self.parameters["mu_hlt"]+self.parameters["el_hlt"]].sum(axis=1)
+        # print(f"df.HLT: {df['HLT'].astype(str)}")
+        print(f"df.HLT: {ak.to_pandas(df.HLT)}")
+        # print(f'self.parameters["mu_hlt"]: {self.parameters["mu_hlt"]}')
+        hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]]) # no el_hlt  because our dataset is Single Muon
+        print(f"hlt b4: {hlt}")
         hlt = hlt[self.parameters["mu_hlt"]].sum(axis=1)
+        print(f"hlt after: {hlt}")
 
 
         if self.timer:
@@ -921,7 +931,13 @@ class EmuProcessor(processor.ProcessorABC):
         # Muon scale factors
         # self.musf_lookup = musf_lookup(self.parameters)
         # Pile-up reweighting
-        self.pu_lookups = pu_lookups(self.parameters)
+        parameters_temp = copy.deepcopy(self.parameters)
+        print(f"parameters_temp: {parameters_temp}")
+        # if "2017_B" in parameters_temp["year"]:
+        #     print("if activated")
+        #     parameters_temp["year"] = "2017"
+        self.pu_lookups = pu_lookups(parameters_temp)
+        # print(f"self.pu_lookups: {self.pu_lookups}")
         # Btag weights
         # self.btag_lookup = BTagScaleFactor(
         #        "data/b-tagging/DeepCSV_102XSF_WP_V1.csv", "medium"

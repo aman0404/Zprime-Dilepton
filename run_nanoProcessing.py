@@ -47,6 +47,7 @@ parser.add_argument(
     dest="label",
     # default="test_amandeep_dimu",
     default="test2023june_golden_data",
+    # default="test_test",
     action="store",
     help="Unique run label (to create output path)",
 )
@@ -79,7 +80,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-node_ip = "128.211.148.61"  # hammer-c000
+node_ip = "128.211.148.60"  # hammer-c000
 #node_ip = "128.211.148.61"  # hammer-c000
 # node_ip = "128.211.149.135"
 # node_ip = "128.211.149.140"
@@ -251,52 +252,54 @@ if __name__ == "__main__":
             "ttbar_lep_M1800toInf",
             "Wantitop",
             "tW",
-            # higgs
-            "TTWJetsToLNu",
-            "TTZToLLNuNu",
-            "ttHJetTobb",
-            "ttHJetToNonbb",
-            "GluGluHToZZTo4L",
-            "VBF_HToZZTo4L",
-            "ZH_HToBB_ZToLL",
-            "ggZH_HToBB",
-            "ttH_HToZZ",
-            "GluGluHToZZTo2L2Q",
-            "ZH_HToZZ",
-            # triboson
-            "WWW",
-            "WWZ",
-            "WZZ",
-            "ZZZ",
+
+            # # higgs
+            # "TTWJetsToLNu",
+            # "TTZToLLNuNu",
+            # "ttHJetTobb",
+            # "ttHJetToNonbb",
+            # "GluGluHToZZTo4L",
+            # "VBF_HToZZTo4L",
+            # "ZH_HToBB_ZToLL",
+            # "ggZH_HToBB",
+            # "ttH_HToZZ",
+            # "GluGluHToZZTo2L2Q",
+            # "ZH_HToZZ",
+
+            # # triboson
+            # "WWW",
+            # "WWZ",
+            # "WZZ",
+            # "ZZZ",
         ],
         "dy": [
-            "dyInclusive50",
+            # "dyInclusive50",
             "dy0J_M200to400",
-            "dy0J_M400to800",
-            "dy0J_M800to1400",
-            "dy0J_M1400to2300",
-            "dy0J_M2300to3500",
-            "dy0J_M3500to4500",
-            "dy0J_M4500to6000",
-            "dy0J_M6000toInf",
+            # "dy0J_M400to800",
+            # "dy0J_M800to1400",
+            # "dy0J_M1400to2300",
+            # "dy0J_M2300to3500",
+            # "dy0J_M3500to4500",
+            # "dy0J_M4500to6000",
+            # "dy0J_M6000toInf",
 
-	        "dy1J_M200to400",
-            "dy1J_M400to800",
-            "dy1J_M800to1400",
-            "dy1J_M1400to2300",
-            "dy1J_M2300to3500",
-            "dy1J_M3500to4500",
-            "dy1J_M4500to6000",
-            "dy1J_M6000toInf",
+	        # "dy1J_M200to400",
+            # "dy1J_M400to800",
+            # "dy1J_M800to1400",
+            # "dy1J_M1400to2300",
+            # "dy1J_M2300to3500",
+            # "dy1J_M3500to4500",
+            # "dy1J_M4500to6000",
+            # "dy1J_M6000toInf",
 
-            "dy2J_M200to400",
-            "dy2J_M400to800",
-            "dy2J_M800to1400",
-            "dy2J_M1400to2300",
-            "dy2J_M2300to3500",
-            "dy2J_M3500to4500",
-            "dy2J_M4500to6000",
-            "dy2J_M6000toInf",
+            # "dy2J_M200to400",
+            # "dy2J_M400to800",
+            # "dy2J_M800to1400",
+            # "dy2J_M1400to2300",
+            # "dy2J_M2300to3500",
+            # "dy2J_M3500to4500",
+            # "dy2J_M4500to6000",
+            # "dy2J_M6000toInf",
         ],
         "CI": [
             # "bsll_lambda1TeV_M200to500",
@@ -348,34 +351,38 @@ if __name__ == "__main__":
             ]
     elif parameters["year"] == "2017":
         smp["data"] = [
-            #"data_B",
-            #"data_C",
-            #"data_D",
-            #"data_E",
+            "data_C",
+            "data_D",
+            "data_E",
             "data_F",
             ]
-    elif parameters["year"] == "2016pre":
+    elif parameters["year"] == "2017_B": 
         smp["data"] = [
-            "data_Bv1",
-            "data_Bv2",
-            "data_C",
-            #"data_D",
-            #"data_E",
-            #"data_F",
-            ]
+            "data_B", # data B needs seperate trigger
+            ]        
     elif parameters["year"] == "2016post":
         smp["data"] = [
             "data_F",
             "data_G",
             "data_H",
             ]
+    elif parameters["year"] == "2016pre":
+        smp["data"] = [
+            "data_Bv1",
+            "data_Bv2",
+            "data_C",
+            "data_D",
+            "data_E",
+            "data_F",
+            ]
+    
 
     # prepare Dask client
     if parameters["local_cluster"]:
         # create local cluster
         parameters["client"] = Client(
             processes=True,
-            n_workers=24,
+            n_workers=50,
             # dashboard_address=dash_local,
             threads_per_worker=1,
             memory_limit="6GB",
@@ -384,6 +391,8 @@ if __name__ == "__main__":
         # connect to existing Slurm cluster
         parameters["client"] = Client(parameters["slurm_cluster_ip"])
     print("Client created")
+    print(f"processing year: {parameters['year']}")
+    print(f"saving on label: {args.label}")
 
     datasets_mc = []
     datasets_data = []
@@ -401,14 +410,17 @@ if __name__ == "__main__":
             # if not ("ttbar" in sample or "Wantitop" in sample or "tW" in sample):
             #    continue
 
-            #if group != "other_mc":
+            # if group != "other_mc":
             #    continue
             #if sample not in ["data_A"]:
             #    continue
             # if group != "dy":
             #     continue
+            if group != "data":
+                continue
             # if group == "dy":
             #     continue
+
             if group == "data":
                 datasets_data.append(sample)
             else:
