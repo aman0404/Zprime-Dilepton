@@ -104,6 +104,7 @@ hdiv1->SetMarkerStyle(20);
    hdiv1->SetLineColor(kBlue+2);
    hdiv1->SetLineWidth(2);
    hdiv1->GetYaxis()->SetRangeUser(0,2);
+   // hdiv1->GetYaxis()->SetRangeUser(-1000,1000);
    hdiv1->GetXaxis()->SetRangeUser(100,1000);
    hdiv1->GetXaxis()->SetTitle("M_{emu} [GeV]");
    hdiv1->GetYaxis()->SetTitle("#frac{Data}{#sum MC}");
@@ -151,15 +152,15 @@ std::cout<< "flag3" << std::endl;
 
 auto hs  = new THStack("hs", "");
 hs->Add(hs_dy);
-hs->Add(hs_bkg);
 hs->Add(hs_ttbar);
-// hs->GetXaxis()->SetRangeUser(100,1000); 
+hs->Add(hs_bkg);
+
 std::cout<< "flag4" << std::endl;
 hs_data->SetStats(kFALSE);
-// hs_data->GetXaxis()->SetRangeUser(100,1000); 
 
 hs->Draw("hist");
 hs_data->Draw("lep, same");
+
 
 hs->SetTitle("");
 
@@ -171,10 +172,12 @@ hs_bkg->SetFillColor(kGreen);
 
 hs_ttbar->SetFillColor(kRed);
 hs_ttbar->SetLineColor(kRed);
+
 std::cout<< "flag5" << std::endl;
 
 hs_data->SetMarkerStyle(22);
 hs_data->SetMarkerSize(1.0);
+hs->GetXaxis()->SetRangeUser(100,1000);
 hs->GetYaxis()->SetTitle("Events");
 hs->GetYaxis()->SetTitleSize(0.045);
 hs->GetYaxis()->SetLabelSize(0.045);
@@ -196,13 +199,13 @@ hs->SetMaximum(1e4);
 
         legend->Draw();
 
-c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.png");
-c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.pdf");
-c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_greater_1.root");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_1.png");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_1.pdf");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_1.root");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.png");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.pdf");
-// c1->SaveAs("plots/DY_BB_2018_emu_ttbar_all_nbjets_eq_0.root");
-// }
+// c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.png");
+// c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.pdf");
+// c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.root");
+// c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.png");
+// c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.pdf");
+// c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.root");
+c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.png");
+c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.pdf");
+c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.root");
+}

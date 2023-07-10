@@ -49,6 +49,14 @@ parser.add_argument(
     help="specify nbjets cut",
 )
 
+parser.add_argument(
+    "-yr",
+    "--year",
+    dest="year",
+    default=None,
+    action="store",
+    help="specify era",
+)
 
 args = parser.parse_args()
 
@@ -60,7 +68,9 @@ if __name__ == '__main__':
     print(f"region is: {parameters['regions']}") 
 
     print(f"nbjet cut is: {args.nbjets}")
-
+    year = args.year
+    print(f"year is : {year}")
+    
     # Dask client settings
     use_local_cluster = args.slurm_port is None
     node_ip = "128.211.148.60"
@@ -90,39 +100,30 @@ if __name__ == '__main__':
 
 
 
-    # paths = "/depot/cms/users/kaur214/output/muchannel_2018_allCuts_debug_Zpeak/stage1_output/2018/dyInclusive50/*parquet"
-
-    # paths_data = "/depot/cms/users/kaur214/output/muchannel_2018_allCuts_debug_Zpeak/stage1_output/2018/data_*/*parquet"
-
-    # paths_ttbar = "/depot/cms/users/kaur214/output/muchannel_2018_allCuts_debug_Zpeak/stage1_output/2018/ttbar_lep_inclusive/*parquet"
-    # paths_ww = "/depot/cms/users/kaur214/output/muchannel_2018_allCuts_debug_Zpeak/stage1_output/2018/W*/*parquet"
-    # paths_zz = "/depot/cms/users/kaur214/output/muchannel_2018_allCuts_debug_Zpeak/stage1_output/2018/Z*/*parquet"
 
 
 
-    paths_data = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/data_*/*parquet"
+    paths_data = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/data_*/*parquet"
 
-    paths_dy_incl = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/dyInclusive50/*parquet"
-    # paths_dy_rest = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/dy*J_*/*parquet"
-    paths_dy_rest = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/dy*/*parquet"
-
-
-    paths_ttbar_incl = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/ttbar_lep_inclusive/*parquet"
-    # paths_ttbar_rest = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/ttbar_*M*/*parquet"
-    paths_ttbar_rest = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/ttbar*/*parquet"
+    paths_dy_incl = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/dyInclusive50/*parquet"
+    paths_dy_rest = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/dy*/*parquet"
 
 
-    paths_w_incl = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/WWinclusive/*parquet"
-    paths_w_rest = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/W*/*parquet" 
+    paths_ttbar_incl = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ttbar_lep_inclusive/*parquet"
+    paths_ttbar_rest = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ttbar*/*parquet"
+
+
+    paths_w_incl = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WWinclusive/*parquet"
+    paths_w_rest = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/W*/*parquet" 
 
     #other bkdgs with no need for inclusive data cut
-    paths_z = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/Z*/*parquet" # includes ZZZ, ZH_HToZZ, ttH_HToZZ
+    paths_z = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/Z*/*parquet" # includes ZZZ, ZH_HToZZ, ttH_HToZZ
 
-    paths_Higgs = list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/TT*/*parquet")))
-    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/tt*/*parquet")))
-    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/gg*/*parquet")))
-    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/GluGlu*/*parquet")))
-    paths_Higgs += list(set(glob.glob("/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/2018/VBF_HToZZTo4L/*parquet")))
+    paths_Higgs = list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/TT*/*parquet")))
+    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/tt*/*parquet")))
+    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/gg*/*parquet")))
+    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/GluGlu*/*parquet")))
+    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/VBF_HToZZTo4L/*parquet")))
 
     data_files = glob.glob(paths_data)
     df_data_temp = dd.read_parquet(data_files)
@@ -132,29 +133,29 @@ if __name__ == '__main__':
     df_dy_incl_temp = dd.read_parquet(dy_incl_files)
 
     dy_rest_files = list(set(glob.glob(paths_dy_rest)) - set(glob.glob(paths_dy_incl)))
-    print(f"dy_rest_files: {dy_rest_files}")
+    # print(f"dy_rest_files: {dy_rest_files}")
     df_dy_rest_temp = dd.read_parquet(dy_rest_files)
 
     ttbar_incl_files = glob.glob(paths_ttbar_incl)
     df_ttbar_incl_temp = dd.read_parquet(ttbar_incl_files)
 
     ttbar_rest_files = list(set(glob.glob(paths_ttbar_rest)) - set(glob.glob(paths_ttbar_incl)))
-    print(f"ttbar_rest_files: {ttbar_rest_files}")
+    # print(f"ttbar_rest_files: {ttbar_rest_files}")
     df_ttbar_rest_temp = dd.read_parquet(ttbar_rest_files)
 
     w_incl_files = glob.glob(paths_w_incl)
     df_w_incl_temp = dd.read_parquet(w_incl_files)
 
     w_rest_files = list(set(glob.glob(paths_w_rest)) - set(glob.glob(paths_w_incl)))
-    print(f"w_rest_files: {w_rest_files}")
+    # print(f"w_rest_files: {w_rest_files}")
     df_w_rest_temp = dd.read_parquet(w_rest_files)
 
     z_files = glob.glob(paths_z)
-    print(f"z_files: {z_files}")
+    # print(f"z_files: {z_files}")
     df_z_temp = dd.read_parquet(z_files)
 
     Higgs_files = paths_Higgs
-    print(f"Higgs_files: {Higgs_files}")
+    # print(f"Higgs_files: {Higgs_files}")
     df_Higgs_temp = dd.read_parquet(Higgs_files)
 
     #check if we are double counting any files
