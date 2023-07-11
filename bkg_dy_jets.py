@@ -160,10 +160,22 @@ if __name__ == '__main__':
 
     #check if we are double counting any files
     print("checking for double counting")
-    double_count_suspects = [z_files, w_rest_files, Higgs_files]
+    double_count_suspects = [
+        z_files, 
+        Higgs_files,
+        dy_incl_files,
+        dy_rest_files,
+        ttbar_incl_files,
+        ttbar_rest_files,
+        w_incl_files,
+        w_rest_files,
+    ]
     for file_idx in range(len(double_count_suspects)):
         suspect = double_count_suspects[file_idx]
-        comp_files = copy.deepcopy(double_count_suspects).pop(file_idx)
+        comp_files = copy.deepcopy(double_count_suspects)
+        comp_files.pop(file_idx)
+        # print(f"suspect: {suspect}")
+        # print(f"comp_files: {comp_files}")
         for comp_file in comp_files :
             overlap = list(set(suspect) & set(comp_file))
             if len(overlap) != 0 :
