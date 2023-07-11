@@ -33,7 +33,8 @@ parameters["lumimask_UL_mu"] = {
 }
 
 parameters["mu_hlt"] = { # override of trigger for data_B of era 2017 happens in the processor (ie emu processor)
-    "2016": ["Mu50", "TkMu50"],
+    "2016post": ["Mu50", "TkMu50"],
+    "2016pre": ["Mu50", "TkMu50"],
     "2017": ["Mu50", "TkMu100", "OldMu100"],
     "2018": ["Mu50", "TkMu100", "OldMu100"],
 }

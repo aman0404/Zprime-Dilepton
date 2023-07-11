@@ -233,6 +233,9 @@ class EmuProcessor(processor.ProcessorABC):
 
         # print(f"df.HLT: {df['HLT'].astype(str)}")
         print(f"df.HLT: {ak.to_pandas(df.HLT)}")
+        print(f"df.HLT.keys(): {ak.to_pandas(df.HLT).columns.tolist()}")
+        print(f"df.HLT TkMu50: {ak.to_pandas(df.HLT)['TkMu50']}")
+        
         # print(f'self.parameters["mu_hlt"]: {self.parameters["mu_hlt"]}')
         hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]]) # no el_hlt  because our dataset is Single Muon
         print(f"hlt b4: {hlt}")
@@ -293,7 +296,8 @@ class EmuProcessor(processor.ProcessorABC):
             # Apply event quality flag
             output["r"] = None
             output["dataset"] = dataset
-            output["year"] = int(self.year)
+            # output["year"] = int(self.year)
+            output["year"] = self.year
             # if dataset == "dyInclusive50":
             #     muons = muons[muons.genPartFlav == 15]
             flags = ak.to_pandas(df.Flag)
@@ -544,7 +548,8 @@ class EmuProcessor(processor.ProcessorABC):
             (np.abs(leptons["eta_mu"]) > 1.2) | (np.abs(leptons["eta_el"]) > 1.442)
         ] = 'be'
 
-        leptons["year"] = int(self.year)
+        # leptons["year"] = int(self.year)
+        leptons["year"] = self.year
         output = leptons
 
 
@@ -933,9 +938,6 @@ class EmuProcessor(processor.ProcessorABC):
         # Pile-up reweighting
         parameters_temp = copy.deepcopy(self.parameters)
         print(f"parameters_temp: {parameters_temp}")
-        # if "2017_B" in parameters_temp["year"]:
-        #     print("if activated")
-        #     parameters_temp["year"] = "2017"
         self.pu_lookups = pu_lookups(parameters_temp)
         # print(f"self.pu_lookups: {self.pu_lookups}")
         # Btag weights
