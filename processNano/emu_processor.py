@@ -297,7 +297,7 @@ class EmuProcessor(processor.ProcessorABC):
             output["r"] = None
             output["dataset"] = dataset
             # output["year"] = int(self.year)
-            output["year"] = self.year
+            output["year"] = self.year # int() doesn't work for 2016pre and 2016post
             # if dataset == "dyInclusive50":
             #     muons = muons[muons.genPartFlav == 15]
             flags = ak.to_pandas(df.Flag)
@@ -549,7 +549,7 @@ class EmuProcessor(processor.ProcessorABC):
         ] = 'be'
 
         # leptons["year"] = int(self.year)
-        leptons["year"] = self.year
+        leptons["year"] = self.year # int() doesn't work for 2016pre and 2016post
         output = leptons
 
 
