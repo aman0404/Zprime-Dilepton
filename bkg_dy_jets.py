@@ -73,7 +73,7 @@ if __name__ == '__main__':
     
     # Dask client settings
     use_local_cluster = args.slurm_port is None
-    node_ip = "128.211.148.60"
+    node_ip = "128.211.148.61"
 
     if use_local_cluster:
         ncpus_local = 40
@@ -117,11 +117,11 @@ if __name__ == '__main__':
     paths_w_rest = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/W*/*parquet" 
 
     #other bkdgs with no need for inclusive data cut
-    paths_z = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/Z*/*parquet" # includes ZZZ, ZH_HToZZ, ttH_HToZZ
+    paths_z = f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/Z*/*parquet" # they are ZZZ, ZH_HToZZ, ZH_HToBB_ZToLL, ZZ2L2Nu, ZZ2L2Q, ZZ4L
 
     paths_Higgs = list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/TT*/*parquet")))
-    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/tt*/*parquet")))
-    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/gg*/*parquet")))
+    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ttH*/*parquet")))
+    paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ggZH_HToBB/*parquet")))
     paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/GluGlu*/*parquet")))
     paths_Higgs += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/VBF_HToZZTo4L/*parquet")))
 
@@ -183,20 +183,20 @@ if __name__ == '__main__':
     df_z = df_z_temp[load_fields]
     df_Higgs = df_Higgs_temp[load_fields]
 
-    # bkg_dfs = [df_ttbar, df_ww, df_zz]
-    bkg_l = [df_w_rest, df_z, df_Higgs]
+    # bkg_l = [df_w_rest, df_z, df_Higgs]
+    bkg_l = [df_w_rest, df_z]
     df_bkg = dd.concat(bkg_l)
 
     print("computation complete")
 
     df_data   = df_data[(df_data["r"]==f"{parameters['regions']}") & (df_data["dilepton_mass"] > 100.) & (df_data["dilepton_mass"] < 4000.)]
 
-    df_dy_incl   = df_dy_incl[(df_dy_incl["r"]==f"{parameters['regions']}") & (df_dy_incl["dilepton_mass"] > 100.) & (df_dy_incl["dilepton_mass"] < 500.) ] # 500 GeV cut
+    df_dy_incl   = df_dy_incl[(df_dy_incl["r"]==f"{parameters['regions']}") & (df_dy_incl["dilepton_mass"] > 100.) & (df_dy_incl["dilepton_mass"] < 200.) ] # 200 GeV cut
     df_dy_rest   = df_dy_rest[(df_dy_rest["r"]==f"{parameters['regions']}") & (df_dy_rest["dilepton_mass"] > 100.) & (df_dy_rest["dilepton_mass"] < 4000.) ]
     df_dy = dd.concat([df_dy_incl, df_dy_rest])
 
 
-    df_ttbar_incl   = df_ttbar_incl[(df_ttbar_incl["r"]==f"{parameters['regions']}") & (df_ttbar_incl["dilepton_mass"] > 100.) & (df_ttbar_incl["dilepton_mass"] < 200.)] # 200 GeV cut
+    df_ttbar_incl   = df_ttbar_incl[(df_ttbar_incl["r"]==f"{parameters['regions']}") & (df_ttbar_incl["dilepton_mass"] > 100.) & (df_ttbar_incl["dilepton_mass"] < 500.)] # 500 GeV cut
     df_ttbar_rest   = df_ttbar_rest[(df_ttbar_rest["r"]==f"{parameters['regions']}") & (df_ttbar_rest["dilepton_mass"] > 100.) & (df_ttbar_rest["dilepton_mass"] < 4000.)]
     df_ttbar = dd.concat([df_ttbar_incl, df_ttbar_rest])
 
