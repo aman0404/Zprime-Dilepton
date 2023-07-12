@@ -58,11 +58,11 @@ cross_sections = {
     "WW600to1200": 0.0566,
     "WW1200to2500": 0.003557,
     "WW2500toInf": 0.00005395,
-    "WWinclusive": 12.178,
+    "WWinclusive": 12.178, # leptonic decays
     "dyInclusive50": 6077.2,
     #"dyInclusive50": 6025.2,
     #"dyInclusive50": 5765.4,
-    # ~ "WWinclusive":118.7,
+    #"WWinclusive":118.7, # this is for all decay modes
     #"WZ": 47.13,
     "WZ1L3Nu": 3.414,
     "WZ1L1Nu2Q": 10.73,
