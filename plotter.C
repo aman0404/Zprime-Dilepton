@@ -1,4 +1,7 @@
 {
+
+int nbjets = 2;
+
 TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
    c1->Range(-29.17415,-0.08108108,263.2406,0.6466216);
    c1->SetFillColor(0);
@@ -107,7 +110,7 @@ hdiv1->SetMarkerStyle(20);
    // hdiv1->GetYaxis()->SetRangeUser(-1000,1000);
    hdiv1->GetXaxis()->SetRangeUser(100,1000);
    hdiv1->GetXaxis()->SetTitle("M_{emu} [GeV]");
-   hdiv1->GetYaxis()->SetTitle("#frac{Data}{#sum MC}");
+   hdiv1->GetYaxis()->SetTitle("#frac{Data - non ttbar MC}{ ttbar MC}");
 
    hdiv1->GetXaxis()->SetLabelFont(42);
    hdiv1->GetXaxis()->SetLabelOffset(0.05);
@@ -152,8 +155,15 @@ std::cout<< "flag3" << std::endl;
 
 auto hs  = new THStack("hs", "");
 hs->Add(hs_dy);
-hs->Add(hs_ttbar);
-hs->Add(hs_bkg);
+if (nbjets == 0){ // ttbar is not domninant bkg
+   hs->Add(hs_ttbar);
+   hs->Add(hs_bkg);
+}
+else { // ttbar is domninant bkg, so added last
+   hs->Add(hs_bkg);
+   hs->Add(hs_ttbar);
+}
+
 
 std::cout<< "flag4" << std::endl;
 hs_data->SetStats(kFALSE);
@@ -199,13 +209,22 @@ hs->SetMaximum(1e4);
 
         legend->Draw();
 
-// c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.png");
-// c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.pdf");
-// c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.root");
-// c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.png");
-// c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.pdf");
-// c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.root");
-c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.png");
-c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.pdf");
-c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.root");
+if (nbjets == 0){
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.png");
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.pdf");
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_0.root");
+}
+else if (nbjets == 1) {
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.png");
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.pdf");
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_eq_1.root");
+}
+else { // nbjets == 2
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.png");
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.pdf");
+   c1->SaveAs("plots/emu_ttbar_all_nbjets_greater_1.root");
+}
+
+
+
 }
