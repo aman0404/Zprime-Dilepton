@@ -195,8 +195,8 @@ if __name__ == '__main__':
     df_z = df_z_temp[load_fields]
     df_Higgs = df_Higgs_temp[load_fields]
 
-    # bkg_l = [df_w_rest, df_z, df_Higgs]
-    bkg_l = [df_w_rest, df_z]
+    # bkg_l = [df_z, df_Higgs]
+    bkg_l = [df_z]
     df_bkg = dd.concat(bkg_l)
 
     print("computation complete")
@@ -204,19 +204,19 @@ if __name__ == '__main__':
     df_data   = df_data[(df_data["r"]==f"{parameters['regions']}") & (df_data["dilepton_mass"] > 100.) & (df_data["dilepton_mass"] < 4000.)]
 
     df_dy_incl   = df_dy_incl[(df_dy_incl["r"]==f"{parameters['regions']}") & (df_dy_incl["dilepton_mass"] > 100.) & (df_dy_incl["dilepton_mass"] < 200.) ] # 200 GeV cut
-    df_dy_rest   = df_dy_rest[(df_dy_rest["r"]==f"{parameters['regions']}") & (df_dy_rest["dilepton_mass"] > 100.) & (df_dy_rest["dilepton_mass"] < 4000.) ]
+    df_dy_rest   = df_dy_rest[(df_dy_rest["r"]==f"{parameters['regions']}") & (df_dy_rest["dilepton_mass"] > 200.) & (df_dy_rest["dilepton_mass"] < 4000.) ]
     df_dy = dd.concat([df_dy_incl, df_dy_rest])
 
 
     df_ttbar_incl   = df_ttbar_incl[(df_ttbar_incl["r"]==f"{parameters['regions']}") & (df_ttbar_incl["dilepton_mass"] > 100.) & (df_ttbar_incl["dilepton_mass"] < 500.)] # 500 GeV cut
-    df_ttbar_rest   = df_ttbar_rest[(df_ttbar_rest["r"]==f"{parameters['regions']}") & (df_ttbar_rest["dilepton_mass"] > 100.) & (df_ttbar_rest["dilepton_mass"] < 4000.)]
+    df_ttbar_rest   = df_ttbar_rest[(df_ttbar_rest["r"]==f"{parameters['regions']}") & (df_ttbar_rest["dilepton_mass"] > 500.) & (df_ttbar_rest["dilepton_mass"] < 4000.)]
     df_ttbar = dd.concat([df_ttbar_incl, df_ttbar_rest])
 
     df_w_incl   = df_w_incl[(df_w_incl["r"]==f"{parameters['regions']}") & (df_w_incl["dilepton_mass"] > 100.) & (df_w_incl["dilepton_mass"] < 200.)] # 200 GeV cut
-    df_bkg   = df_bkg[(df_bkg["r"]==f"{parameters['regions']}") & (df_bkg["dilepton_mass"] > 100.) & (df_bkg["dilepton_mass"] < 4000.)]
+    df_w_rest   = df_w_rest[(df_w_rest["r"]==f"{parameters['regions']}") & (df_w_rest["dilepton_mass"] > 200.) & (df_w_rest["dilepton_mass"] < 4000.)]
 
-    # df_w_incl is part of other bkg
-    df_bkg = dd.concat([df_bkg, df_w_incl])
+    df_bkg = df_bkg[(df_bkg["r"]==f"{parameters['regions']}") & (df_bkg["dilepton_mass"] > 100.) & (df_bkg["dilepton_mass"] < 4000.)]
+    df_bkg = dd.concat([df_bkg, df_w_incl, df_w_rest]) # df_w_incl and df_w_rest is part of other bkg
 
 
     # apply nbjet cut:
