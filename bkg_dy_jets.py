@@ -73,7 +73,7 @@ if __name__ == '__main__':
     
     # Dask client settings
     use_local_cluster = args.slurm_port is None
-    node_ip = "128.211.148.61"
+    node_ip = "128.211.148.60"
 
     if use_local_cluster:
         ncpus_local = 40
@@ -201,7 +201,7 @@ if __name__ == '__main__':
 
     print("computation complete")
 
-    df_data   = df_data[(df_data["r"]==f"{parameters['regions']}") & (df_data["dilepton_mass_gen"] > 100.) & (df_data["dilepton_mass_gen"] < 4000.)]
+    df_data   = df_data[(df_data["r"]==f"{parameters['regions']}") & (df_data["dilepton_mass"] > 100.) & (df_data["dilepton_mass"] < 4000.)]
 
     df_dy_incl   = df_dy_incl[(df_dy_incl["r"]==f"{parameters['regions']}") & (df_dy_incl["dilepton_mass_gen"] > 100.) & (df_dy_incl["dilepton_mass_gen"] < 200.) ] # 200 GeV cut
     df_dy_rest   = df_dy_rest[(df_dy_rest["r"]==f"{parameters['regions']}") & (df_dy_rest["dilepton_mass_gen"] > 200.) & (df_dy_rest["dilepton_mass_gen"] < 4000.) ]
