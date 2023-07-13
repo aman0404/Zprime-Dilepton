@@ -419,7 +419,7 @@ datasets = {
 #        "ZZ4L": "/ZZTo4L_TuneCP5_13TeV_powheg_pythia8/jschulte-RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1-NANOAOD-00000000000000000000000000000000/USER",
 
    },
-    "2016pre" : {
+    "2016pre" : { # data_Bv1 is moved to a separate category
 
 #        "data_Bv1" : "/SingleMuon/jschulte-Run2016B-ver1_HIPM_UL2016_MiniAODv2-v2-NANOAOD-00000000000000000000000000000000/USER",
 #        "data_Bv2" : "/SingleMuon/jschulte-Run2016B-ver2_HIPM_UL2016_MiniAODv2-v2-NANOAOD-00000000000000000000000000000000/USER",
@@ -429,7 +429,6 @@ datasets = {
 #	"data_F" : "/SingleMuon/jschulte-Run2016F-HIPM_UL2016_MiniAODv2-v2-NANOAOD-00000000000000000000000000000000/USER",
  
         # "data_Bv1": "/SingleMuon/Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD", # using only v2
-        "data_Bv2": "/SingleMuon/Run2016B-ver2_HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD",
         "data_C": "/SingleMuon/Run2016C-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD",
         "data_D": "/SingleMuon/Run2016D-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD",
         "data_E": "/SingleMuon/Run2016E-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD",
@@ -601,6 +600,9 @@ datasets = {
 #        "ZZ2L2Q": "/ZZTo2Q2L_mllmin4p0_TuneCP5_13TeV-amcatnloFXFX-pythia8/jschulte-RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2-NANOAOD-00000000000000000000000000000000/USER",
 #        "ZZ4L": "/ZZTo4L_TuneCP5_13TeV_powheg_pythia8/jschulte-RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11_v1_NANOAOD-00000000000000000000000000000000/USER",
 
+   },
+   "2016pre_Bv2" : { # 2016 pre data_Bv2 uses a different Trigger to the rest, thus this distinction is made
+        "data_Bv2": "/SingleMuon/Run2016B-ver2_HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD",
    }
 
 }

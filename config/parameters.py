@@ -7,6 +7,7 @@ parameters = {}
 # for lumis, the 0th element is golden sample, the 1th element is muonphys
 lumis = {
     "2016pre": [19.12*1000,19.29*1000], 
+    "2016pre_Bv2": [19.12*1000,19.29*1000], 
     "2016post": [16.81*1000, 17.01*1000], 
     "2017": [41.48*1000,42.02*1000], 
     "2017_B": [41.48*1000,42.02*1000],

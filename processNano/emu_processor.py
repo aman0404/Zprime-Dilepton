@@ -69,13 +69,29 @@ class EmuProcessor(processor.ProcessorABC):
             return
         print(f"self.samp_info: {self.samp_info}")
         print(f"self.samp_info.year: {self.samp_info.year}")
-        self.era_2017_B = self.samp_info.year == "2017_B"
-        if self.era_2017_B:
+
+        if (self.samp_info.year == "2017_B"):
             self.year = "2017"
+        elif (self.samp_info.year == "2016pre_Bv2"):
+            self.year = "2016pre"
         else:
             self.year = self.samp_info.year
         self.parameters = {k: v.get(self.year, None) for k, v in parameters.items()}
-        if self.era_2017_B: # override Trigger if data_B of 2017
+        # self.parameters = {}
+        # for k, v in parameters.items():
+        #     print(f"parameters key: {k}")
+        #     print(f"parameters value: {v}")
+        #     param_v = v.get(self.year, None)
+        #     print(f"param_v b4: {param_v}")
+        #     if (param_v is not None) and (type(param_v) == list): # look for cases where param_v = ['Mu50', 'TkMu50']
+        #         if ('TkMu50' in param_v) and (self.samp_info.year == "2016pre_Bv2"):
+        #             param_v.remove('TkMu50')
+        #     print(f"param_v after: {param_v}")
+        #     self.parameters[k] = param_v
+
+        if (self.samp_info.year == "2017_B"): # override Trigger if data_B of 2017
+            self.parameters['mu_hlt'] = ['Mu50'] 
+        elif (self.samp_info.year == "2016pre_Bv2"): # override Trigger if data_Bv2 of 2016pre
             self.parameters['mu_hlt'] = ['Mu50'] 
 
         self.do_btag = True
@@ -234,9 +250,8 @@ class EmuProcessor(processor.ProcessorABC):
         # print(f"df.HLT: {df['HLT'].astype(str)}")
         print(f"df.HLT: {ak.to_pandas(df.HLT)}")
         print(f"df.HLT.keys(): {ak.to_pandas(df.HLT).columns.tolist()}")
-        print(f"df.HLT TkMu50: {ak.to_pandas(df.HLT)['TkMu50']}")
         
-        # print(f'self.parameters["mu_hlt"]: {self.parameters["mu_hlt"]}')
+        print(f'self.parameters["mu_hlt"]: {self.parameters["mu_hlt"]}')
         hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]]) # no el_hlt  because our dataset is Single Muon
         print(f"hlt b4: {hlt}")
         hlt = hlt[self.parameters["mu_hlt"]].sum(axis=1)

@@ -46,8 +46,8 @@ parser.add_argument(
     "--label",
     dest="label",
     # default="test_amandeep_dimu",
-    default="test2023june_golden_data",
-    # default="test_test",
+    # default="test2023june_golden_data",
+    default="test_test",
     action="store",
     help="Unique run label (to create output path)",
 )
@@ -273,33 +273,33 @@ if __name__ == "__main__":
             # "ZZZ",
         ],
         "dy": [
-            # "dyInclusive50",
+            "dyInclusive50",
             "dy0J_M200to400",
-            # "dy0J_M400to800",
-            # "dy0J_M800to1400",
-            # "dy0J_M1400to2300",
-            # "dy0J_M2300to3500",
-            # "dy0J_M3500to4500",
-            # "dy0J_M4500to6000",
-            # "dy0J_M6000toInf",
+            "dy0J_M400to800",
+            "dy0J_M800to1400",
+            "dy0J_M1400to2300",
+            "dy0J_M2300to3500",
+            "dy0J_M3500to4500",
+            "dy0J_M4500to6000",
+            "dy0J_M6000toInf",
 
-	        # "dy1J_M200to400",
-            # "dy1J_M400to800",
-            # "dy1J_M800to1400",
-            # "dy1J_M1400to2300",
-            # "dy1J_M2300to3500",
-            # "dy1J_M3500to4500",
-            # "dy1J_M4500to6000",
-            # "dy1J_M6000toInf",
+	        "dy1J_M200to400",
+            "dy1J_M400to800",
+            "dy1J_M800to1400",
+            "dy1J_M1400to2300",
+            "dy1J_M2300to3500",
+            "dy1J_M3500to4500",
+            "dy1J_M4500to6000",
+            "dy1J_M6000toInf",
 
-            # "dy2J_M200to400",
-            # "dy2J_M400to800",
-            # "dy2J_M800to1400",
-            # "dy2J_M1400to2300",
-            # "dy2J_M2300to3500",
-            # "dy2J_M3500to4500",
-            # "dy2J_M4500to6000",
-            # "dy2J_M6000toInf",
+            "dy2J_M200to400",
+            "dy2J_M400to800",
+            "dy2J_M800to1400",
+            "dy2J_M1400to2300",
+            "dy2J_M2300to3500",
+            "dy2J_M3500to4500",
+            "dy2J_M4500to6000",
+            "dy2J_M6000toInf",
         ],
         "CI": [
             # "bsll_lambda1TeV_M200to500",
@@ -368,14 +368,16 @@ if __name__ == "__main__":
             ]
     elif parameters["year"] == "2016pre":
         smp["data"] = [
-            "data_Bv1",
-            "data_Bv2",
+            # "data_Bv1", # not using v1
             "data_C",
             "data_D",
             "data_E",
             "data_F",
             ]
-    
+    elif parameters["year"] == "2016pre_Bv2":
+        smp["data"] = [
+           "data_Bv2" # data Bv2 needs seperate trigger
+        ]
 
     # prepare Dask client
     if parameters["local_cluster"]:
