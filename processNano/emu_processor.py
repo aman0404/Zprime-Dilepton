@@ -560,7 +560,7 @@ class EmuProcessor(processor.ProcessorABC):
             (np.abs(leptons["eta_mu"]) < 1.2) & (np.abs(leptons["eta_el"]) < 1.442)
         ] = 'bb'
         leptons['r'][
-            (np.abs(leptons["eta_mu"]) > 1.2) | (np.abs(leptons["eta_el"]) > 1.442)
+            (np.abs(leptons["eta_mu"]) > 1.2) ^ (np.abs(leptons["eta_el"]) > 1.442) # ee is not wanted
         ] = 'be'
 
         # leptons["year"] = int(self.year)
@@ -736,30 +736,6 @@ class EmuProcessor(processor.ProcessorABC):
         # between the objects
         # ------------------------------------------------------------#
 
-        matched_mu_pt = jets.matched_muons.pt
-        matched_mu_id = jets.matched_muons[self.parameters["muon_id"]]
-        matched_mu_pass = (
-            (matched_mu_pt > self.parameters["muon_pt_cut"])
-            & matched_mu_id
-        )
-        clean_mu = ~(
-            ak.to_pandas(matched_mu_pass)
-            .astype(float)
-            .fillna(0.0)
-            .groupby(level=[0, 1])
-            .sum()
-            .astype(bool)
-        )
-        matched_ele_pt = jets.matched_electrons.pt
-        matched_ele_id = jets.matched_electrons[self.parameters["electron_id"]]
-        matched_ele_pass = (
-            (matched_ele_pt > self.parameters["electron_pt_cut"]) &
-            matched_ele_id
-        )
-        clean_el = ~(ak.to_pandas(matched_ele_pass).astype(float).fillna(0.0)
-                  .groupby(level=[0, 1]).sum().astype(bool))
-
-        clean = clean_mu & clean_el
 
         #print("jet loop flag3")
         # if self.timer:
