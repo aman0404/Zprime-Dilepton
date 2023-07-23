@@ -1,6 +1,20 @@
+#include <string>
+#include <math.h>
+#include <stdexcept>
+
+float relErrQuadrature(float rel_err1, float rel_err2) {
+   /*
+   function that adds two relative errors in quadrature
+   */
+   return std::pow(std::pow(rel_err1, 2.0) + std::pow(rel_err2, 2.0), 0.5);
+}
+
+int plotter()
 {
 
-int nbjets = 2;
+int nbjets = 0;
+int year = 2018;
+std::string region = "be";
 
 TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
    c1->Range(-29.17415,-0.08108108,263.2406,0.6466216);
@@ -19,43 +33,125 @@ TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
 
 TH1 *h1, *h2, *h3, *h4;
 
-TFile *f1 = TFile::Open("dy_sys_BB.root"); // not sure why we need multiple file instances ... -> sth to try fix later
-f1->GetObject("h_dy", h1);
+TFile *f = TFile::Open("dy_sys_BB.root");
+// TFile *f1 = TFile::Open("dy_sys_BB.root"); // not sure why we need multiple file instances ... -> sth to try fix later
+f->GetObject("h_dy", h1);
 
-TFile *f2 = TFile::Open("dy_sys_BB.root");
-f2->GetObject("h_data", h2);
+// TFile *f2 = TFile::Open("dy_sys_BB.root");
+f->GetObject("h_data", h2);
 
-TFile *f3 = TFile::Open("dy_sys_BB.root");
-f3->GetObject("h_bkg", h3);
+// TFile *f3 = TFile::Open("dy_sys_BB.root");
+f->GetObject("h_bkg", h3);
 
-TFile *f4 = TFile::Open("dy_sys_BB.root");
-f4->GetObject("h_ttbar", h4);
+// TFile *f4 = TFile::Open("dy_sys_BB.root");
+f->GetObject("h_ttbar", h4);
 
 std::cout<< "flag" << std::endl;
 
- TPad *pad1 = new TPad("pad1", "pad1",0.05,0.03114206,0.99,0.39);
-   pad1->Draw();
-   pad1->cd();
-   pad1->Range(-49.46043,-0.4895868,524.2806,1.328879);
-   pad1->SetFillColor(0);
-   pad1->SetBorderMode(0);
-   pad1->SetBorderSize(2);
+TPad *pad1 = new TPad("pad1", "pad1",0.05,0.03114206,0.99,0.39);
+pad1->Draw();
+pad1->cd();
+pad1->Range(-49.46043,-0.4895868,524.2806,1.328879);
+pad1->SetFillColor(0);
+pad1->SetBorderMode(0);
+pad1->SetBorderSize(2);
 //   pad1->SetGridx();
-   pad1->SetRightMargin(0.04);
- //  pad1->SetTopMargin(0.00101554);
-   pad1->SetBottomMargin(0.4);
-   pad1->SetFrameBorderMode(0);
-   pad1->SetFrameBorderMode(0);
-   pad1->SetLeftMargin(0.14);
-   pad1->SetFrameBorderMode(0);
-   pad1->SetFrameBorderMode(0);
+pad1->SetRightMargin(0.04);
+//  pad1->SetTopMargin(0.00101554);
+pad1->SetBottomMargin(0.4);
+pad1->SetFrameBorderMode(0);
+pad1->SetFrameBorderMode(0);
+pad1->SetLeftMargin(0.14);
+pad1->SetFrameBorderMode(0);
+pad1->SetFrameBorderMode(0);
 
-        TH1F *hbkg = (TH1F*)h3->Clone("hbkg");
-        TH1F *hdiv1 = (TH1F*)h2->Clone("hdiv1"); // data
-        TH1F *hdy = (TH1F*)h1->Clone("hdy"); // dy
-      //   std::cout<< "flag2" << std::endl;
-        TH1F *hdiv2 = (TH1F*)h4->Clone("hdiv2"); // ttbar
-      //   std::cout<< "flag3" << std::endl;
+TH1F *hbkg = (TH1F*)h3->Clone("hbkg");
+TH1F *hdiv1 = (TH1F*)h2->Clone("hdiv1"); // data
+TH1F *hdy = (TH1F*)h1->Clone("hdy"); 
+//   std::cout<< "flag2" << std::endl;
+TH1F *hdiv2 = (TH1F*)h4->Clone("hdiv2"); // ttbar
+//   std::cout<< "flag3" << std::endl;
+TH1F *hsf = (TH1F*)h4->Clone("hdiv2");// SF histogram
+hsf->Reset();
+
+// apply the egamma SF
+// source: https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaUL2016To2018#HEEP_ID_Scale_Factor_for_UL
+
+float barrel_SF, barrel_SF_err_stat, barrel_SF_err_syst, endcap_SF,endcap_SF_err_stat, endcap_SF_err_syst;
+if (year == 2018){
+   barrel_SF = 0.973;
+   barrel_SF_err_stat = 0.001;
+   barrel_SF_err_syst = 0.004;
+   endcap_SF = 0.980;
+   endcap_SF_err_stat = 0.002;
+   endcap_SF_err_syst = 0.011;
+}
+else if (year == 2017){ 
+   barrel_SF = 0.979;
+   barrel_SF_err_stat = 0.001;
+   barrel_SF_err_syst = 0.005;
+   endcap_SF = 0.987;
+   endcap_SF_err_stat = 0.002;
+   endcap_SF_err_syst = 0.010;
+}
+else if (year == 2016){
+   barrel_SF = 0.985;
+   barrel_SF_err_stat = 0.001;
+   barrel_SF_err_syst = 0.004;
+   endcap_SF = 0.990;
+   endcap_SF_err_stat = 0.003;
+   endcap_SF_err_syst = 0.007;
+}
+else{
+   throw std::invalid_argument("invalid value for year");
+}
+
+// add barrel_SFs and endcap_SFs to make BB_SF and BE_SF
+float barrel_SF_err = barrel_SF* relErrQuadrature(
+   barrel_SF_err_stat/barrel_SF, 
+   barrel_SF_err_syst/barrel_SF 
+);
+
+float endcap_SF_err = endcap_SF* relErrQuadrature(
+   endcap_SF_err_stat/endcap_SF, 
+   endcap_SF_err_syst/endcap_SF 
+);
+
+float BB_SF = barrel_SF*barrel_SF;
+float BB_SF_err = BB_SF* relErrQuadrature(
+   barrel_SF_err/barrel_SF, 
+   barrel_SF_err/barrel_SF 
+);
+
+float BE_SF = barrel_SF*endcap_SF;
+float BE_SF_err = BE_SF* relErrQuadrature(
+   barrel_SF_err/barrel_SF, 
+   endcap_SF_err/endcap_SF 
+);
+
+float hsf_SF, hsf_SF_err;
+if (region == "bb" || region == "BB"){
+   hsf_SF = BB_SF;
+   hsf_SF_err = BB_SF_err;
+}
+else if (region == "be" || region == "BE"){
+   hsf_SF = BE_SF;
+   hsf_SF_err = BE_SF_err;
+}
+else{
+   throw std::invalid_argument("invalid value for region");
+}
+
+for(int i = 1; i < hsf->GetNbinsX()+1; i++){
+   hsf->SetBinContent(i, hsf_SF);
+	hsf->SetBinError(i, hsf_SF_err);
+}
+
+// apply hsf to all the histograms
+hbkg->Multiply(hsf);
+hdy->Multiply(hsf);
+hdiv1->Multiply(hsf);
+hdiv2->Multiply(hsf);
 
 // get ttbar SF and error
 hdiv1->Add(hbkg, -1); // substract dy and bkg from data
@@ -129,7 +225,7 @@ std::cout<< "flag2" << std::endl;
 
 
    c1->cd();
-   pad2 = new TPad("pad2", "pad2",0.05,0.37,0.99,0.99);
+   TPad *pad2 = new TPad("pad2", "pad2",0.05,0.37,0.99,0.99);
    pad2->Draw();
    pad2->cd();
    pad2->Range(-44.421,-161.3852,528.7119,36963.49);
