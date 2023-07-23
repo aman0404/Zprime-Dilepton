@@ -14,7 +14,7 @@ int plotter()
 
 int nbjets = 0;
 int year = 2018;
-std::string region = "be";
+std::string region = "bb";
 
 TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
    c1->Range(-29.17415,-0.08108108,263.2406,0.6466216);
@@ -246,6 +246,12 @@ std::cout<< "flag2" << std::endl;
         TH1F *hs_data = (TH1F*)h2->Clone("hs_data");
         TH1F *hs_dy = (TH1F*)h1->Clone("hs_dy");
         TH1F *hs_ttbar = (TH1F*)h4->Clone("hs_ttbar");
+
+// apply hsf to all the histograms
+hs_bkg->Multiply(hsf);
+hs_data->Multiply(hsf);
+hs_dy->Multiply(hsf);
+hdiv2->Multiply(hsf);
 
 std::cout<< "flag3" << std::endl;
 
