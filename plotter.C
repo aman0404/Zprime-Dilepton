@@ -9,7 +9,7 @@ float relErrQuadrature(float rel_err1, float rel_err2) {
    return std::pow(std::pow(rel_err1, 2.0) + std::pow(rel_err2, 2.0), 0.5);
 }
 
-int plotter()
+void plotter()
 {
 
 int nbjets = 0;
@@ -147,10 +147,9 @@ for(int i = 1; i < hsf->GetNbinsX()+1; i++){
 	hsf->SetBinError(i, hsf_SF_err);
 }
 
-// apply hsf to all the histograms
+// apply hsf to all the MC histograms
 hbkg->Multiply(hsf);
 hdy->Multiply(hsf);
-hdiv1->Multiply(hsf);
 hdiv2->Multiply(hsf);
 
 // get ttbar SF and error
@@ -247,11 +246,10 @@ std::cout<< "flag2" << std::endl;
         TH1F *hs_dy = (TH1F*)h1->Clone("hs_dy");
         TH1F *hs_ttbar = (TH1F*)h4->Clone("hs_ttbar");
 
-// apply hsf to all the histograms
+// apply hsf to all the MC histograms
 hs_bkg->Multiply(hsf);
-hs_data->Multiply(hsf);
 hs_dy->Multiply(hsf);
-hdiv2->Multiply(hsf);
+hs_ttbar->Multiply(hsf);
 
 std::cout<< "flag3" << std::endl;
 
