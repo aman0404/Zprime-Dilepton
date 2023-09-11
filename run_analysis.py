@@ -19,10 +19,10 @@ __all__ = ["dask"]
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "-y", "--years", nargs="+", help="Years to process", default=["2016pre"]
+    "-y", "--years", nargs="+", help="Years to process", default=["2018"]
 )
 parser.add_argument(
-    "-f", "--flavor", dest="flavor", help="lepton flavor", default="el"
+    "-f", "--flavor", dest="flavor", help="lepton flavor", default="emu"
 )
 parser.add_argument(
     "-sl",
@@ -50,16 +50,15 @@ else:
 parameters = {
     # < general settings >
     "slurm_cluster_ip": slurm_cluster_ip,
-    "global_path": "/depot/cms/private/users/kaur214/output/",
+    "global_path" : "/depot/cms/users/yun79/Zprime-Dilepton/output",
     "years": args.years,
-    # "label": "moreKiller",
-    # "label": "noGenWeight",
-    "label": "elec_channel_2016",
+    # "label": "test_amandeep_dimu",
+    "label": "test2023june_golden_data",
     "flavor": args.flavor,
+    # "channels": ["inclusive"],
     "channels": ["0b"],
-    #"channels": ["inclusive", "0b", "1b", "2b"],
-#    "regions": ["inclusive"],
-    "regions": ["bb", "be"],
+    "regions": ["bb"],
+    # "regions": ["bb", "be"],
     # "syst_variations": ["nominal"],
     # "syst_variations": ["nominal", "resUnc", "scaleUncUp", "scaleUncDown"],
     "syst_variations": [
@@ -78,8 +77,9 @@ parameters = {
     #
     # < settings for histograms >
     "hist_vars": [
-    #    "min_bl_mass",
-        "dielectron_mass",
+       "min_bl_mass",
+       "dilepton_mass",
+        # "dielectron_mass",
     #    "dielectron_mass_gen",
     #    "njets",
     #    "nbjets",
@@ -96,14 +96,14 @@ parameters = {
     #    "e1_phi",
     #    "bjet1_eta",
     ],
-    "hist_vars_2d": [["dielectron_mass", "met"]],
+    "hist_vars_2d": [["dilepton_mass", "met"]],
     "variables_lookup": variables_lookup,
     "save_hists": True,
     #
     # < settings for unbinned output>
     "tosave_unbinned": {
-        "bb": ["dielectron_mass", "event", "wgt_nominal"],
-        "be": ["dielectron_mass", "event", "wgt_nominal"],
+        "bb": ["dilepton_mass", "event", "wgt_nominal"],
+        "be": ["dilepton_mass", "event", "wgt_nominal"],
     },
     "save_unbinned": True,
     #
@@ -143,15 +143,15 @@ parameters["datasets"] = [
 #    "data_B",
 #    "data_C",
 #    "data_D",
-#
-    "dy0J_M200to400",
-    "dy0J_M400to800",
-    "dy0J_M800to1400",
-    "dy0J_M1400to2300",
-    "dy0J_M2300to3500",
-    "dy0J_M3500to4500",
-    "dy0J_M4500to6000",
-    "dy0J_M6000toInf",
+# #
+#     "dy0J_M200to400",
+#     "dy0J_M400to800",
+#     "dy0J_M800to1400",
+#     "dy0J_M1400to2300",
+#     "dy0J_M2300to3500",
+#     "dy0J_M3500to4500",
+#     "dy0J_M4500to6000",
+#     "dy0J_M6000toInf",
 
 #    "dy1J_M200to400",
 #    "dy1J_M400to800",
@@ -161,7 +161,7 @@ parameters["datasets"] = [
 #    "dy1J_M3500to4500",
 #    "dy1J_M4500to6000",
 #    "dy1J_M6000toInf",
-#
+
 #    "dy2J_M200to400",
 #    "dy2J_M400to800",
 #    "dy2J_M800to1400",
@@ -171,7 +171,7 @@ parameters["datasets"] = [
 #    "dy2J_M4500to6000",
 #    "dy2J_M6000toInf",
 
-#    "dyInclusive50",
+   "dyInclusive50",
 #    "ttbar_lep_inclusive",
 #    "ttbar_lep_M500to800",
 #    "ttbar_lep_M800to1200",
@@ -179,17 +179,17 @@ parameters["datasets"] = [
 #    "ttbar_lep_M1800toInf",
 #    "tW",
 #    "Wantitop",
-#
+
 #    "WWinclusive",
 #    "WW200to600",
 #    "WW600to1200",
 #    "WW1200to2500",
 #    "WW2500toInf",
-#
+
 #    "WZ1L1Nu2Q",
 #    "WZ2L2Q",
 #    "WZ3LNu",
-#
+
 #    "ZZ2L2Q",  
 #    "ZZ2L2Nu",
 #    "ZZ4L",
@@ -280,13 +280,17 @@ if __name__ == "__main__":
     # run postprocessing
     for year in parameters["years"]:
         print(f"Processing {year}")
+        print(f"all_paths: {all_paths}")
         for dataset, path in tqdm.tqdm(all_paths[year].items()):
             if len(path) == 0:
+                print(f"no length")
                 continue
             #if "data" not in dataset:
             #    continue
             # read stage1 outputs
             df = load_dataframe(client, parameters, inputs=[path], dataset=dataset)
+            print(f"df.head(): {df.head()}")
+            print(f"type(df): {type(df)}")
             if not isinstance(df, dd.DataFrame):
                 continue
 

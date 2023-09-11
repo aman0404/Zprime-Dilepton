@@ -48,6 +48,7 @@ parser.add_argument(
     # default="test_amandeep_dimu",
     # default="test2023june_golden_data",
     default="test_test",
+    # default="test2023july_clean_cut",
     action="store",
     help="Unique run label (to create output path)",
 )
@@ -273,33 +274,33 @@ if __name__ == "__main__":
             # "ZZZ",
         ],
         "dy": [
-            "dyInclusive50",
-            "dy0J_M200to400",
-            "dy0J_M400to800",
-            "dy0J_M800to1400",
-            "dy0J_M1400to2300",
-            "dy0J_M2300to3500",
-            "dy0J_M3500to4500",
-            "dy0J_M4500to6000",
-            "dy0J_M6000toInf",
+            # "dyInclusive50",
+            # "dy0J_M200to400",
+            # "dy0J_M400to800",
+            # "dy0J_M800to1400",
+            # "dy0J_M1400to2300",
+            # "dy0J_M2300to3500",
+            # "dy0J_M3500to4500",
+            # "dy0J_M4500to6000",
+            # "dy0J_M6000toInf",
 
-	        "dy1J_M200to400",
+	        # "dy1J_M200to400",
             "dy1J_M400to800",
             "dy1J_M800to1400",
-            "dy1J_M1400to2300",
-            "dy1J_M2300to3500",
-            "dy1J_M3500to4500",
-            "dy1J_M4500to6000",
-            "dy1J_M6000toInf",
+            # "dy1J_M1400to2300",
+            # "dy1J_M2300to3500",
+            # "dy1J_M3500to4500",
+            # "dy1J_M4500to6000",
+            # "dy1J_M6000toInf",
 
-            "dy2J_M200to400",
+            # "dy2J_M200to400",
             "dy2J_M400to800",
             "dy2J_M800to1400",
-            "dy2J_M1400to2300",
-            "dy2J_M2300to3500",
-            "dy2J_M3500to4500",
-            "dy2J_M4500to6000",
-            "dy2J_M6000toInf",
+            # "dy2J_M1400to2300",
+            # "dy2J_M2300to3500",
+            # "dy2J_M3500to4500",
+            # "dy2J_M4500to6000",
+            # "dy2J_M6000toInf",
         ],
         "CI": [
             # "bsll_lambda1TeV_M200to500",
@@ -416,10 +417,10 @@ if __name__ == "__main__":
             #    continue
             #if sample not in ["data_A"]:
             #    continue
-            # if group != "dy":
-            #     continue
-            if group != "data":
+            if group != "dy":
                 continue
+            # if group != "data":
+            #     continue
             # if group == "dy":
             #     continue
 

@@ -223,7 +223,7 @@ if __name__ == '__main__':
     df_tw = df_tw_temp[load_fields]
     df_Higgs = df_Higgs_temp[load_fields]
 
-    # bkg_l = [df_z, df_Higgs]
+    # bkg_l = [df_diboson_rest, df_triboson, df_tw, df_Higgs]
     bkg_l = [df_diboson_rest, df_triboson, df_tw]
     df_bkg = dd.concat(bkg_l)
 

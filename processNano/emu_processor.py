@@ -855,28 +855,78 @@ class EmuProcessor(processor.ProcessorABC):
             (
                 (jets.pt > 20.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.year])
+                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years])
                 & (jets.jetId >= 2)
-                & (jets.HEMVeto >= parameters["2018HEM_veto"][self.year])
+                & (jets.clean)
+                & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
             ),
             "bselection",
         ] = 1
 
-        nbjets = jets.loc[:, "bselection"].groupby("entry").sum()
-        variables["nbjets"] = nbjets
+        #print(parameters["UL_btag_medium"][self.year])
+#        nbjets = jets.loc[:, "bselection"].groupby("entry").sum()
+#        variables["nbjets"] = nbjets
 
+
+        print("hello")
+        
         bjets = jets.query("bselection==1")
-        bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
-        #print(f"bjets: \n {bjets.to_string()}")
-        bjet1 = bjets.groupby("entry").nth(0)
-        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.year])]
-        bjet2 = bjets.groupby("entry").nth(1)
-        bJets = [bjet1, bjet2]
+        bjets["new_btight"] = 0
+        bjets["sub_bmedium"] = 0
 
-        idx = bjet1.index.intersection(bjet2.index)
+        bjets.loc[
+           (bjets.btagDeepFlavB > parameters["UL_btag_tight"][self.years]),
+           "new_btight",
+         ] = 1
+
+        bjets.loc[
+           (bjets.btagDeepFlavB > parameters["UL_btag_medium"][self.years]),
+           "sub_bmedium",
+         ] = 1
+
+
+
+        bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
+
+        bjet1 = bjets.groupby("entry").nth(0)
+        bjet2 = bjets.groupby("entry").nth(1)
+
+        bjet1 = bjet1[bjet1.new_btight == 1]
+#       print(bjet1)
+#       print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
+#        print(bjet1.index.values)
+        
+        bjets = bjets.loc[bjet1.index.values]
+        nbjets= bjets.loc[:, "sub_bmedium"].groupby("entry").sum()
+
+#        print(nbjets.to_string(), bjets["sub_bmedium"].to_string()) 
+
+#        print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
+
+#Aman edits
+#        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
+
+        #jindex = jets.groupby("entry").sum().index 
+#        jindex = jets.groupby("entry").sum().index  # Convert index to a list
+#        jindex = jindex.astype(bjets.index.dtype)  # Convert data type to match bjets index
+
+#        bjets = bjets.reindex(jindex)
+#        print(jets["btagDeepFlavB"].to_string())
+#        print(bjets["btagDeepFlavB"].to_string())
+       
+        variables["nbjets"] = nbjets
+        variables["nbjets"] = variables["nbjets"].fillna(0)
+        
+
+
+        bJets = [bjet1, bjet2]
+        
+        
         print(f"bjet1: {bjet1.to_string()}")
         print(f"bjet2: {bjet2.to_string()}")
-        print(f"check indices length: {len(bjet1.index) == len(idx)}")
+        if (! bjet2.empty):
+            idx = bjet1.index.intersection(bjet2.index)
+            print(f"check indices length: {len(bjet2.index) == len(idx)}") # if there are indices where bjet2 is 
 
         mu_col = []
         el_col = []

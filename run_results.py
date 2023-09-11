@@ -16,7 +16,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-f", "--flavor", dest="flavor", help="lepton flavor", default="el"
+    "-f", "--flavor", dest="flavor", help="lepton flavor", default="mu"
 )
 
 
@@ -47,21 +47,21 @@ parameters = {
     # < general settings >
     "slurm_cluster_ip": slurm_cluster_ip,
     "years": args.years,
-    "global_path": "/depot/cms/private/users/kaur214/output/",
-    "label": "elec_channel_v1_overlap/unfolding",
+    "global_path": "/depot/cms/users/yun79/Zprime-Dilepton/output",
+    "label": "test_amandeep_dimu",
     #"label": "elec_channel_v1_overlap/ttbar_hardcut",
     #"label": "elec_channel_v1_overlap/ttbar_hardcut_nocut",
 #    "label": "elec_channel_v1_overlap/all_categories",
 #    "channels": ["inclusive", "0b", "1b", "2b"],
-    "channels": ["inclusive"],
+    "channels": ["inclusive", "1b", "2b"],
     #"channels": ["1b", "2b"],
 #    "regions": ["inclusive"],
-    "regions": ["bb", "be"],
+    "regions": ["inclusive", "bb", "be"],
     "syst_variations": ["nominal"],
     #
     # < plotting settings >
     "plot_vars": [
-#        "min_bl_mass",
+       "min_bl_mass",
 #        "njets",
 #        "nbjets",
 #        "met",
@@ -76,11 +76,11 @@ parameters = {
 #        "e2_eta",
 #        "e1_phi",
 #        "bjet1_eta",
-        "dielectron_mass",
-        "dielectron_mass_gen",
+        # "dielectron_mass",
+        # "dielectron_mass_gen",
 #        "dielectron_cos_theta_cs",
     ],  # "dielectron_mass"],
-    "plot_vars_2d": [["dielectron_mass", "met"]],  # "dimuon_mass"],
+    "plot_vars_2d": [["dimuon_mass", "met"]],  # "dimuon_mass"],
     "variables_lookup": variables_lookup,
     "save_plots": True,
     "plot_ratio": True,
@@ -91,11 +91,11 @@ parameters = {
     # < templates and datacards >
     "save_templates": True,
     "templates_vars": [
-#        "min_bl_mass",
+       "min_bl_mass",
 #        "min_b1l_mass",
 #        "min_b2l_mass",
-        "dielectron_mass",
-        "dielectron_mass_gen",
+        # "dielectron_mass",
+        # "dielectron_mass_gen",
     ],  # "dielectron_mass"],
 }
 
@@ -122,10 +122,10 @@ if args.flavor == "el":
 ]
 
 parameters["grouping"] = {
-#    "data_A": "Data",
-#    "data_B": "Data",
-#    "data_C": "Data",
-#    "data_D": "Data",
+   "data_A": "Data",
+   "data_B": "Data",
+   "data_C": "Data",
+   "data_D": "Data",
     # "data_E": "Data",
     # "data_F": "Data",
     # "data_G": "Data",
@@ -160,8 +160,8 @@ parameters["grouping"] = {
     "ttbar_lep_inclusive": "Top",
 #    #"ttbar_lep_inclusive": "Top",
     "ttbar_lep_M500to800": "Top",
-#    "ttbar_lep_M800to1200": "Top",
-#    "ttbar_lep_M1200to1800": "Top",
+   "ttbar_lep_M800to1200": "Top",
+   "ttbar_lep_M1200to1800": "Top",
     "ttbar_lep_M1800toInf": "Top",
     "tW": "Top",
     "Wantitop": "Top",
@@ -175,6 +175,23 @@ parameters["grouping"] = {
     "WZ3LNu": "Diboson",
     "ZZ2L2Nu": "Diboson",
     "ZZ4L": "Diboson",
+    
+    "TTWJetsToLNu" : "Higgs",
+    "TTZToLLNuNu" : "Higgs",
+    "ttHJetTobb" : "Higgs",
+    "ttHJetToNonbb" : "Higgs",
+    "GluGluHToZZTo4L" : "Higgs",
+    "VBF_HToZZTo4L" : "Higgs",
+    "ZH_HToBB_ZToLL" : "Higgs",
+    "ggZH_HToBB" : "Higgs",
+    "ttH_HToZZ" : "Higgs",
+    "GluGluHToZZTo2L2Q" : "Higgs",
+    "ZH_HToZZ" : "Higgs",
+
+    "WWW" : "Triboson",
+    "WWZ" : "Triboson",
+    "WZZ" : "Triboson",
+    "ZZZ" : "Triboson",
 #
 #    "bsll_lambda1TeV_M200to500" : "bsll_lambda1TeV",
 #    "bsll_lambda1TeV_M500to1000" : "bsll_lambda1TeV",
