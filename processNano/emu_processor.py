@@ -30,7 +30,7 @@ from processNano.jets import prepare_jets, btagSF
 
 import copy
 
-from processNano.muons import find_dimuon, fill_muons
+# from processNano.muons import find_dimuon, fill_muons # i don't think we use these
 from processNano.utils import bbangle, delta_r, p4_sum
 from processNano.emus import get_pair_inv_mass, fill_jets, fill_bjets
 
@@ -248,14 +248,14 @@ class EmuProcessor(processor.ProcessorABC):
         # Apply HLT to both Data and MC
 
         # print(f"df.HLT: {df['HLT'].astype(str)}")
-        print(f"df.HLT: {ak.to_pandas(df.HLT)}")
-        print(f"df.HLT.keys(): {ak.to_pandas(df.HLT).columns.tolist()}")
+        # print(f"df.HLT: {ak.to_pandas(df.HLT)}")
+        # print(f"df.HLT.keys(): {ak.to_pandas(df.HLT).columns.tolist()}")
         
-        print(f'self.parameters["mu_hlt"]: {self.parameters["mu_hlt"]}')
+        # print(f'self.parameters["mu_hlt"]: {self.parameters["mu_hlt"]}')
         hlt = ak.to_pandas(df.HLT[self.parameters["mu_hlt"]]) # no el_hlt  because our dataset is Single Muon
-        print(f"hlt b4: {hlt}")
+        # print(f"hlt b4: {hlt}")
         hlt = hlt[self.parameters["mu_hlt"]].sum(axis=1)
-        print(f"hlt after: {hlt}")
+        # print(f"hlt after: {hlt}")
 
 
         if self.timer:
@@ -523,7 +523,10 @@ class EmuProcessor(processor.ProcessorABC):
             # )
             # if output_updated is not None:
             #     output = output_updated
+            print("jet_loop flag")
             if leptons.empty:
+                print(f"leptons empty")
+                print(f"leptons: {leptons}")
                 continue
             leptons_updated = self.jet_loop(
                 v_name,
@@ -870,6 +873,11 @@ class EmuProcessor(processor.ProcessorABC):
         bjet2 = bjets.groupby("entry").nth(1)
         bJets = [bjet1, bjet2]
 
+        idx = bjet1.index.intersection(bjet2.index)
+        print(f"bjet1: {bjet1.to_string()}")
+        print(f"bjet2: {bjet2.to_string()}")
+        print(f"check indices length: {len(bjet1.index) == len(idx)}")
+
         mu_col = []
         el_col = []
         for col in leptons.columns:
@@ -928,7 +936,7 @@ class EmuProcessor(processor.ProcessorABC):
         # self.musf_lookup = musf_lookup(self.parameters)
         # Pile-up reweighting
         parameters_temp = copy.deepcopy(self.parameters)
-        print(f"parameters_temp: {parameters_temp}")
+        # print(f"parameters_temp: {parameters_temp}")
         self.pu_lookups = pu_lookups(parameters_temp)
         # print(f"self.pu_lookups: {self.pu_lookups}")
         # Btag weights
