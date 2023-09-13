@@ -855,10 +855,9 @@ class EmuProcessor(processor.ProcessorABC):
             (
                 (jets.pt > 20.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years])
+                & (jets.btagDeepFlavB > parameters["UL_btag_medium"][self.year])
                 & (jets.jetId >= 2)
-                & (jets.clean)
-                & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
+                & (jets.HEMVeto >= parameters["2018HEM_veto"][self.year])
             ),
             "bselection",
         ] = 1
@@ -875,12 +874,12 @@ class EmuProcessor(processor.ProcessorABC):
         bjets["sub_bmedium"] = 0
 
         bjets.loc[
-           (bjets.btagDeepFlavB > parameters["UL_btag_tight"][self.years]),
+           (bjets.btagDeepFlavB > parameters["UL_btag_tight"][self.year]),
            "new_btight",
          ] = 1
 
         bjets.loc[
-           (bjets.btagDeepFlavB > parameters["UL_btag_medium"][self.years]),
+           (bjets.btagDeepFlavB > parameters["UL_btag_medium"][self.year]),
            "sub_bmedium",
          ] = 1
 
@@ -924,7 +923,7 @@ class EmuProcessor(processor.ProcessorABC):
         
         print(f"bjet1: {bjet1.to_string()}")
         print(f"bjet2: {bjet2.to_string()}")
-        if (! bjet2.empty):
+        if (not bjet2.empty):
             idx = bjet1.index.intersection(bjet2.index)
             print(f"check indices length: {len(bjet2.index) == len(idx)}") # if there are indices where bjet2 is 
 
