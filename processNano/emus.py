@@ -496,7 +496,7 @@ def fill_bjets(output, variables, jets, leptons, is_mc=True):
         "eta_gen",
         "phi_gen",
         "qgl",
-        "btagDeepB",
+        "btagDeepFlavB",
         "sf",
     ]:
         try:
