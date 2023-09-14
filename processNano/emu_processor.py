@@ -922,26 +922,26 @@ class EmuProcessor(processor.ProcessorABC):
         
         
         
-        print(f"bjet1.shape: {bjet1.to_numpy().shape}")
-        print(f"bjet2.shape: {bjet2.to_numpy().shape}")
-        print(f'bjet1: {bjet1[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
-        print(f'bjet2: {bjet2[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
+        # print(f"bjet1.shape: {bjet1.to_numpy().shape}")
+        # print(f"bjet2.shape: {bjet2.to_numpy().shape}")
+        # print(f'bjet1: {bjet1[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
+        # print(f'bjet2: {bjet2[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
         
         if (not bjet2.empty):
             common_idx = bjet1.index.intersection(bjet2.index)
-            print(f"bjet1.index: {bjet1.index.to_numpy()}")
-            print(f"bjet2.index: {bjet2.index.to_numpy()}")
-            print(f"common_idx: {common_idx}")
+            # print(f"bjet1.index: {bjet1.index.to_numpy()}")
+            # print(f"bjet2.index: {bjet2.index.to_numpy()}")
+            # print(f"common_idx: {common_idx}")
             idx_diff = bjet2.index.difference(common_idx)
             # print(f"check indices length: {len(bjet2.index) == len(common_idx)}") # if there are indices where bjet2 is 
-            print(f"idx_diff: {idx_diff}")
-            print(f"idx_diff[0] in bjet1.index: {idx_diff[0] in bjet1.index}")
-            print(f"idx_diff[0] in bjet2.index: {idx_diff[0] in bjet2.index}")
+            # print(f"idx_diff: {idx_diff}")
+            # print(f"idx_diff[0] in bjet1.index: {idx_diff[0] in bjet1.index}")
+            # print(f"idx_diff[0] in bjet2.index: {idx_diff[0] in bjet2.index}")
             
             bjet2 = bjet2.loc[common_idx]
-            print(f'new bjet2: {bjet2[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
+            # print(f'new bjet2: {bjet2[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
             idx_diff = bjet2.index.difference(common_idx)
-            print(f"updated idx_diff: {idx_diff}")
+            # print(f"updated idx_diff: {idx_diff}")
 
         mu_col = []
         el_col = []

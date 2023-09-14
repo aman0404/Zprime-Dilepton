@@ -232,27 +232,28 @@ if __name__ == "__main__":
         #     'test_file',
         # ],
         "other_mc": [
-            "WZ1L1Nu2Q",
-            "WZ1L3Nu",
-            "WZ3LNu",
-            "WZ2L2Q",
+            # "WZ1L1Nu2Q",
+            # "WZ1L3Nu",
+            # "WZ3LNu",
+            # "WZ2L2Q",
+            # above not done yet
 
-            "ZZ2L2Nu",
-            "ZZ2L2Q",
-            "ZZ4L",
+            # "ZZ2L2Nu",
+            # "ZZ2L2Q",
+            # "ZZ4L",
 
             "WWinclusive",
             "WW200to600",
             "WW600to1200",
             "WW1200to2500",
             "WW2500toInf",
-            "ttbar_lep_inclusive",
-            "ttbar_lep_M500to800",
-            "ttbar_lep_M800to1200",
-            "ttbar_lep_M1200to1800",
-            "ttbar_lep_M1800toInf",
-            "Wantitop",
-            "tW",
+#             "ttbar_lep_inclusive",
+#             "ttbar_lep_M500to800",
+#             "ttbar_lep_M800to1200",
+#             "ttbar_lep_M1200to1800",
+#             "ttbar_lep_M1800toInf",
+#             "Wantitop",
+#             "tW",
 
             # # higgs
             # "TTWJetsToLNu",
@@ -413,16 +414,16 @@ if __name__ == "__main__":
             # if not ("ttbar" in sample or "Wantitop" in sample or "tW" in sample):
             #    continue
 
-            # if group != "other_mc":
-            #    continue
+            if group != "other_mc":
+                continue
             #if sample not in ["data_A"]:
             #    continue
-            if group != "dy":
-                continue
+            # if group != "dy":
+            #     continue
             # if group != "data":
-            #     continue
+                # continue
             # if group == "dy":
-            #     continue
+                # continue
 
             if group == "data":
                 datasets_data.append(sample)
