@@ -1,0 +1,35 @@
+Stage 1:
+source setup.sh
+
+then we do: ipython -i slurm_cluster_prep.py  (to start the cluster -> restart the cluster everytime you change something imporantant. the cluster keeps its package cache fromt he previous run)
+
+
+clusterA = SLURMCluster( project='cms', cores=1, memory='8GB',walltime='1-00:00:00',
+   ...:   job_extra=['--qos=normal','-o  /tmp/dask_job.%j.%N.out','-
+   ...: e /tmp/dask_job.%j.%N.error'])
+   
+   
+   
+    clusterA.adapt(minimum=50, maximum=100)
+    
+    clusterA (to check that adapt works)	
+    
+ nohup python run_nanoProcessing.py --channel emu -sl <slurm id> &> stage1.log&
+    
+    
+ Stage 2 (making histrograms):
+
+ python run_analysis.py -y 2018 -sl 47484
+ 
+ 
+ Stage 3 (plotting ) :
+ source pyROOT_env.sh
+ python 
+ 
+ root -l Plotter.C
+ 
+ 
+Also, for debugging (ie stage 1, first use sinteractive to access more computing power)
+<sinteractive -A cms -t 7-00:00:00 --nodes=1  -n6 --mem-per-cpu=6G> (6 cpu cores with 6GB of ram each, so 36 GBs in total)
+<source setup.sh >
+< python run_nanoProcessing.py -mch 5 -ch 10 &> stage1.log >
