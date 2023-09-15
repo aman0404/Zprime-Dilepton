@@ -33,3 +33,17 @@ Also, for debugging (ie stage 1, first use sinteractive to access more computing
 <sinteractive -A cms -t 7-00:00:00 --nodes=1  -n6 --mem-per-cpu=6G> (6 cpu cores with 6GB of ram each, so 36 GBs in total)
 <source setup.sh >
 < python run_nanoProcessing.py -mch 5 -ch 10 &> stage1.log >
+
+For slurm interactive:
+<sinteractive -A cms-a -t 0-02:00:00 --nodes=1  -n6 --mem-per-cpu=4G>
+
+
+
+Also, to locate the samples from datasets_muon, search eos, for eg:
+
+to find:
+"WZ1L1Nu2Q": "/WZTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
+
+
+you should look at:
+/eos/purdue/store/mc/RunIISummer20UL18NanoAODv9/WZTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8/

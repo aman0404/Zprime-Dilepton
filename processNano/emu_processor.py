@@ -102,12 +102,19 @@ class EmuProcessor(processor.ProcessorABC):
 
         self._accumulator = processor.defaultdict_accumulator(int)
 
-        self.applykFac = True
-        self.applyNNPDFWeight = True
+        # self.applykFac = True
+        # self.applyNNPDFWeight = True
+        # self.do_pu = True
+        # self.auto_pu = False
+        # self.do_l1pw = True  # L1 prefiring weights
+        # self.do_jecunc = True
+        # self.do_jerunc = False
+        self.applykFac = False
+        self.applyNNPDFWeight = False
         self.do_pu = True
-        self.auto_pu = False
-        self.do_l1pw = True  # L1 prefiring weights
-        self.do_jecunc = True
+        self.auto_pu = True
+        self.do_l1pw = False  # L1 prefiring weights
+        self.do_jecunc = False
         self.do_jerunc = False
 
         self.timer = Timer("global") if do_timer else None
@@ -157,46 +164,46 @@ class EmuProcessor(processor.ProcessorABC):
         muon_branches_local = copy.copy(muon_branches)
         ele_branches_local = copy.copy(ele_branches)
 
-        # calculate generated mass from generated particles using the coffea genParticles
-        if is_mc:
-            genPart = df.GenPart
-            print(f"genPart type: {type(genPart)}")
-            genPart = genPart[
-                (
-                    (abs(genPart.pdgId) == 11) | abs(genPart.pdgId)
-                    == 13 | (abs(genPart.pdgId) == 15)
-                )
-                & genPart.hasFlags(["isHardProcess", "fromHardProcess", "isPrompt"])
-            ]
+        # # calculate generated mass from generated particles using the coffea genParticles
+        # if is_mc:
+        #     genPart = df.GenPart
+        #     print(f"genPart type: {type(genPart)}")
+        #     genPart = genPart[
+        #         (
+        #             (abs(genPart.pdgId) == 11) | abs(genPart.pdgId)
+        #             == 13 | (abs(genPart.pdgId) == 15)
+        #         )
+        #         & genPart.hasFlags(["isHardProcess", "fromHardProcess", "isPrompt"])
+        #     ]
 
-            cut = ak.num(genPart) == 2
-            output["emu_mass_gen"] = cut
-            output["emu_pt_gen"] = cut
-            output["emu_eta_gen"] = cut
-            output["emu_phi_gen"] = cut
-            genMother = genPart[cut][:, 0] + genPart[cut][:, 1]
-            output.loc[
-                output["emu_mass_gen"] == True, ["emu_mass_gen"]
-            ] = genMother.mass
-            output.loc[
-                output["emu_pt_gen"] == True, ["emu_pt_gen"]
-            ] = genMother.pt
-            output.loc[
-                output["emu_eta_gen"] == True, ["emu_eta_gen"]
-            ] = genMother.eta
-            output.loc[
-                output["emu_phi_gen"] == True, ["emu_phi_gen"]
-            ] = genMother.phi
-            output.loc[output["emu_mass_gen"] == False, ["emu_mass_gen"]] = -999.0
-            output.loc[output["emu_pt_gen"] == False, ["emu_pt_gen"]] = -999.0
-            output.loc[output["emu_eta_gen"] == False, ["emu_eta_gen"]] = -999.0
-            output.loc[output["emu_phi_gen"] == False, ["emu_phi_gen"]] = -999.0
+        #     cut = ak.num(genPart) == 2
+        #     output["emu_mass_gen"] = cut
+        #     output["emu_pt_gen"] = cut
+        #     output["emu_eta_gen"] = cut
+        #     output["emu_phi_gen"] = cut
+        #     genMother = genPart[cut][:, 0] + genPart[cut][:, 1]
+        #     output.loc[
+        #         output["emu_mass_gen"] == True, ["emu_mass_gen"]
+        #     ] = genMother.mass
+        #     output.loc[
+        #         output["emu_pt_gen"] == True, ["emu_pt_gen"]
+        #     ] = genMother.pt
+        #     output.loc[
+        #         output["emu_eta_gen"] == True, ["emu_eta_gen"]
+        #     ] = genMother.eta
+        #     output.loc[
+        #         output["emu_phi_gen"] == True, ["emu_phi_gen"]
+        #     ] = genMother.phi
+        #     output.loc[output["emu_mass_gen"] == False, ["emu_mass_gen"]] = -999.0
+        #     output.loc[output["emu_pt_gen"] == False, ["emu_pt_gen"]] = -999.0
+        #     output.loc[output["emu_eta_gen"] == False, ["emu_eta_gen"]] = -999.0
+        #     output.loc[output["emu_phi_gen"] == False, ["emu_phi_gen"]] = -999.0
 
-        else:
-            output["emu_mass_gen"] = -999.0
-            output["emu_pt_gen"] = -999.0
-            output["emu_eta_gen"] = -999.0
-            output["emu_phi_gen"] = -999.0
+        # else:
+        #     output["emu_mass_gen"] = -999.0
+        #     output["emu_pt_gen"] = -999.0
+        #     output["emu_eta_gen"] = -999.0
+        #     output["emu_phi_gen"] = -999.0
 
         output["emu_mass_gen"] = output["emu_mass_gen"].astype(float)
         output["emu_pt_gen"] = output["emu_pt_gen"].astype(float)
@@ -332,7 +339,7 @@ class EmuProcessor(processor.ProcessorABC):
                 & (abs(muons.eta_raw) < self.parameters["muon_eta_cut"])
                 & (muons.tkRelIso < self.parameters["muon_iso_cut"])
                 & (muons[self.parameters["muon_id"]] > 0)
-                & (muons.dxy < self.parameters["muon_dxy"])
+                & (abs(muons.dxy) < self.parameters["muon_dxy"])
                 & (
                     (muons.ptErr.values / muons.pt.values)
                     < self.parameters["muon_ptErr/pt"]
