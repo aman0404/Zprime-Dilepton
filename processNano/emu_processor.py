@@ -164,46 +164,46 @@ class EmuProcessor(processor.ProcessorABC):
         muon_branches_local = copy.copy(muon_branches)
         ele_branches_local = copy.copy(ele_branches)
 
-        # # calculate generated mass from generated particles using the coffea genParticles
-        # if is_mc:
-        #     genPart = df.GenPart
-        #     print(f"genPart type: {type(genPart)}")
-        #     genPart = genPart[
-        #         (
-        #             (abs(genPart.pdgId) == 11) | abs(genPart.pdgId)
-        #             == 13 | (abs(genPart.pdgId) == 15)
-        #         )
-        #         & genPart.hasFlags(["isHardProcess", "fromHardProcess", "isPrompt"])
-        #     ]
+        # calculate generated mass from generated particles using the coffea genParticles
+        if is_mc:
+            genPart = df.GenPart
+            print(f"genPart type: {type(genPart)}")
+            genPart = genPart[
+                (
+                    (abs(genPart.pdgId) == 11) | abs(genPart.pdgId)
+                    == 13 | (abs(genPart.pdgId) == 15)
+                )
+                & genPart.hasFlags(["isHardProcess", "fromHardProcess", "isPrompt"])
+            ]
 
-        #     cut = ak.num(genPart) == 2
-        #     output["emu_mass_gen"] = cut
-        #     output["emu_pt_gen"] = cut
-        #     output["emu_eta_gen"] = cut
-        #     output["emu_phi_gen"] = cut
-        #     genMother = genPart[cut][:, 0] + genPart[cut][:, 1]
-        #     output.loc[
-        #         output["emu_mass_gen"] == True, ["emu_mass_gen"]
-        #     ] = genMother.mass
-        #     output.loc[
-        #         output["emu_pt_gen"] == True, ["emu_pt_gen"]
-        #     ] = genMother.pt
-        #     output.loc[
-        #         output["emu_eta_gen"] == True, ["emu_eta_gen"]
-        #     ] = genMother.eta
-        #     output.loc[
-        #         output["emu_phi_gen"] == True, ["emu_phi_gen"]
-        #     ] = genMother.phi
-        #     output.loc[output["emu_mass_gen"] == False, ["emu_mass_gen"]] = -999.0
-        #     output.loc[output["emu_pt_gen"] == False, ["emu_pt_gen"]] = -999.0
-        #     output.loc[output["emu_eta_gen"] == False, ["emu_eta_gen"]] = -999.0
-        #     output.loc[output["emu_phi_gen"] == False, ["emu_phi_gen"]] = -999.0
+            cut = ak.num(genPart) == 2
+            output["emu_mass_gen"] = cut
+            output["emu_pt_gen"] = cut
+            output["emu_eta_gen"] = cut
+            output["emu_phi_gen"] = cut
+            genMother = genPart[cut][:, 0] + genPart[cut][:, 1]
+            output.loc[
+                output["emu_mass_gen"] == True, ["emu_mass_gen"]
+            ] = genMother.mass
+            output.loc[
+                output["emu_pt_gen"] == True, ["emu_pt_gen"]
+            ] = genMother.pt
+            output.loc[
+                output["emu_eta_gen"] == True, ["emu_eta_gen"]
+            ] = genMother.eta
+            output.loc[
+                output["emu_phi_gen"] == True, ["emu_phi_gen"]
+            ] = genMother.phi
+            output.loc[output["emu_mass_gen"] == False, ["emu_mass_gen"]] = -999.0
+            output.loc[output["emu_pt_gen"] == False, ["emu_pt_gen"]] = -999.0
+            output.loc[output["emu_eta_gen"] == False, ["emu_eta_gen"]] = -999.0
+            output.loc[output["emu_phi_gen"] == False, ["emu_phi_gen"]] = -999.0
 
-        # else:
-        #     output["emu_mass_gen"] = -999.0
-        #     output["emu_pt_gen"] = -999.0
-        #     output["emu_eta_gen"] = -999.0
-        #     output["emu_phi_gen"] = -999.0
+        else:
+            output["emu_mass_gen"] = -999.0
+            output["emu_pt_gen"] = -999.0
+            output["emu_eta_gen"] = -999.0
+            output["emu_phi_gen"] = -999.0
 
         output["emu_mass_gen"] = output["emu_mass_gen"].astype(float)
         output["emu_pt_gen"] = output["emu_pt_gen"].astype(float)
