@@ -102,20 +102,22 @@ class EmuProcessor(processor.ProcessorABC):
 
         self._accumulator = processor.defaultdict_accumulator(int)
 
-        # self.applykFac = True
-        # self.applyNNPDFWeight = True
-        # self.do_pu = True
-        # self.auto_pu = False
-        # self.do_l1pw = True  # L1 prefiring weights
-        # self.do_jecunc = True
-        # self.do_jerunc = False
-        self.applykFac = False
-        self.applyNNPDFWeight = False
+        self.applykFac = True
+        self.applyNNPDFWeight = True
         self.do_pu = True
-        self.auto_pu = True
-        self.do_l1pw = False  # L1 prefiring weights
-        self.do_jecunc = False
+        self.auto_pu = False
+        self.do_l1pw = True  # L1 prefiring weights
+        self.do_jecunc = True
         self.do_jerunc = False
+
+        # # changes Amandeep made that I will look into later
+        # self.applykFac = False
+        # self.applyNNPDFWeight = False
+        # self.do_pu = True
+        # self.auto_pu = True
+        # self.do_l1pw = False  # L1 prefiring weights
+        # self.do_jecunc = False
+        # self.do_jerunc = False
 
         self.timer = Timer("global") if do_timer else None
 
@@ -895,37 +897,18 @@ class EmuProcessor(processor.ProcessorABC):
         bjets = bjets.sort_values(["entry", "pt"], ascending=[True, False])
 
         bjet1 = bjets.groupby("entry").nth(0)
-        bjet2 = bjets.groupby("entry").nth(1)
+        bjet2 = bjets.groupby("entry").nth(1)   
 
         bjet1 = bjet1[bjet1.new_btight == 1]
 #       print(bjet1)
-        print(f'bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head() : {bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')        
+        # print(f'bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head() : {bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')        
 #        print(bjet1.index.values)
         
-        bjets = bjets.loc[bjet1.index.values]
-        nbjets= bjets.loc[:, "sub_bmedium"].groupby("entry").sum()
-
-#        print(nbjets.to_string(), bjets["sub_bmedium"].to_string()) 
-
-#        print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
-
-#Aman edits
-#        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
-
-        #jindex = jets.groupby("entry").sum().index 
-#        jindex = jets.groupby("entry").sum().index  # Convert index to a list
-#        jindex = jindex.astype(bjets.index.dtype)  # Convert data type to match bjets index
-
-#        bjets = bjets.reindex(jindex)
-#        print(jets["btagDeepFlavB"].to_string())
-#        print(bjets["btagDeepFlavB"].to_string())
-       
-        variables["nbjets"] = nbjets
-        variables["nbjets"] = variables["nbjets"].fillna(0)
+        
         
 
 
-        bJets = [bjet1, bjet2]
+        # bJets = [bjet1, bjet2]
         
         
         
@@ -949,6 +932,23 @@ class EmuProcessor(processor.ProcessorABC):
             # print(f'new bjet2: {bjet2[["new_btight", "sub_bmedium", "btagDeepFlavB"]].head()}')
             idx_diff = bjet2.index.difference(common_idx)
             # print(f"updated idx_diff: {idx_diff}")
+
+        bJets = [bjet1, bjet2]
+
+        nbjets= pd.DataFrame(index=variables.index.copy())
+        print(f"nbjets b4: {nbjets.head()}")
+        nbjets[:] = 0
+        # nbjets.loc[bjet1.index] += 1
+        print(f"nbjets after: {nbjets.head()}")
+        n_sub_bmedium = bjets.loc[:, "sub_bmedium"].groupby("entry").sum()
+        n_sub_bmedium = n_sub_bmedium.loc[bjet1.index] # filter only ones with tight passes
+        nbjets.loc[bjet1.index] += n_sub_bmedium # all bjet1 also pass sub_bmedium, so this is fine
+
+        variables["nbjets"] = nbjets
+        
+        print(f'variables["nbjets"].isnull().values.any(): {variables["nbjets"].isnull().values.any()}')
+        # variables["nbjets"] = variables["nbjets"].fillna(0)
+
 
         mu_col = []
         el_col = []

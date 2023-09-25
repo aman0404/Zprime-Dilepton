@@ -47,8 +47,12 @@ parser.add_argument(
     dest="label",
     # default="test_amandeep_dimu",
     # default="test2023june_golden_data",
-    # default="test_test",
-    default="test2023september_clean_cut",
+    default="test_test",
+    # default="test2023september_clean_cut",
+    # default="test2_2023september_golden_data",
+    # default="test_2023trial15_ver2",
+    # default="test_2023trial16",
+    # default="test_2023trial17",
     action="store",
     help="Unique run label (to create output path)",
 )
@@ -81,8 +85,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-node_ip = "128.211.148.60"  # hammer-c000
-#node_ip = "128.211.148.61"  # hammer-c000
+# node_ip = "128.211.148.60"  # hammer-c000
+node_ip = "128.211.148.61"  # hammer-c000
 # node_ip = "128.211.149.135"
 # node_ip = "128.211.149.140"
 dash_local = f"{node_ip}:34875"
@@ -236,37 +240,36 @@ if __name__ == "__main__":
             # "WZ1L3Nu",
             # "WZ3LNu",
             # "WZ2L2Q",
-            # above not done yet
 
             # "ZZ2L2Nu",
             # "ZZ2L2Q",
             # "ZZ4L",
 
-            "WWinclusive",
-            "WW200to600",
-            "WW600to1200",
-            "WW1200to2500",
-            "WW2500toInf",
-#             "ttbar_lep_inclusive",
-#             "ttbar_lep_M500to800",
-#             "ttbar_lep_M800to1200",
-#             "ttbar_lep_M1200to1800",
-#             "ttbar_lep_M1800toInf",
-#             "Wantitop",
-#             "tW",
+            "WWinclusive", 
+            # "WW200to600",
+            # "WW600to1200",
+            # "WW1200to2500",
+            # "WW2500toInf",
+            # "ttbar_lep_inclusive",
+            # "ttbar_lep_M500to800",
+            # "ttbar_lep_M800to1200",
+            # "ttbar_lep_M1200to1800",
+            # "ttbar_lep_M1800toInf",
+            # "Wantitop",
+            # "tW",
 
             # # higgs
-            # "TTWJetsToLNu",
-            # "TTZToLLNuNu",
-            # "ttHJetTobb",
+            # "TTWJetsToLNu", 
+            # "TTZToLLNuNu", 
+            # "ttHJetTobb", 
             # "ttHJetToNonbb",
-            # "GluGluHToZZTo4L",
-            # "VBF_HToZZTo4L",
-            # "ZH_HToBB_ZToLL",
-            # "ggZH_HToBB",
-            # "ttH_HToZZ",
-            # "GluGluHToZZTo2L2Q",
-            # "ZH_HToZZ",
+            # "GluGluHToZZTo4L", 
+            # "VBF_HToZZTo4L",  
+            # "ZH_HToBB_ZToLL", 
+            # "ggZH_HToBB", 
+            # "ttH_HToZZ", 
+            # "GluGluHToZZTo2L2Q", 
+            # "ZH_HToZZ", 
 
             # # triboson
             # "WWW",
@@ -421,7 +424,7 @@ if __name__ == "__main__":
             # if group != "dy":
             #     continue
             # if group != "data":
-                # continue
+            #     continue
             # if group == "dy":
                 # continue
 
