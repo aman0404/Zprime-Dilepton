@@ -935,9 +935,8 @@ class EmuProcessor(processor.ProcessorABC):
 
         bJets = [bjet1, bjet2]
 
-        nbjets= pd.DataFrame(index=variables.index.copy())
+        nbjets= pd.DataFrame(columns=['nbjets'], index=variables.index.copy()).fillna(0)
         print(f"nbjets b4: {nbjets.head()}")
-        nbjets[:] = 0
         # nbjets.loc[bjet1.index] += 1
         print(f"nbjets after: {nbjets.head()}")
         n_sub_bmedium = bjets.loc[:, "sub_bmedium"].groupby("entry").sum()
