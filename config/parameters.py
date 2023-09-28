@@ -204,9 +204,9 @@ parameters.update(
     {
         "muon_pt_cut": for_all_years(53.0),
         "muon_eta_cut": for_all_years(2.4),
-        "muon_iso_cut": for_all_years(0.15),  # medium iso
-        "muon_id": for_all_years("looseId"),
-        "muon_dxy": for_all_years(0.2),
+        "muon_iso_cut": for_all_years(0.05),  # tight iso
+        "muon_id": for_all_years("highPtId"),
+        "muon_dxy": for_all_years(0.02),
         "muon_ptErr/pt": for_all_years(0.3),
         # "muon_flags": for_all_years(["isGlobal", "isTracker"]),
         "muon_flags": for_all_years([]),
