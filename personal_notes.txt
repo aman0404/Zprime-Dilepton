@@ -1,41 +1,31 @@
 Stage 1:
 source setup.sh
 
-then we do: ipython -i slurm_cluster_prep.py  (to start the cluster -> restart the cluster everytime you change something imporantant. the cluster keeps its package cache fromt he previous run)
+then we do:
+< ipython -i slurm_cluster_prep.py > (to start the cluster -> restart the cluster everytime you change something imporantant. the cluster keeps its package cache fromt he previous run)
 
-
-clusterA = SLURMCluster( project='cms', cores=1, memory='8GB',walltime='1-00:00:00',
-   ...:   job_extra=['--qos=normal','-o  /tmp/dask_job.%j.%N.out','-
-   ...: e /tmp/dask_job.%j.%N.error'])
+within the ipython script:
+< clusterA = SLURMCluster( project='cms', cores=1, memory='8GB',walltime='1-00:00:00', job_extra=['--qos=normal','-o  /tmp/dask_job.%j.%N.out','-e /tmp/dask_job.%j.%N.error']) >   
+< clusterA.adapt(minimum=50, maximum=100) >
+< clusterA > (to check that adapt works)	
+    
+then make a new terminal:
+< nohup python run_nanoProcessing.py --channel emu -sl <slurm id> &> stage1.log& >
    
    
-   
-    clusterA.adapt(minimum=50, maximum=100)
-    
-    clusterA (to check that adapt works)	
-    
- nohup python run_nanoProcessing.py --channel emu -sl <slurm id> &> stage1.log&
-    
-    
- Stage 2 (making histrograms):
+Stage 2 (making histrograms, though as of present I just recommend using amandeep's quick plotting to replace stage2 and stage3):
 
- python run_analysis.py -y 2018 -sl 47484
- 
- 
- Stage 3 (plotting ) :
- source pyROOT_env.sh
- python 
- 
- root -l Plotter.C
- 
+< python run_analysis.py -y 2018 -sl <slurm id> >
+
+Stage 3: (I forgot what the instructions were as of this writing) 
  
 Also, for debugging (ie stage 1, first use sinteractive to access more computing power)
 <sinteractive -A cms -t 7-00:00:00 --nodes=1  -n6 --mem-per-cpu=6G> (6 cpu cores with 6GB of ram each, so 36 GBs in total)
 <source setup.sh >
 < python run_nanoProcessing.py -mch 5 -ch 10 &> stage1.log >
 
-For slurm interactive:
-<sinteractive -A cms-a -t 0-02:00:00 --nodes=1  -n6 --mem-per-cpu=4G>
+For slurm interactive, bc sometimes debugging locally you need more resources than just hammer front-end :
+<sinteractive -A cms-a -t 0-02:00:00 --nodes=1  -n8 --mem-per-cpu=6G>
 
 
 
@@ -47,3 +37,10 @@ to find:
 
 you should look at:
 /eos/purdue/store/mc/RunIISummer20UL18NanoAODv9/WZTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8/
+
+
+For plotting using amandeep's quick plotting code (this replaces stage2 and stage3):
+< source pyROOT_env.sh >
+< python bkg_dy_jets.py -r bb --year 2018 -nbj 0 -sl 44130 > "bb" here represents barrel-barrel region, the other options is "be" barrel-endcap
+Then make sure the year, nbjets and region are consistent in the plotter.C file variables, and then:
+< root -l plotter.C>
