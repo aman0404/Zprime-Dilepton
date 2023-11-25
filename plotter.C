@@ -14,7 +14,7 @@ void plotter()
 
 int nbjets = 0;
 int year = 2018;
-std::string region = "bb";
+std::string region = "be";
 
 TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
    c1->Range(-29.17415,-0.08108108,263.2406,0.6466216);
@@ -33,17 +33,10 @@ TCanvas *c1 = new TCanvas("c1", "stacked hists",61,24,744,744);
 
 TH1 *h1, *h2, *h3, *h4;
 
-TFile *f = TFile::Open("dy_sys_BB.root");
-// TFile *f1 = TFile::Open("dy_sys_BB.root"); // not sure why we need multiple file instances ... -> sth to try fix later
+TFile *f = TFile::Open("emu_results.root");
 f->GetObject("h_dy", h1);
-
-// TFile *f2 = TFile::Open("dy_sys_BB.root");
 f->GetObject("h_data", h2);
-
-// TFile *f3 = TFile::Open("dy_sys_BB.root");
 f->GetObject("h_bkg", h3);
-
-// TFile *f4 = TFile::Open("dy_sys_BB.root");
 f->GetObject("h_ttbar", h4);
 
 std::cout<< "flag" << std::endl;

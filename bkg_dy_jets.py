@@ -100,47 +100,52 @@ if __name__ == '__main__':
 
 
 
+    # sample_path = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data"
+    # sample_path = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2023september_clean_cut"
+    # sample_path = "/depot/cms/users/yun79/Zprime-Dilepton/output/test2_2023september_golden_data"
+    # sample_path = "/depot/cms/users/yun79/Zprime-Dilepton/output/test_2023trial15"
+    # sample_path = "/depot/cms/users/yun79/Zprime-Dilepton/output/test_2023trial16"
+    sample_path = "/depot/cms/users/yun79/Zprime-Dilepton/output/test_2023trial18"
+    
 
+    paths_data = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/data_*/*parquet"))
 
-
-    paths_data = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/data_*/*parquet"))
-
-    paths_dy_incl = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/dyInclusive50/*parquet"))
-    paths_dy_rest = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/dy*/*parquet"))
+    paths_dy_incl = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/dyInclusive50/*parquet"))
+    paths_dy_rest = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/dy*/*parquet"))
     paths_dy_rest = list(set(paths_dy_rest) - set(paths_dy_incl))
 
 
-    paths_ttbar_incl = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ttbar_lep_inclusive/*parquet"))
-    paths_ttbar_rest = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ttbar*/*parquet"))
+    paths_ttbar_incl = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/ttbar_lep_inclusive/*parquet"))
+    paths_ttbar_rest = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/ttbar*/*parquet"))
     paths_ttbar_rest = list(set(paths_ttbar_rest) - set(paths_ttbar_incl))
 
     #other bkdgs 
 
-    paths_triboson = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WWW/*parquet"))
-    paths_triboson += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WWZ/*parquet"))
-    paths_triboson += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WZZ/*parquet"))
-    paths_triboson += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ZZZ/*parquet"))
+    paths_triboson = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/WWW/*parquet"))
+    paths_triboson += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/WWZ/*parquet"))
+    paths_triboson += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/WZZ/*parquet"))
+    paths_triboson += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/ZZZ/*parquet"))
 
 
-    paths_ww_incl = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WWinclusive/*parquet"))
-    paths_ww_rest = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WW*/*parquet" ))
+    paths_ww_incl = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/WWinclusive/*parquet"))
+    paths_ww_rest = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/WW*/*parquet" ))
     paths_ww_rest = list(set(paths_ww_rest) - set(paths_ww_incl) - set(paths_triboson))
 
 
     #named diboson_rest bc we are excluding ww
-    paths_diboson_rest = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ZZ*/*parquet"))
-    paths_diboson_rest += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/WZ*/*parquet"))
+    paths_diboson_rest = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/ZZ*/*parquet"))
+    paths_diboson_rest += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/WZ*/*parquet"))
     paths_diboson_rest = list(set(paths_diboson_rest) - set(paths_triboson))
 
-    paths_tw = list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/Wantitop/*parquet")))
-    paths_tw += list(set(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/tW/*parquet"))) 
+    paths_tw = list(set(glob.glob(sample_path+f"/stage1_output_emu/{year}/Wantitop/*parquet")))
+    paths_tw += list(set(glob.glob(sample_path+f"/stage1_output_emu/{year}/tW/*parquet"))) 
     
 
-    paths_Higgs = list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/TT*/*parquet"))
-    paths_Higgs += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/ttH*/*parquet"))
-    paths_Higgs += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/*ZH_*/*parquet"))
-    paths_Higgs += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/GluGlu*/*parquet"))
-    paths_Higgs += list(glob.glob(f"/depot/cms/users/yun79/Zprime-Dilepton/output/test2023june_golden_data/stage1_output_emu/{year}/VBF_HToZZTo4L/*parquet"))
+    paths_Higgs = list(glob.glob(sample_path+f"/stage1_output_emu/{year}/TT*/*parquet"))
+    paths_Higgs += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/ttH*/*parquet"))
+    paths_Higgs += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/*ZH_*/*parquet"))
+    paths_Higgs += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/GluGlu*/*parquet"))
+    paths_Higgs += list(glob.glob(sample_path+f"/stage1_output_emu/{year}/VBF_HToZZTo4L/*parquet"))
 
     data_files = paths_data
     df_data_temp = dd.read_parquet(data_files)
@@ -230,21 +235,33 @@ if __name__ == '__main__':
     print("computation complete")
 
     df_data   = df_data[(df_data["r"]==f"{parameters['regions']}")]
+    df_data = df_data[df_data["dilepton_mass"] > 100] # lastly, apply 100 GeV reco mass cut to all data + mc sample
 
-    df_dy_incl   = df_dy_incl[(df_dy_incl["r"]==f"{parameters['regions']}") & (df_dy_incl["dilepton_mass_gen"] < 200.) ] # 200 GeV cut
+    """
+    for mc samples, we apply gen mass cut off point at the border that defines "inclusive" sample
+    from the rest (ie, WWinclusive and WW200to600).
+    Due to effects of folding, we get bein leakage at this border (ie 200 GeV or 500 GeV)
+    Bc of this, we had weird bumps of statistics at the border values when we plotted them. 
+    This is why we make teh gen_mass border cut to erase this weird bump
+    """
+    df_dy_incl   = df_dy_incl[(df_dy_incl["r"]==f"{parameters['regions']}") & (df_dy_incl["dilepton_mass_gen"] < 200.) ] # 200 GeV border cut,
     df_dy_rest   = df_dy_rest[(df_dy_rest["r"]==f"{parameters['regions']}") & (df_dy_rest["dilepton_mass_gen"] > 200.)]
     df_dy = dd.concat([df_dy_incl, df_dy_rest])
+    df_dy = df_dy[df_dy["dilepton_mass"] > 100] 
 
 
-    df_ttbar_incl   = df_ttbar_incl[(df_ttbar_incl["r"]==f"{parameters['regions']}") & (df_ttbar_incl["dilepton_mass_gen"] < 500.)] # 500 GeV cut
+    df_ttbar_incl   = df_ttbar_incl[(df_ttbar_incl["r"]==f"{parameters['regions']}") & (df_ttbar_incl["dilepton_mass_gen"] < 500.)] # 500 GeV border cut
     df_ttbar_rest   = df_ttbar_rest[(df_ttbar_rest["r"]==f"{parameters['regions']}") & (df_ttbar_rest["dilepton_mass_gen"] > 500.)]
     df_ttbar = dd.concat([df_ttbar_incl, df_ttbar_rest])
+    df_ttbar = df_ttbar[df_ttbar["dilepton_mass"] > 100] 
 
-    df_ww_incl   = df_ww_incl[(df_ww_incl["r"]==f"{parameters['regions']}") & (df_ww_incl["dilepton_mass_gen"] < 200.)] # 200 GeV cut
+
+    df_ww_incl   = df_ww_incl[(df_ww_incl["r"]==f"{parameters['regions']}") & (df_ww_incl["dilepton_mass_gen"] < 200.)] # 200 GeV border cut
     df_ww_rest   = df_ww_rest[(df_ww_rest["r"]==f"{parameters['regions']}") & (df_ww_rest["dilepton_mass_gen"] > 200.)]
 
     df_bkg = df_bkg[(df_bkg["r"]==f"{parameters['regions']}")]
     df_bkg = dd.concat([df_bkg, df_ww_incl, df_ww_rest]) # df_ww_incl and df_ww_rest is part of other bkg
+    df_bkg = df_bkg[df_bkg["dilepton_mass"] > 100] 
 
 
     # apply nbjet cut:
@@ -310,7 +327,8 @@ if __name__ == '__main__':
     for i in range(len(ttbar_mass)):
         h_ttbar.Fill(ttbar_mass[i], wgt_ttbar[i])
 
-    file2 = TFile(f"dy_sys_BB.root","RECREATE")
+    file2 = TFile(f"emu_results.root","RECREATE")
+    # file2 = TFile(f"emu_results_yr{args.year}_{args.region}_nbj{args.nbjets}.root","RECREATE")
     file2.cd()
     h_dy.Write()
     h_data.Write()
