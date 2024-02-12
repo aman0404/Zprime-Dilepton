@@ -117,7 +117,7 @@ def btagSF(df, year, correction="shape", is_UL=True):
                     try:
 
                         fac = cset.eval(syst, flavor, eta, pt, wp)
-                        print("uncertainty is " + syst)
+                        #print("uncertainty is " + syst)
                     except Exception:
                         fac = cset.eval("central", flavor, eta, pt, wp)
 
@@ -135,7 +135,7 @@ def btagSF(df, year, correction="shape", is_UL=True):
                 df["btag_sf_wp"].fillna(1.0)
             else:
                 df[f"btag_sf_wp_{syst}"].fillna(1.0)
-
+            #print("sys names ", f"btag_sf_wp_{syst}")
 
 def prepare_jets(df, is_mc):
     # Initialize missing fields (needed for JEC)
@@ -390,6 +390,7 @@ def fill_bjets(output, variables, jets, leptons, flavor="mu", is_mc=True):
         "bjet1_jetId",
         "bjet1_puId",
         "bjet1_btagDeepB",
+        "bjet1_hadronFlavour",
         "bjet2_pt",
         "bjet2_eta",
         "bjet2_rap",
@@ -398,6 +399,7 @@ def fill_bjets(output, variables, jets, leptons, flavor="mu", is_mc=True):
         "bjet2_jetId",
         "bjet2_puId",
         "bjet2_btagDeepB",
+        "bjet2_hadronFlavour",
         "bjet1_sf",
         "bjet2_sf",
         "bjj_mass",
@@ -470,6 +472,7 @@ def fill_bjets(output, variables, jets, leptons, flavor="mu", is_mc=True):
         "qgl",
         "btagDeepFlavB",
         "sf",
+        "hadronFlavour",
     ]:
         try:
             variables[f"bjet1_{v}"] = jet1[v]

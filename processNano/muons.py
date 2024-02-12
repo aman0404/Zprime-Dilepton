@@ -223,6 +223,8 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
         except Exception:
             output[name] = -999.0
 
+    #print(" aman is printing \n ", output.dimuon_mass)
+
     # create numpy arrays for reco and gen mass needed for mass variations
     recoMassBB = output.loc[
         ((abs(output.mu1_eta < 1.2)) & (abs(output.mu2_eta < 1.2))), "dimuon_mass"
@@ -249,6 +251,7 @@ def fill_muons(processor, output, mu1, mu2, is_mc, year, weights):
             * smearMass(genMassBE, year, bb=False, forUnc=False)
         ).values
 
+    #print(" aman is printing \n ", output.dimuon_mass)
     # calculate mass values smeared by mass resolution uncertainty
     output["dimuon_mass_resUnc"] = output.dimuon_mass.values
     if is_mc:

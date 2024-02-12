@@ -18,6 +18,10 @@ from copperhead.stage1.corrections.pu_reweight import pu_lookups, pu_evaluator
 
 # from copperhead.stage1.corrections.lepton_sf import musf_lookup
 
+from processNano.corrections.lepton_sf import musf_evaluator 
+from processNano.corrections.lepton_sf_iso import musf_iso_evaluator
+from processNano.corrections.lepton_sf_hlt import musf_hlt_evaluator
+
 from processNano.corrections.jec import jec_factories, apply_jec
 from copperhead.stage1.corrections.l1prefiring_weights import l1pf_weights
 
@@ -29,6 +33,9 @@ from processNano.corrections.kFac import kFac
 from processNano.corrections.nnpdfWeight import NNPDFWeight
 
 from processNano.jets import prepare_jets, fill_jets, fill_bjets, btagSF
+
+#aman edits
+from processNano.corrections.met_corr  import corrMet
 
 import copy
 
@@ -42,6 +49,11 @@ from config.parameters import ele_branches
 
 #from config.jec_parameters import jec_parameters
 
+##top pT reweighting
+from processNano.corrections.topPtweights import topPtWeight
+
+#ttbar SF
+from processNano.corrections.ttbar_sf import ttbar_sf
 
 class DimuonProcessor(processor.ProcessorABC):
     def __init__(self, **kwargs):
@@ -63,7 +75,6 @@ class DimuonProcessor(processor.ProcessorABC):
         
         # self.do_btag_syst = kwargs.pop("do_btag_syst", None)
         self.do_btag = True
-        #self.do_btag = True
         # if self.do_btag_syst:
         #    self.btag_systs = self.parameters["btag_systs"]
         # else:
@@ -72,15 +83,27 @@ class DimuonProcessor(processor.ProcessorABC):
         if self.samp_info is None:
             print("Samples info missing!")
             return
-        self.applykFac = True
-        self.applyNNPDFWeight = True
+        self.applykFac = False
+        self.applyNNPDFWeight = False
+        #self.do_musf = False
+        self.do_musf = True
+
+        self.applyTopPtWeight = True
         self.do_pu = True
         self.auto_pu = True
-        self.do_l1pw = False  # L1 prefiring weights
-        #self.do_l1pw = True  # L1 prefiring weights
+        #self.do_l1pw = False  # L1 prefiring weights
+        self.do_l1pw = True  # L1 prefiring weights
         #jec_pars = {k: v[self.years] for k, v in jec_parameters.items()}
-        self.do_jecunc = False
+        self.do_jecunc = False  #default : True
+        self.do_jecunc_up   = False
+        self.do_jecunc_down = False
+
         self.do_jerunc = False
+        self.do_jerunc_up = False
+        self.do_jerunc_down = False
+
+        self.applyttbarSF = True
+
 
 #        for ptvar in self.pt_variations:
 #            if ptvar in jec_pars["jec_variations"]:
@@ -131,7 +154,6 @@ class DimuonProcessor(processor.ProcessorABC):
         # ------------------------------------------------------------#
 
         numevents = len(df)
-        print(" aman here num events ",numevents)
         # All variables that we want to save
         # will be collected into the 'output' dataframe
         output = pd.DataFrame(
@@ -139,8 +161,10 @@ class DimuonProcessor(processor.ProcessorABC):
         )
         output.index.name = "entry"
         output["npv"] = df.PV.npvs
-        output["met"] = df.MET.pt
+        #output["met"] = df.MET.pt
         output["met_phi"] = df.MET.phi
+
+
 
         # Separate dataframe to keep track on weights
         # and their systematic variations
@@ -194,10 +218,25 @@ class DimuonProcessor(processor.ProcessorABC):
         if is_mc:
             # For MC: Apply gen.weights, pileup weights, lumi weights,
             # L1 prefiring weights
+
+            genPart = df.GenPart
             mask = np.ones(numevents, dtype=bool)
             genweight = df.genWeight
             weights.add_weight("genwgt", genweight)
             weights.add_weight("lumi", self.lumi_weights[dataset])
+
+#            if self.do_musf:
+#                muID, muIso, muTrig = musf_evaluator(
+#                    self.musf_lookup, self.year, numevents, mu1, mu2
+#                )
+#                weights.add_weight("muID", muID, how="all")
+#                weights.add_weight("muIso", muIso, how="all")
+#                weights.add_weight("muTrig", muTrig, how="all")
+#            else:
+#                weights.add_weight("muID", how="dummy_all")
+#                weights.add_weight("muIso", how="dummy_all")
+#                weights.add_weight("muTrig", how="dummy_all")
+
             if self.do_pu:
                 pu_wgts = pu_evaluator(
                     self.pu_lookups,
@@ -207,6 +246,11 @@ class DimuonProcessor(processor.ProcessorABC):
                     self.auto_pu,
                 )
                 weights.add_weight("pu_wgt", pu_wgts, how="all")
+
+            if self.applyTopPtWeight:
+                    topPtweight = topPtWeight(dataset, genPart)
+                    weights.add_weight("topPt", topPtweight)
+
             if self.do_l1pw:
                 if "L1PreFiringWeight" in df.fields:
                     l1pfw = l1pf_weights(df)
@@ -217,7 +261,6 @@ class DimuonProcessor(processor.ProcessorABC):
         else:
             # For Data: apply Lumi mask
             lumi_info = LumiMask(self.parameters["lumimask_UL_mu"])
-            #lumi_info = LumiMask(self.parameters["lumimask_Pre-UL_mu"])
             mask = lumi_info(df.run, df.luminosityBlock)
         # Apply HLT to both Data and MC
 
@@ -238,24 +281,38 @@ class DimuonProcessor(processor.ProcessorABC):
         # ------------------------------------------------------------#
         prepare_jets(df, is_mc)
 
+
         # ------------------------------------------------------------#
         # Apply JEC, get JEC and JER variations
         # ------------------------------------------------------------#
 
         jets = df.Jet
 
+        #print("before jec \n", jets.pt)
 
         # Save raw variables before computing any corrections
         df["Muon", "pt_raw"] = df.Muon.pt
+
         df["Muon", "eta_raw"] = df.Muon.eta
         df["Muon", "phi_raw"] = df.Muon.phi
+
+        df["Muon", "tunepRelPt"] = df.Muon.tunepRelPt
+       
+        df["Muon", "tunePpt"] = df.Muon.tunepRelPt * df.Muon.pt
+
+        df["Muon", "pt"] = df["Muon", "tunePpt"]
+#aman edits
+        #output["met"] = corrMet(df.MET, df.Muon)
+        
+
         if is_mc:
             df["Muon", "pt_gen"] = df.Muon.matched_gen.pt
             df["Muon", "eta_gen"] = df.Muon.matched_gen.eta
             df["Muon", "phi_gen"] = df.Muon.matched_gen.phi
             df["Muon", "idx"] = df.Muon.genPartIdx
 
-
+       
+       
 ##Aman edits
         
         ele_branches_local = copy.copy(ele_branches)
@@ -306,7 +363,6 @@ class DimuonProcessor(processor.ProcessorABC):
             
             muons = ak.to_pandas(df.Muon[muon_branches_local])
             #print("----- muons -------")
-            #print(muons)
             if self.timer:
                 self.timer.add_checkpoint("load muon data")
 
@@ -322,6 +378,13 @@ class DimuonProcessor(processor.ProcessorABC):
 
             muons = muons.dropna()
             muons = muons.loc[:, ~muons.columns.duplicated()]
+
+#Aman edits
+            met_raw  = ak.to_pandas(df.MET)
+
+            output["met"] = corrMet(met_raw, muons)
+             
+
             # --------------------------------------------------------#
             # Select muons that pass pT, eta, isolation cuts,
             # muon ID and quality flags
@@ -349,9 +412,9 @@ class DimuonProcessor(processor.ProcessorABC):
 
 
             # Define baseline muon selection (applied to pandas DF!)
-
             muons["selection"] = (
-                (muons.pt_raw > self.parameters["muon_pt_cut"])
+                (muons.pt > self.parameters["muon_pt_cut"])
+                #(muons.pt_raw > self.parameters["muon_pt_cut"])
                 & (abs(muons.eta_raw) < self.parameters["muon_eta_cut"])
                 & (muons.tkRelIso < self.parameters["muon_iso_cut"])
                 & (muons[self.parameters["muon_id"]] > 0)
@@ -363,6 +426,7 @@ class DimuonProcessor(processor.ProcessorABC):
                 )
 #                & muons.pass_flags
             )
+            #print("test", muons.pt)
 
             # Count muons
             nmuons = (
@@ -373,6 +437,12 @@ class DimuonProcessor(processor.ProcessorABC):
             )
             # Find opposite-sign muons
             sum_charge = muons.loc[muons.selection, "charge"].groupby("entry").sum()
+
+            #print(" \n")
+            #print("nmuons ", nmuons)
+            #print("\n")
+            #print("sum_charge ", sum_charge)
+
 
             # Find events with at least one good primary vertex
             good_pv = ak.to_pandas(df.PV).npvsGood > 0
@@ -446,10 +516,29 @@ class DimuonProcessor(processor.ProcessorABC):
             output["bbangle"] = bbangle(mu1, mu2)
 
             output["event_selection"] = ((output.event_selection) & (nelectrons==0) & (
-             output.bbangle > self.parameters["3dangle"]
+            output.bbangle > self.parameters["3dangle"]
                 ))
 
-
+            if is_mc:
+               if self.do_musf:
+                   muID = musf_evaluator(
+                       self.parameters, self.year, mu1, mu2
+                   )
+                   muISO = musf_iso_evaluator(
+                       self.parameters, self.year, mu1, mu2
+                   )
+                   muHLT = musf_hlt_evaluator(
+                       self.parameters, self.year, mu1, mu2
+                   )
+                   weights.add_weight("muID", muID, how="all")
+                   weights.add_weight("muISO", muISO, how="all")
+                   weights.add_weight("muHLT", muHLT, how="all")
+                   #weights.add_weight("muTrig", muTrig, how="all")
+               else:
+                   weights.add_weight("muID", how="dummy_all")
+                   weights.add_weight("muISO", how="dummy_all")
+                   weights.add_weight("muHLT", how="dummy_all")
+                   #print("values are ---- ", muID, muIso, muTrig)
 
             if self.timer:
                 self.timer.add_checkpoint("back back angle calculation")
@@ -473,21 +562,21 @@ class DimuonProcessor(processor.ProcessorABC):
         # ------------------------------------------------------------#
         # Prepare jets
         # ------------------------------------------------------------#
-#        prepare_jets(df, is_mc)
+        #prepare_jets(df, is_mc)
 
         # ------------------------------------------------------------#
         # Apply JEC, get JEC and JER variations
         # ------------------------------------------------------------#
 
 #        jets = df.Jet
-        self.do_jec = True
+        self.do_jec = True #default : True
 
         # We only need to reapply JEC for 2018 data
         # (unless new versions of JEC are released)
         # if ("data" in dataset) and ("2018" in self.year):
         #    self.do_jec = False
 
-        apply_jec(
+        jets = apply_jec(
            df,
            jets,
            dataset,
@@ -503,6 +592,29 @@ class DimuonProcessor(processor.ProcessorABC):
             [output.columns, [""]], names=["Variable", "Variation"]
         )
 
+        #print("after jec \n", jets.pt)
+        #print("jet pt \n", jets.pt)
+
+        #jets.pt = jets.JES_jes.up.pt
+        #jets.eta = jets.JES_jes.up.eta
+        #jets.phi = jets.JES_jes.up.phi
+
+        #print("jet pt \n", jets.JES_jes.up.pt)
+        #print("jer up", jets.JER.up.pt/jets.pt_raw)
+ 
+#        if self.do_jecunc:
+#           jets["pt"] = jets.JES_jes.up.pt
+#           jets["eta"] = jets.JES_jes.up.eta
+#           jets["phi"] = jets.JES_jes.up.phi
+#
+#        if self.do_jerunc:
+#           jets["pt"] = jets.JER.down.pt
+
+
+
+
+#        print("jet pt \n", jets.pt)
+ 
         if self.timer:
             self.timer.add_checkpoint("Jet preparation & event weights")
 
@@ -554,8 +666,8 @@ class DimuonProcessor(processor.ProcessorABC):
             ((abs(output.mu1_eta) > 1.2) | (abs(output.mu2_eta) > 1.2)), "r"
         ] = "be"
 
-        output["year"] = int(self.year)
 
+        output["year"] = int(self.year)
 #Aman edits
         for wgt in weights.df.columns:
             output[f"wgt_{wgt}"] = weights.get_weight(wgt)
@@ -655,6 +767,9 @@ class DimuonProcessor(processor.ProcessorABC):
         output = output.loc[output.event_selection, :]
         output = output.reindex(sorted(output.columns), axis=1)
         output = output[output.r.isin(self.regions)]
+
+
+
         output.columns = output.columns.droplevel("Variation")
         if self.timer:
             self.timer.add_checkpoint("Filled outputs")
@@ -689,6 +804,8 @@ class DimuonProcessor(processor.ProcessorABC):
         variables = pd.DataFrame(index=output.index)
         jet_branches_local = copy.copy(jet_branches)
 
+
+
         if is_mc:
             jets["pt_gen"] = jets.matched_gen.pt
             jets["eta_gen"] = jets.matched_gen.eta
@@ -702,11 +819,35 @@ class DimuonProcessor(processor.ProcessorABC):
                 "phi_gen",
             ]
 
-        # if variation == "nominal":
-        #    if self.do_jec:
-        #        jet_branches_local += ["pt_jec", "mass_jec"]
-        #    if is_mc and self.do_jerunc:
-        #        jet_branches_local += ["pt_orig", "mass_orig"]
+#        print("jet pt \n", jets.pt)
+#        if self.do_jecunc and self.do_jecunc_up:
+#           jets["pt"] = jets.JES_jes.up.pt
+#           jets["eta"] = jets.JES_jes.up.eta
+#           jets["phi"] = jets.JES_jes.up.phi
+#
+#        if self.do_jecunc and self.do_jecunc_down:
+#           jets["pt"] = jets.JES_jes.down.pt
+#           jets["eta"] = jets.JES_jes.down.eta
+#           jets["phi"] = jets.JES_jes.down.phi
+#
+        if self.do_jerunc and self.do_jerunc_up:
+           jets["pt"] = jets.JER.up.pt
+           jets["eta"] = jets.JER.up.eta
+           jets["phi"] = jets.JER.up.phi
+#
+#
+#        if self.do_jerunc and self.do_jerunc_down:
+#           jets["pt"] = jets.JER.down.pt
+#           jets["eta"] = jets.JER.down.eta
+#           jets["phi"] = jets.JER.down.phi
+
+
+
+        if variation == "nominal":
+           if self.do_jec:
+               jet_branches_local += ["pt_jec", "mass_jec"]
+           if is_mc and self.do_jerunc:
+               jet_branches_local += ["pt_orig", "mass_orig"]
 
         # Find jets that have selected muons within dR<0.4 from them
         matched_mu_pt = jets.matched_muons.pt
@@ -735,41 +876,47 @@ class DimuonProcessor(processor.ProcessorABC):
             self.timer.add_checkpoint("Clean jets from matched muons")
 
         # Select particular JEC variation
-        # if "_up" in variation:
-        #    unc_name = "JES_" + variation.replace("_up", "")
-        #    if unc_name not in jets.fields:
-        #        return
-        #    jets = jets[unc_name]["up"][jet_branches_local]
-        # elif "_down" in variation:
-        #    unc_name = "JES_" + variation.replace("_down", "")
-        #    if unc_name not in jets.fields:
-        #        return
-        #    jets = jets[unc_name]["down"][jet_branches_local]
-        # else:
+     
+        #if "_up" in variation:
+        #   unc_name = "JES_" + variation.replace("_up", "")
+
+        #   if unc_name not in jets.fields:
+        #       return
+        #   jets = jets[unc_name]["up"][jet_branches_local]
+        #elif "_down" in variation:
+        #   unc_name = "JES_" + variation.replace("_down", "")
+        #   if unc_name not in jets.fields:
+        #       return
+        #   jets = jets[unc_name]["down"][jet_branches_local]
+        #else:
+        #   jets = jets[jet_branches_local]
 
         jets = jets[jet_branches_local]
 
         # --- conversion from awkward to pandas --- #
         jets = ak.to_pandas(jets)
 
+
+
         if jets.index.nlevels == 3:
             # sometimes there are duplicates?
             jets = jets.loc[pd.IndexSlice[:, :, 0], :]
             jets.index = jets.index.droplevel("subsubentry")
 
-        # if variation == "nominal":
-        # Update pt and mass if JEC was applied
-        #    if self.do_jec:
-        #        jets["pt"] = jets["pt_jec"]
-        #        jets["mass"] = jets["mass_jec"]
+        if variation == "nominal":
+           #Update pt and mass if JEC was applied
+           if self.do_jec:
+               jets["pt"] = jets["pt_jec"]
+               jets["mass"] = jets["mass_jec"]
 
         # We use JER corrections only for systematics, so we shouldn't
         # update the kinematics. Use original values,
         # unless JEC were applied.
-        # if is_mc and self.do_jerunc and not self.do_jec:
-        #    jets["pt"] = jets["pt_orig"]
-        #    jets["mass"] = jets["mass_orig"]
+        if is_mc and self.do_jerunc and not self.do_jec:
+           jets["pt"] = jets["pt_orig"]
+           jets["mass"] = jets["mass_orig"]
 
+        #print("jet pt \n", jets.pt)
         # ------------------------------------------------------------#
         # Apply jetID
         # ------------------------------------------------------------#
@@ -790,7 +937,7 @@ class DimuonProcessor(processor.ProcessorABC):
 
         if self.do_btag:
             if is_mc:
-                btagSF(jets, self.years, correction="shape", is_UL=True)
+                #btagSF(jets, self.years, correction="shape", is_UL=True)
                 btagSF(jets, self.years, correction="wp", is_UL=True)
                 jets = jets.dropna()
 
@@ -822,6 +969,157 @@ class DimuonProcessor(processor.ProcessorABC):
                     "wgt_btag_down"
                 ] * weights.get_weight("nominal")
 
+                ## further breakdown of btag systematics recommended by BTV POG
+
+##bc up correlated
+                variables["wgt_btag_bc_up_correlated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour>=4)), "btag_sf_wp_up_correlated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_bc_up_correlated"] = variables["wgt_btag_bc_up_correlated"].fillna(1.0)
+
+                variables["wgt_btag_bc_up_correlated"] = variables[
+                    "wgt_btag_bc_up_correlated"
+                ] * weights.get_weight("nominal")
+
+##bc up uncorrelated
+                variables["wgt_btag_bc_up_uncorrelated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour>=4)), "btag_sf_wp_up_uncorrelated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_bc_up_uncorrelated"] = variables["wgt_btag_bc_up_uncorrelated"].fillna(1.0)
+
+                variables["wgt_btag_bc_up_uncorrelated"] = variables[
+                    "wgt_btag_bc_up_uncorrelated"
+                ] * weights.get_weight("nominal")
+
+##bc down correlated
+                variables["wgt_btag_bc_down_correlated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour>=4)), "btag_sf_wp_down_correlated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_bc_down_correlated"] = variables["wgt_btag_bc_down_correlated"].fillna(1.0)
+
+                variables["wgt_btag_bc_down_correlated"] = variables[
+                    "wgt_btag_bc_down_correlated"
+                ] * weights.get_weight("nominal")
+
+##bc down uncorrelated
+                variables["wgt_btag_bc_down_uncorrelated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour>=4)), "btag_sf_wp_down_uncorrelated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_bc_down_uncorrelated"] = variables["wgt_btag_bc_down_uncorrelated"].fillna(1.0)
+
+                variables["wgt_btag_bc_down_uncorrelated"] = variables[
+                    "wgt_btag_bc_down_uncorrelated"
+                ] * weights.get_weight("nominal")
+
+
+
+##light hadron flavour
+##up correlated
+
+                variables["wgt_btag_light_up_correlated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour<4)), "btag_sf_wp_up_correlated"]
+                    .groupby("entry")
+                    .prod()
+                )
+
+                variables["wgt_btag_light_up_correlated"] = variables["wgt_btag_light_up_correlated"].fillna(1.0)
+
+                variables["wgt_btag_light_up_correlated"] = variables[
+                    "wgt_btag_light_up_correlated"
+                ] * weights.get_weight("nominal")
+
+##light up uncorrelated
+                variables["wgt_btag_light_up_uncorrelated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour<4)), "btag_sf_wp_up_uncorrelated"]
+                    .groupby("entry")
+                    .prod()
+                )
+
+                variables["wgt_btag_light_up_uncorrelated"] = variables["wgt_btag_light_up_uncorrelated"].fillna(1.0)
+
+                variables["wgt_btag_light_up_uncorrelated"] = variables[
+                    "wgt_btag_light_up_uncorrelated"
+                ] * weights.get_weight("nominal")
+
+##down correlated
+
+                variables["wgt_btag_light_down_correlated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour<4)), "btag_sf_wp_down_correlated"]
+                    .groupby("entry")
+                    .prod()
+                )
+
+                variables["wgt_btag_light_down_correlated"] = variables["wgt_btag_light_down_correlated"].fillna(1.0)
+
+                variables["wgt_btag_light_down_correlated"] = variables[
+                    "wgt_btag_light_down_correlated"
+                ] * weights.get_weight("nominal")
+
+##light down uncorrelated
+                variables["wgt_btag_light_down_uncorrelated"] = (
+                    jets.loc[((jets.pre_selection == 1)&(jets.hadronFlavour<4)), "btag_sf_wp_down_uncorrelated"]
+                    .groupby("entry")
+                    .prod()
+                )
+
+                variables["wgt_btag_light_down_uncorrelated"] = variables["wgt_btag_light_down_uncorrelated"].fillna(1.0)
+
+                variables["wgt_btag_light_down_uncorrelated"] = variables[
+                    "wgt_btag_light_down_uncorrelated"
+                ] * weights.get_weight("nominal")
+
+
+##############################
+                variables["wgt_btag_up_correlated"] = (
+                    jets.loc[jets.pre_selection == 1, "btag_sf_wp_up_correlated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_up_correlated"] = variables["wgt_btag_up_correlated"].fillna(1.0)
+                variables["wgt_btag_up_correlated"] = variables[
+                    "wgt_btag_up_correlated"
+                ] * weights.get_weight("nominal")
+
+                variables["wgt_btag_up_uncorrelated"] = (
+                    jets.loc[jets.pre_selection == 1, "btag_sf_wp_up_uncorrelated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_up_uncorrelated"] = variables["wgt_btag_up_uncorrelated"].fillna(1.0)
+                variables["wgt_btag_up_uncorrelated"] = variables[
+                    "wgt_btag_up_uncorrelated"
+                ] * weights.get_weight("nominal")
+
+                variables["wgt_btag_down_correlated"] = (
+                    jets.loc[jets.pre_selection == 1, "btag_sf_wp_down_correlated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_down_correlated"] = variables["wgt_btag_down_correlated"].fillna(1.0)
+                variables["wgt_btag_down_correlated"] = variables[
+                    "wgt_btag_down_correlated"
+                ] * weights.get_weight("nominal")
+
+
+                variables["wgt_btag_down_uncorrelated"] = (
+                    jets.loc[jets.pre_selection == 1, "btag_sf_wp_down_uncorrelated"]
+                    .groupby("entry")
+                    .prod()
+                )
+                variables["wgt_btag_down_uncorrelated"] = variables["wgt_btag_down_uncorrelated"].fillna(1.0)
+                variables["wgt_btag_down_uncorrelated"] = variables[
+                    "wgt_btag_down_uncorrelated"
+                ] * weights.get_weight("nominal")
+
+
                 for s in ["_up", "_down"]:
 
                     variables["wgt_recowgt" + s] = (
@@ -839,6 +1137,21 @@ class DimuonProcessor(processor.ProcessorABC):
                 variables["wgt_nominal"] = 1.0
                 variables["wgt_btag_up"] = 1.0
                 variables["wgt_btag_down"] = 1.0
+
+                variables["wgt_btag_bc_up_correlated"] = 1.0
+                variables["wgt_btag_bc_up_uncorrelated"] = 1.0
+                variables["wgt_btag_bc_down_correlated"] = 1.0
+                variables["wgt_btag_bc_down_uncorrelated"] = 1.0
+
+                variables["wgt_btag_light_up_correlated"] = 1.0
+                variables["wgt_btag_light_up_uncorrelated"] = 1.0
+                variables["wgt_btag_light_down_correlated"] = 1.0
+                variables["wgt_btag_light_down_uncorrelated"] = 1.0
+
+                variables["wgt_btag_up_correlated"] = 1.0
+                variables["wgt_btag_up_uncorrelated"] = 1.0
+                variables["wgt_btag_down_correlated"] = 1.0
+                variables["wgt_btag_down_uncorrelated"] = 1.0
                 variables["wgt_recowgt_up"] = 1.0
                 variables["wgt_recowgt_down"] = 1.0
         else:
@@ -923,7 +1236,6 @@ class DimuonProcessor(processor.ProcessorABC):
 #        variables["nbjets"] = nbjets
 
 
-        print("hello")
         
         bjets = jets.query("bselection==1")
         bjets["new_btight"] = 0
@@ -947,36 +1259,59 @@ class DimuonProcessor(processor.ProcessorABC):
         bjet2 = bjets.groupby("entry").nth(1)
 
         bjet1 = bjet1[bjet1.new_btight == 1]
-#       print(bjet1)
-#       print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
-#        print(bjet1.index.values)
-        
-        bjets = bjets.loc[bjet1.index.values]
-        nbjets= bjets.loc[:, "sub_bmedium"].groupby("entry").sum()
 
-#        print(nbjets.to_string(), bjets["sub_bmedium"].to_string()) 
+        bjets["tagged_jets"] = 0
+        bjets.loc[
+           (bjet1.index.values),
+           "tagged_jets",
+         ] = 1
 
-#        print(bjets[["new_btight", "sub_bmedium", "btagDeepFlavB"]].to_string())        
+        if (not bjet2.empty):
+            common_idx = bjet1.index.intersection(bjet2.index)
 
-#Aman edits
-#        bjet1 = bjet1.loc[(bjet1.btagDeepFlavB > parameters["UL_btag_tight"][self.years])]
 
-        #jindex = jets.groupby("entry").sum().index 
-#        jindex = jets.groupby("entry").sum().index  # Convert index to a list
-#        jindex = jindex.astype(bjets.index.dtype)  # Convert data type to match bjets index
+            idx_diff = bjet2.index.difference(common_idx)
 
-#        bjets = bjets.reindex(jindex)
-#        print(jets["btagDeepFlavB"].to_string())
-#        print(bjets["btagDeepFlavB"].to_string())
-       
+            bjet2 = bjet2.loc[common_idx]
+
+
+
+            idx_diff = bjet2.index.difference(common_idx)
+
+        nbjets= bjets.loc[:, "tagged_jets"].groupby("entry").sum()
+
+
         variables["nbjets"] = nbjets
         variables["nbjets"] = variables["nbjets"].fillna(0)
-        
+
+        #print("nbjets \n" , nbjets)
+        #print(bjets[["tagged_jets", "btagDeepFlavB"]], "\n")
 
 
         bJets = [bjet1, bjet2]
+
         muons = [mu1, mu2]
         fill_bjets(output, variables, bJets, muons, is_mc=is_mc)
+
+        variables["dataset"] =  dataset
+
+        output["regions"] = None
+
+        output.loc[
+            ((abs(output.mu1_eta) < 1.2) & (abs(output.mu2_eta) < 1.2)), "regions"
+        ] = "bb"
+        output.loc[
+            ((abs(output.mu1_eta) > 1.2) | (abs(output.mu2_eta) > 1.2)), "regions"
+        ] = "be"
+
+        variables["regions"] = output["regions"]        
+        variables["year"] =  output["year"]
+
+
+        if self.applyttbarSF:
+            variables["ttbar_sfs"] = variables.apply(ttbar_sf, axis = 1)
+            weights.add_weight("ttbar_sf", variables.ttbar_sfs)
+            #print("sfs ",variables["ttbar_sfs"])
 
 #        vec_mu1 = ROOT.TVector(mu1)
 #        vec_b1 =  ROOT.TVector(bjet1)
@@ -1029,10 +1364,12 @@ class DimuonProcessor(processor.ProcessorABC):
         del mu2
         return output
 
+
+
     def prepare_lookups(self):
         self.jec_factories, self.jec_factories_data = jec_factories(self.years)
         # Muon scale factors
-        # self.musf_lookup = musf_lookup(self.parameters)
+        #self.musf_lookup = musf_lookup(self.parameters)
         # Pile-up reweighting
         self.pu_lookups = pu_lookups(self.parameters)
         # Btag weights

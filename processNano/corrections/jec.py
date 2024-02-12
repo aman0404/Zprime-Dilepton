@@ -1,4 +1,5 @@
 #from coffea.jetmet_tools import CorrectedJetsFactory, JECStack
+import awkward as ak
 from coffea.lookup_tools import extractor
 from config.jec_parameters import jec_parameters
 
@@ -21,6 +22,7 @@ def apply_jec(
 
     # Correct jets (w/o uncertainties)
     if do_jec:
+
         if is_mc:
             factory = jec_factories["jec"]
         else:
@@ -29,16 +31,28 @@ def apply_jec(
                     factory = jec_factories_data[run]
         jets = factory.build(jets, lazy_cache=cache)
 
+
     # TODO: only consider nuisances that are defined in run parameters
     # Compute JEC uncertainties
     if is_mc and do_jecunc:
         jets = jec_factories["junc"].build(jets, lazy_cache=cache)
 
+#        print("JES UP pt ratio", jets.JES_jes.up.pt/jets.pt)
+#        print("JES Down pt ratio", jets.JES_jes.down.pt/jets.pt_raw)
+
     # Compute JER uncertainties
     if is_mc and do_jerunc:
         jets = jec_factories["jer"].build(jets, lazy_cache=cache)
 
+        #print('new columns:', set(ak.fields(jets)))
+
+
+        
+        #print("JER UP pt ratio", jets.JER.up.pt/jets.pt_raw)
+        #print("JER Down pt ratio", jets.JER.down.pt/jets.pt_raw)
+
     # TODO: JER nuisances
+
 
     return jets
 

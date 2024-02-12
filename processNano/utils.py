@@ -106,6 +106,13 @@ def p4_sum(obj1, obj2, is_mc=True):
         result.py += py_
         result.pz += pz_
         result.e += e_
+
+#        result.px += px_.reindex(result.index).fillna(0.0)
+#        result.py += py_.reindex(result.index).fillna(0.0)
+#        result.pz += pz_.reindex(result.index).fillna(0.0)
+#        result.e += e_.reindex(result.index).fillna(0.0)
+
+
         if is_mc:
             px_gen_ = obj.pt_gen * np.cos(obj.phi_gen)
             py_gen_ = obj.pt_gen * np.sin(obj.phi_gen)
