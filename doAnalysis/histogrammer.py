@@ -30,6 +30,8 @@ def make_histograms(df, var_name, year, dataset, regions, channels, npart, param
     # prepare list of systematic variations
     wgt_variations = [w for w in df.columns if ("wgt_" in w)]
     syst_variations = parameters.get("syst_variations", ["nominal"])
+    #print("debugging ", wgt_variations)
+    #print("debugging ", syst_variations)
     variations = []
     for w in wgt_variations:
         for v in syst_variations:
@@ -37,6 +39,7 @@ def make_histograms(df, var_name, year, dataset, regions, channels, npart, param
             if variation:
                 variations.append(variation)
 
+    #print("debugging ", variations)
     # prepare multidimensional histogram
     # add axes for (1) mass region, (2) channel, (3) value or sumw2
     hist = (
@@ -85,6 +88,7 @@ def make_histograms(df, var_name, year, dataset, regions, channels, npart, param
         if not variation:
             continue
 
+        #print("debugging ", variation)
         var_name = f"{var.name}_{v}"
         if var_name not in df.columns:
             if var.name in df.columns:
@@ -92,23 +96,40 @@ def make_histograms(df, var_name, year, dataset, regions, channels, npart, param
             else:
                 continue
 
+        #print("debugging ", var_name)
         slicer = (
             (df.dataset == dataset)
             & ((df.r == region) | (region == "inclusive"))
             & (df.year == year)
             #& (df.dimuon_mass > 60)
             #& (df.dimuon_mass < 120)
-            & (df.dimuon_mass > 200)
+
+            & (df.dimuon_mass > 200) # default
+            #& (df.dimuon_mass > 200) ##for response matrix
+            #& (df.dimuon_mass_gen > 200)  ## for response matrix
+
             #& (df.dimuon_mass_gen < 400)   #gen level cut for flavor ratio
-            #& (df.dimuon_mass_gen > 400)   #gen level cut for flavor ratio
+            #& (df.dimuon_mass_gen > 600)   #gen level cut for flavor ratio
+
+
             & ((df["channel"] == channel) | (channel == "inclusive"))
+
+            & (~((df.dataset == "dyInclusive50") & (df.dimuon_mass_gen > 200)))
             & (~((df.dataset == "ttbar_lep_inclusive") & (df.dimuon_mass_gen > 500)))
             & (~((df.dataset == "WWinclusive") & (df.dimuon_mass_gen > 200)))
-            & (df.bjet1_mb1_dR == False)
-            & (df.bjet1_mb2_dR == False)
+
+            #& (~((df.dataset == "dyInclusive50") & (df.dimuon_mass_gen > 200)))
+            #& (~((df.dataset == "ttbar_lep_inclusive") & (df.dimuon_mass_gen > 500)))
+            #& (~((df.dataset == "WWinclusive") & (df.dimuon_mass_gen > 200)))
+            #& (df.bjet1_mb1_dR == True)
+            #& (df.bjet1_mb2_dR == True)
+            #& (df.bjet2_mb1_dR == True)
+            #& (df.bjet2_mb2_dR == True)
         )
         data = df.loc[slicer, var_name]
         weight = df.loc[slicer, w]
+
+        #print(data)
 
         if var.norm_to_bin_width:
             weight = weight * calc_binwidth_weight(data.to_numpy(), var.binning)
@@ -248,8 +269,8 @@ def make_histograms2D(
             & ((df["channel"] == channel) | (channel == "inclusive"))
             & (~((df.dataset == "ttbar_lep_inclusive") & (df.dimuon_mass_gen > 500)))
             & (~((df.dataset == "WWinclusive") & (df.dimuon_mass_gen > 200)))
-            & (df.bjet1_mb1_dR == False)
-            & (df.bjet1_mb2_dR == False)
+            #& (df.bjet1_mb1_dR == False)
+            #& (df.bjet1_mb2_dR == False)
         )
 
         data1 = df.loc[slicer, var_name1]

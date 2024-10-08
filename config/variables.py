@@ -47,6 +47,13 @@ massBinningMuMu = (
     + [6070]
 )
 
+massBinningMuMu_new = (
+    [j for j in range(200, 1000, 50)]
+    + [j for j in range(1000, 2000, 100)]
+    + [j for j in range(2000, 4000, 200)]
+    + [4000]
+)
+
 #variables.append(
 #    Variable(
 #        "dimuon_mass",
@@ -59,10 +66,12 @@ massBinningMuMu = (
 #        1e-5,
 #        1e8,
 #        binning_=massBinningMuMu,
-#        norm_to_bin_width_=True,
+#        #norm_to_bin_width_=True,
 #    )
 #)
+
 ##for limits, use the following binning
+
 variables.append(
     Variable(
         "dimuon_mass",
@@ -71,9 +80,51 @@ variables.append(
         200,
         6000,
         1e-5,
-        1e8
+        1e8,
+        #norm_to_bin_width_=True,
     )
 )
+
+#variables.append(
+#    Variable(
+#        "dimuon_mass",
+#        r"$m_{\mu\mu}$ [GeV]",
+#        196,
+#        200,
+#        10000,
+#        1e-5,
+#        1e8,
+#        #norm_to_bin_width_=True,
+#    )
+#)
+
+#for likelihood ratio###
+#variables.append(
+#    Variable(
+#        "dimuon_mass",
+#        r"$m_{\mu\mu}$ [GeV]",
+#        len(massBinningMuMu_new) - 1,
+#        200,
+#        4000,
+#        1e-5,
+#        1e8,
+#        binning_=massBinningMuMu_new,
+#        #norm_to_bin_width_=True,
+#    )
+#)
+
+#variables.append(
+#    Variable(
+#        "dimuon_mass",
+#        r"$m_{\mu\mu}$ [GeV]",
+#        116,
+#        200,
+#        6000,
+#        1e-5,
+#        1e8,
+#        norm_to_bin_width_=True,
+#    )
+#)
 
 variables.append(
     Variable(
@@ -224,7 +275,13 @@ variables.append(
 variables.append(
     Variable("bmmj1_mass", r"m(\ell\ell b) [GeV]", 200, 0, 4000, 1e-5, 1e8)
 )
-variables.append(Variable("min_bl_mass", r"min m(l,b) [GeV]", 100, 0, 600, 1e-5, 1e8))
+
+variables.append(Variable("min_bl_mass", r"min m(l,b) [GeV]", 25, 0, 500, 2e-3, 2e3))
+
+#variables.append(Variable("min_bl_mass", r"min m(l,b) [GeV]", 100, 0, 600, 1e-5, 1e8))
+
+
+
 variables.append(
     Variable("min_b1l_mass", r"min m(l,leading b) [GeV]", 100, 0, 1000, 1e-5, 1e8)
 )
@@ -235,13 +292,12 @@ variables.append(
 variables.append(Variable("njets", r"$N_{jet}$", 10, -0.5, 9.5, 0.5, 1e8))
 variables.append(Variable("nbjets", r"$N_{b-tagged jet}$", 10, -0.5, 9.5, 0.5, 1e8))
 variables.append(
-    Variable("met", r"$E_{\mathrm{T}}^{\mathrm{miss}} [GeV]$", 40, 0, 1000, 0.5, 1e8)
+    Variable("met", r"$E_{\mathrm{T}}^{\mathrm{miss}} [GeV]$", 25, 0, 500, 2e-3, 2e3)
+    #Variable("met", r"$E_{\mathrm{T}}^{\mathrm{miss}} [GeV]$", 40, 0, 1000, 0.5, 1e8)
 )
 variables.append(
-    #Variable("lb_angle", r"$\theta_{\ell,b}$", 300, 0.0, 1, 0.01, 1e8)
-    #Variable("lb_angle", r"$cos(\theta_{\ell,b})$", 300, 0.8, 1.1, 0.01, 1e8)
-    #Variable("lb_angle", r"$angle_{\ell,b}$", 50, -0.1, 0.1, 0.01, 1e8)
-    Variable("lb_angle", r"$angle_{\ell,b}$", 40, 0, 3.2, 0.01, 1e8)
+    Variable("lb_angle", r"$3D angle_{\ell,b}$", 40, 0, 3.2, 2e-3, 2e3)
+    #Variable("lb_angle", r"$3D angle_{\ell,b}$", 40, 0, 3.2, 0.01, 1e8)
 )
 
 variables.append(
@@ -281,13 +337,20 @@ variables.append(
     Variable("dimuon_cos_theta_cs", r"$cos\theta_{\mathrm{CS}}$", 20, -1, 1, 0.5, 1e8)
 )
 variables.append(
-    Variable("bjet1_pt", r"bjet1 $p_T$ [GeV]",50, 0, 500, 1e-5, 1e8)
+    Variable("bjet1_pt", r"bjet1 $p_T$ [GeV]",50, 0, 500, 1e-3, 1e3)
+    #Variable("bjet1_pt", r"bjet1 $p_T$ [GeV]",50, 0, 500, 1e-5, 1e8)
 )
+
+variables.append(
+    Variable("jet1_pt", r"jet1 $p_T$ [GeV]",50, 0, 500, 1e-3, 1e3)
+)
+
 variables.append(
     Variable("bjet2_pt", r"bjet2 $p_T$ [GeV]",50, 0, 500, 1e-5, 1e8)
 )
 variables.append(
-    Variable("mu1_pt", r"$\mu_{1}$ $p_T$ [GeV]",25, 0, 500, 1e-5, 1e8)
+    Variable("mu1_pt", r"$\mu_{1}$ $p_T$ [GeV]",25, 0, 500, 1e-3, 1e3)
+    #Variable("mu1_pt", r"$\mu_{1}$ $p_T$ [GeV]",25, 0, 500, 1e-5, 1e8)
 )
 variables.append(
     Variable("mu2_pt", r"$\mu_{2}$ $p_T$ [GeV]",25, 0, 500, 1e-5, 1e8)
@@ -304,6 +367,12 @@ variables.append(
 variables.append(
     Variable("bjet1_eta", r"bjet1 $\eta$",12, -3.0, 3.0, 1e-5, 1e8)
 )
+
+
+variables.append(
+    Variable("jet1_eta", r"jet1 $\eta$",12, -3.0, 3.0, 1e-5, 1e8)
+)
+
 variables.append(
     Variable("bjet2_eta", r"bjet2 $\eta$",12, -3.0, 3.0, 1e-5, 1e8)
 )

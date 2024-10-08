@@ -22,15 +22,17 @@ def apply_jec(
 
     # Correct jets (w/o uncertainties)
     if do_jec:
-
+        #print('old columns:', set(ak.fields(jets)))
         if is_mc:
             factory = jec_factories["jec"]
         else:
             for run in jec_parameters["runs"][year]:
                 if run in dataset:
                     factory = jec_factories_data[run]
+
         jets = factory.build(jets, lazy_cache=cache)
 
+        #print('new columns:', set(ak.fields(jets)))
 
     # TODO: only consider nuisances that are defined in run parameters
     # Compute JEC uncertainties

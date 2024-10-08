@@ -176,15 +176,17 @@ def make_templates(args, parameters={}):
         mkdir(out_dir)
         out_dir += "/" + parameters["label"]
         mkdir(out_dir)
-#        out_dir += "/" + "data_samples"
-#        mkdir(out_dir)
+        #out_dir += "/" + "dnn_DY_genlevel_above1000"
+        #mkdir(out_dir)
         out_dir += "/" + "stage3_templates"
         mkdir(out_dir)
         out_dir += "/" + var.name
         mkdir(out_dir)
 
-        #out_fn = f"{out_dir}/{channel}_{region}_{year}.root"
-        out_fn = f"{out_dir}/dy_400_{channel}_{region}_{year}.root"
+        out_fn = f"{out_dir}/{channel}_{region}_{year}.root"
+        #out_fn = f"{out_dir}/dy_b1000_{channel}_{region}_{year}.root"
+        #out_fn = f"{out_dir}/dy_b400_{channel}_{region}_{year}.root"
+
         save_template(templates, out_fn, parameters)
 
     yield_df = pd.DataFrame(yield_rows)

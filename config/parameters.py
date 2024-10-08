@@ -4,7 +4,7 @@ def for_all_years(value):
 
 
 parameters = {}
-lumis = {"2016": 36.3, "2017": 42.1, "2018": 59.83}
+lumis = {"2016": 35.93, "2017": 41.48, "2018": 59.83}
 #parameters["lumimask_Pre-UL_mu"] = {
     # "2016": "data/lumimasks/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt",
     # "2017": "data/lumimasks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt",
@@ -23,19 +23,20 @@ lumis = {"2016": 36.3, "2017": 42.1, "2018": 59.83}
 #}
 parameters["lumimask_UL_mu"] = {
 
-     "2016pre": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
-     "2016post": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON_MuonPhys.txt",
+     "2016pre": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
+     "2016post": "data/lumimasks/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
      "2018": "data/lumimasks/UL18_json_GoldenJson.txt",
      #"2018": "data/lumimasks/UL18_json_muonPhys.txt",
-     "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_MuonJSON.txt",
+     "2017": "data/lumimasks/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt",
 }
 
 parameters["mu_hlt"] = {
-    #"2016pre": ["Mu50"],
+    #"2016pre": ["Mu50"], #2016Bv2, Bv1
     "2016pre": ["Mu50", "TkMu50"],
     "2016post": ["Mu50", "TkMu50"],
-    #"2017": ["Mu50"],
+    #"2017": ["Mu50"], #dataB only
     "2017": ["Mu50", "TkMu100", "OldMu100"],
+    #"2018": ["IsoMu24"], #only for testing muons
     "2018": ["Mu50", "TkMu100", "OldMu100"],
 }
 
@@ -55,7 +56,8 @@ parameters["btag_sf_pre_UL"] = {
 
 parameters["btag_sf_UL"] = {
     "2018" : "data/b-tagging/btagging_UL18.json",
-    "2016post": "data/b-tagging/btagging_UL2016postVFP.json",
+    #"2016post": "data/b-tagging/btagging_UL2016postVFP.json",
+    "2016post": "data/b-tagging/btagging_UL2016preVFP.json",
     "2016pre": "data/b-tagging/btagging_UL2016preVFP.json",
     "2017":  "data/b-tagging/btagging_UL17.json",
 }
@@ -87,54 +89,66 @@ parameters["muSFFileList"] = {
     "2016pre": [
         {
             "id": (
-                "data/muon_sf/year2016/RunBCDEF_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_eta_pt",
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_IDISO_2016_preVFP_schemaV2.json",
+                "NUM_HighPtID_DEN_GlobalMuonProbes",
             ),
             "iso": (
-                "data/muon_sf/year2016/RunBCDEF_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_eta_pt",
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_IDISO_2016_preVFP_schemaV2.json",
+                "NUM_probe_TightRelTkIso_DEN_HighPtProbes",
+            ),
+            "HLT": (
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_HLT_2016_preVFP_schemaV2.json",
+                "NUM_HLT_DEN_HighPtTightRelIsoProbes",
             ),
             "trig": (
                 "data/muon_sf/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunBtoF.root",
                 "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
                 "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
             ),
-            "scale": 20.1 / 36.4,
+            "scale": 1.0,
         },
         {
             "id": (
-                "data/muon_sf/year2016/RunGH_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_eta_pt",
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_IDISO_2016_preVFP_schemaV2.json",
+                "NUM_HighPtID_DEN_GlobalMuonProbes",
             ),
             "iso": (
-                "data/muon_sf/year2016/RunGH_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_eta_pt",
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_IDISO_2016_preVFP_schemaV2.json",
+                "NUM_probe_TightRelTkIso_DEN_HighPtProbes",
+            ),
+            "HLT": (
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_HLT_2016_preVFP_schemaV2.json",
+                "NUM_HLT_DEN_HighPtTightRelIsoProbes",
             ),
             "trig": (
                 "data/muon_sf/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root",
                 "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
                 "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
             ),
-            "scale": 16.3 / 36.4,
+            "scale": 1.0,
         },
     ],
 
     "2016post": [
         {
             "id": (
-                "data/muon_sf/year2016/RunBCDEF_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_eta_pt",
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_IDISO_2016_schemaV2.json",
+                "NUM_HighPtID_DEN_GlobalMuonProbes",
             ),
             "iso": (
-                "data/muon_sf/year2016/RunBCDEF_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_eta_pt",
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_IDISO_2016_schemaV2.json",
+                "NUM_probe_TightRelTkIso_DEN_HighPtProbes",
+            ),
+            "HLT": (
+                "data/muon_sf/year2016/ScaleFactors_Muon_highPt_HLT_2016_schemaV2.json",
+                "NUM_HLT_DEN_HighPtTightRelIsoProbes",
             ),
             "trig": (
                 "data/muon_sf/mu2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunBtoF.root",
                 "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
                 "IsoMu24_OR_IsoTkMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
             ),
-            "scale": 20.1 / 36.4,
+            "scale": 1.0,
         },
         {
             "id": (
@@ -157,12 +171,16 @@ parameters["muSFFileList"] = {
     "2017": [
         {
             "id": (
-                "data/muon_sf/year2017/RunBCDEF_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_pt_abseta",
+                "data/muon_sf/year2017/ScaleFactors_Muon_highPt_IDISO_2017_schemaV2.json",
+                "NUM_HighPtID_DEN_GlobalMuonProbes",
             ),
             "iso": (
-                "data/muon_sf/year2017/RunBCDEF_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_pt_abseta",
+                "data/muon_sf/year2017/ScaleFactors_Muon_highPt_IDISO_2017_schemaV2.json",
+                "NUM_probe_TightRelTkIso_DEN_HighPtProbes",
+            ),
+            "HLT": (
+                "data/muon_sf/year2017/ScaleFactors_Muon_highPt_HLT_2017_schemaV2.json",
+                "NUM_HLT_DEN_HighPtTightRelIsoProbes",
             ),
             "trig": (
                 "data/muon_sf/mu2017/EfficienciesAndSF_RunBtoF_Nov17Nov2017.root",
@@ -175,19 +193,26 @@ parameters["muSFFileList"] = {
     "2018": [
         {
             "id": (
-                "data/muon_sf/year2018/RunABCD_SF_ID.root",
-                "NUM_MediumID_DEN_genTracks_pt_abseta",
+                "data/muon_sf/year2018/ScaleFactors_Muon_highPt_IDISO_2018_schemaV2.json",
+                "NUM_HighPtID_DEN_GlobalMuonProbes",
             ),
             "iso": (
-                "data/muon_sf/year2018/RunABCD_SF_ISO.root",
-                "NUM_TightRelIso_DEN_MediumID_pt_abseta",
+                "data/muon_sf/year2018/ScaleFactors_Muon_highPt_IDISO_2018_schemaV2.json",
+                "NUM_probe_TightRelTkIso_DEN_HighPtProbes",
+            ),
+            "HLT": (
+                "data/muon_sf/year2018/ScaleFactors_Muon_highPt_HLT_2018_schemaV2.json",
+                "NUM_HLT_DEN_HighPtTightRelIsoProbes",
             ),
             "trig": (
-                "data/muon_sf/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root",
-                "IsoMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
-                "IsoMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
+                 #"data/muon_sf/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root",
+                 #"IsoMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
+                 #"IsoMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
+                "data/muon_sf/year2018/Efficiencies_muon_generalTracks_Z_Run2018_UL_SingleMuonTriggers_schemaV2.json",
+                "Eff_2018_Data_var",
+                "Eff_2018_DY_var",
             ),
-            "scale": 8.95 / 59.74,
+            "scale": 1.0,
         },
         {
             "id": (
@@ -199,11 +224,14 @@ parameters["muSFFileList"] = {
                 "NUM_TightRelIso_DEN_MediumID_pt_abseta",
             ),
             "trig": (
-                "data/muon_sf/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_AfterMuonHLTUpdate.root",
-                "IsoMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
-                "IsoMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
+                 #"data/muon_sf/mu2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_AfterMuonHLTUpdate.root",
+                 #"IsoMu24_PtEtaBins/efficienciesDATA/abseta_pt_DATA",
+                 #"IsoMu24_PtEtaBins/efficienciesMC/abseta_pt_MC",
+                "data/muon_sf/year2018/OutFile-v20190510-Combined-Run2016BtoH_Run2017BtoF_Run2018AtoD-M120to10000.root",
+                "Eff_2018_Data_var",
+                "Eff_2018_DY_var",
             ),
-            "scale": 50.79 / 59.74,
+            "scale": 1.0,
         },
     ],
 }
@@ -215,7 +243,7 @@ parameters.update(
     {
         "event_flags": for_all_years(
             [
-                "BadPFMuonDzFilter",
+                #"BadPFMuonDzFilter",
                 "BadPFMuonFilter",
                 "EcalDeadCellTriggerPrimitiveFilter",
                 "HBHENoiseFilter",
@@ -236,7 +264,7 @@ parameters.update(
     {
         "muon_pt_cut": for_all_years(53.0),
         "muon_eta_cut": for_all_years(2.4),
-        "muon_iso_cut": for_all_years(0.05),  # medium iso
+        "muon_iso_cut": for_all_years(0.05),  # tight iso
         "muon_id": for_all_years("highPtId"),
         "muon_dz": for_all_years(0.1),
         "muon_dxy": for_all_years(0.02),
@@ -316,6 +344,7 @@ bins = [
 event_branches = ["run", "event", "luminosityBlock", "genWeight"]
 muon_branches = [
     "pt_raw",
+    #"tunePpt",
     "pt",
     "eta",
     "eta_raw",
@@ -323,6 +352,7 @@ muon_branches = [
     "phi_raw",
     "charge",
     "ptErr",
+    "mediumId",
     "highPtId",
     "tkRelIso",
     "mass",

@@ -246,7 +246,6 @@ class DimuonProcessor(processor.ProcessorABC):
                     self.auto_pu,
                 )
                 weights.add_weight("pu_wgt", pu_wgts, how="all")
-
             if self.applyTopPtWeight:
                     topPtweight = topPtWeight(dataset, genPart)
                     weights.add_weight("topPt", topPtweight)
@@ -280,7 +279,7 @@ class DimuonProcessor(processor.ProcessorABC):
         # Prepare jets
         # ------------------------------------------------------------#
         prepare_jets(df, is_mc)
-
+        
 
         # ------------------------------------------------------------#
         # Apply JEC, get JEC and JER variations
@@ -289,6 +288,7 @@ class DimuonProcessor(processor.ProcessorABC):
         jets = df.Jet
 
         #print("before jec \n", jets.pt)
+        #print("before jec raw \n", jets.pt_raw)
 
         # Save raw variables before computing any corrections
         df["Muon", "pt_raw"] = df.Muon.pt
@@ -592,8 +592,8 @@ class DimuonProcessor(processor.ProcessorABC):
             [output.columns, [""]], names=["Variable", "Variation"]
         )
 
-        #print("after jec \n", jets.pt)
-        #print("jet pt \n", jets.pt)
+        
+      
 
         #jets.pt = jets.JES_jes.up.pt
         #jets.eta = jets.JES_jes.up.eta
@@ -896,7 +896,7 @@ class DimuonProcessor(processor.ProcessorABC):
         # --- conversion from awkward to pandas --- #
         jets = ak.to_pandas(jets)
 
-
+        #print(jets[["pt", "eta"]])
 
         if jets.index.nlevels == 3:
             # sometimes there are duplicates?

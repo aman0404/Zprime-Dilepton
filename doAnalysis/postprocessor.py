@@ -80,8 +80,10 @@ def on_partition(args, parameters):
     # < evaluate here MVA scores before categorization, if needed >
     # ...
 
-    # < categorization into channels (ggH, VBF, etc.) >
+    # < categorization into channels (0b, 1b, etc.) >
     split_into_channels(df, v="nominal")
+
+
     #Aman
     #regions = [r for r in parameters["regions"] if r in df.r.unique()]
     regions = parameters["regions"] 

@@ -43,7 +43,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
         self.pt_variations = kwargs.pop("pt_variations", ["nominal"])
 
         if self.samp_info is None:
-            print("Samples info missing!")
+            #print("Samples info missing!")
             return
 
         #self._accumulator = processor.defaultdict_accumulator(int)
@@ -66,7 +66,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
            self.year = self.years
         self.parameters = {k: v.get(self.years, None) for k, v in parameters.items()}
 
-        print("processing year ",self.year)
+        #print("processing year ",self.year)
 
 
         #self.parameters = {k: v[self.year] for k, v in parameters.items()}
@@ -343,7 +343,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
         jets.drop("subentry", axis=1, inplace=True)
         jets.index.names = ["entry", "subentry"]
         jets.loc[
-            jets.btagDeepFlavB > parameters["UL_btag_medium"][self.years], "btag"
+            jets.btagDeepFlavB > parameters["UL_btag_tight"][self.years], "btag"
         ] = True
         jets.loc[jets.jetId >= 2, "Jet_ID"] = True
         jets["Jet_match"] = True
@@ -430,36 +430,55 @@ class DimuonEffProcessor(processor.ProcessorABC):
         genPart = genPart.merge(
             muons[["match", "pt_raw", "ID"]], on=["entry", "subentry"], how="left"
         )
+        #genPart["pt_gen"] = genPart["pt"]
+        #genPart["eta_gen"] = genPart["eta"]
+        #genPart["phi_gen"] = genPart["phi"]
         genPart.pt_raw.fillna(-999.0, inplace=True)
-        genPart.fillna(False, inplace=True)
+        #genPart.fillna(False, inplace=True)
         genPart = genPart[
-            (genPart.status == 1)
+            ((genPart.status == 1)
             & (abs(genPart.pdgId) == 13)
-            & (genPart.statusFlags == 8449)
+            & (genPart.statusFlags == 8449))
         ]
-        genPart.loc[genPart["pdgId"] == -13, "charge"] = -1
-        genPart.loc[genPart["pdgId"] == 13, "charge"] = 1
-        sum_sign = genPart.loc[:, "charge"].groupby("entry").sum()
         nGen = genPart.reset_index().groupby("entry")["subentry"].nunique()
+        genPart = genPart[
+            (genPart["status"] == 1) & (nGen >= 2)
+        ]
+        genPart["charge"] = np.nan
+        #genPart["charge"] = np.where(genPart["pdgId"] == 13, 1, -1) 
+        genPart.loc[genPart["pdgId"] ==  13, "charge"] =  1
+        genPart.loc[genPart["pdgId"] == -13, "charge"] = -1
+
+        sum_sign = genPart.loc[:, "charge"].groupby("entry").sum()
+        #nGen = genPart.reset_index().groupby("entry")["subentry"].nunique()
         # print(nGen.head())
         genPart = genPart[
             (genPart["status"] == 1) & (nGen >= 2) & (abs(sum_sign) < nGen)
         ]
+        #genPart.fillna(False, inplace=True)
         # print("check if 2 particles in genpart")
-        # print(genPart.head())
+        #print(genPart)
 
-        print(muons["ID"])
-        print(genPart["ID"])
         result = genPart.groupby("entry").apply(find_dimuon, is_mc=False)
-        dimuon = pd.DataFrame(result.to_list(), columns=["idx1", "idx2", "dimuon_mass"])
+        if not result.empty:
+            dimuon = pd.DataFrame(result.to_list(), columns=["idx1", "idx2", "dimuon_mass"])
+        else:
+            dimuon = pd.DataFrame(columns=["idx1", "idx2", "dimuon_mass"])
+
+
+        #dimuon = pd.DataFrame(result.to_list(), columns=["idx1", "idx2", "dimuon_mass"])
+        print(" --- \n")
+        print(dimuon)
         mu1 = genPart.loc[dimuon.idx1.values, :]
         mu2 = genPart.loc[dimuon.idx2.values, :]
         mu1.index = mu1.index.droplevel("subentry")
         mu2.index = mu2.index.droplevel("subentry")
 
-        print(mu1, mu2)
+        #print(mu1, mu2)
         mm = p4_sum(mu1, mu2, is_mc=False)
         mm.rename(columns={"mass": "dimuon_mass"}, inplace=True)
+        genPart.fillna(False, inplace=True)
+        #mm.rename(columns={"mass": "dimuon_mass"}, inplace=True)
         pt_pass = (
             genPart[genPart["pt"] > 53]
             .reset_index()
@@ -788,7 +807,7 @@ class DimuonEffProcessor(processor.ProcessorABC):
             (
                 (jets.pt > 20.0)
                 & (abs(jets.eta) < 2.4)
-                & (jets.btagDeepB > parameters["UL_btag_medium"][self.years])
+                & (jets.btagDeepB > parameters["UL_btag_tight"][self.years])
                 & (jets.jetId >= 2)
             ),
             "selection",
