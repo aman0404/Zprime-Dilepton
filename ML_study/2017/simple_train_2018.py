@@ -98,16 +98,27 @@ decayRate = 0.90
 my_lr_scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=optimizer, gamma=decayRate)
 
 #default
+#sig_path = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bbll_6TeV_M1300To2000_posLL/*parquet"
 
 #testing
+#sig_path = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda1TeV_M*/*parquet"
+#sig_path = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda1TeV_M500to1000*/*parquet"
+
+#sig_path1 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bbll_6TeV_M*_posLL/*parquet"
+
+sig_path1 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda1TeV_M*/*parquet"
+#sig_path1 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda1TeV_M500to1000*/*parquet"
+sig_path2 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bbll_6TeV_M800To*_posLL/*parquet"
+sig_path3 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bbll_6TeV_M300To*_posLL/*parquet"
+sig_path4 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda1TeV_M1000to2000*/*parquet"
+
+#sig_path2 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda2TeV_M500to1000*/*parquet"
+#sig_path3 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/bsll_lambda3TeV_M500to1000*/*parquet"
 
 
-sig_path1 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2016*/bsll_lambda1TeV_M*/*parquet"
-
-
-bkg_path = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2016*/ttbar*/*parquet"
-bkg_path1 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2016*/tW/*parquet"
-bkg_path2 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2016*/Wantitop/*parquet"
+bkg_path = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/ttbar*/*parquet"
+bkg_path1 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/tW/*parquet"
+bkg_path2 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_iso/stage1_output/2018/Wantitop/*parquet"
 
 #sig_path = "output/trainData_v1/2018/sig/bbll_4TeV_*_posLL/*parquet"
 #bkg_path = "output/trainData_v1/2018/bkg/*/*parquet"
@@ -115,6 +126,9 @@ bkg_path2 = "/depot/cms/private/users/kaur214/output/muchannel_2018_testingmuSF_
 
 
 sig_files1 = glob.glob(sig_path1)
+sig_files2 = glob.glob(sig_path2)
+sig_files3 = glob.glob(sig_path3)
+sig_files4 = glob.glob(sig_path4)
 
 #sig_files = glob.glob(sig_path)
 
@@ -124,8 +138,13 @@ bkg_files2 = glob.glob(bkg_path2)
 #data_files = glob.glob(data_path)
 
 df_sig1 = dd.read_parquet(sig_files1)
+df_sig2 = dd.read_parquet(sig_files2)
+df_sig3 = dd.read_parquet(sig_files3)
+df_sig4 = dd.read_parquet(sig_files4)
 #
 sig_frames = [df_sig1]
+#sig_frames = [df_sig2, df_sig4]
+#sig_frames = [df_sig1, df_sig2, df_sig3, df_sig4]
 df_sig = dd.concat(sig_frames)
 
 #df_sig = df_sig.compute()
@@ -256,7 +275,7 @@ train_data = dataset.iloc[:train_size, :]
 #train_data["mu2_eta"] = train_data["mu2_eta"]/train_data["dimuon_mass"]
 
 
-train_data.to_parquet("/home/kaur214/Zp_analysis/Zprime-Dilepton/output/trainData_v1/2016/train_data.parquet")
+train_data.to_parquet("/home/kaur214/Zp_analysis/Zprime-Dilepton/output/trainData_v1/2018/train_data.parquet")
 
 print("train data parameters ", len(train_data))
 #train_data = train_data.loc[train_data["dimuon_mass"] > 200., :].copy()
@@ -280,7 +299,7 @@ val_data = dataset.iloc[train_size:, :]
 #val_data["mu2_eta"] = val_data["mu2_eta"]/val_data["dimuon_mass"]
 
 print("val data parameters ", len(val_data))
-val_data.to_parquet("/home/kaur214/Zp_analysis/Zprime-Dilepton/output/trainData_v1/2016/val_data.parquet")
+val_data.to_parquet("/home/kaur214/Zp_analysis/Zprime-Dilepton/output/trainData_v1/2018/val_data.parquet")
 
 #val_data = val_data.loc[val_data["dimuon_mass"] > 200., :].copy()
 
@@ -361,7 +380,7 @@ plt.legend()
 plt.xlim(0., num_epochs)
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
-plt.savefig("/depot/cms/users/kaur214/analysis_facility/ML_plots/loss_epochs_wgt_div_bbll_2016.png")
+plt.savefig("/depot/cms/users/kaur214/analysis_facility/ML_plots/loss_epochs_wgt_div_bbll.png")
 plt.clf()
 
 plt.plot(trainingloss, label='train_loss')
@@ -371,11 +390,11 @@ plt.legend()
 plt.xlim(0., num_epochs)
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
-plt.savefig("/depot/cms/users/kaur214/analysis_facility/ML_plots/loss_epochs_div_bbll_2016.png")
+plt.savefig("/depot/cms/users/kaur214/analysis_facility/ML_plots/loss_epochs_div_bbll.png")
 plt.clf()
 
 
-torch.save(model.state_dict(), 'model_year2016_div_bbll_vtest.ckpt')
+torch.save(model.state_dict(), 'model_year2018_div_bbll_vtest_retrace.ckpt')
 
 
 
