@@ -34,7 +34,7 @@ parser.add_argument(
     "-y",
     "--year",
     dest="year",
-    default="2016post",
+    default="2018",
     action="store",
     help="Year to process (2016pre, 2016post, 2017 or 2018)",
 )
@@ -70,7 +70,7 @@ parser.add_argument(
     "-cl",
     "--channel",
     dest="channel",
-    default="el",
+    default="mu",
     action="store",
     help="the flavor of the final state dilepton",
 )
@@ -181,7 +181,7 @@ def submit_job(parameters):
     }
 
     if parameters["channel"] == "mu":
-        from processNano.dimuon_processor import DimuonProcessor as event_processor
+        from processNano.new_dimuon_processor import DimuonProcessor as event_processor
     elif parameters["channel"] == "el":
         from processNano.dielectron_processor import (
             DielectronProcessor as event_processor,

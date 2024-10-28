@@ -85,12 +85,15 @@ class DimuonProcessor(processor.ProcessorABC):
             return
         self.applykFac = False
         self.applyNNPDFWeight = False
+        #self.do_musf = False
         self.do_musf = True
 
         self.applyTopPtWeight = True
         self.do_pu = True
         self.auto_pu = True
+        #self.do_l1pw = False  # L1 prefiring weights
         self.do_l1pw = True  # L1 prefiring weights
+        #jec_pars = {k: v[self.years] for k, v in jec_parameters.items()}
         self.do_jecunc = False  #default : True
         self.do_jecunc_up   = False
         self.do_jecunc_down = False
@@ -102,6 +105,13 @@ class DimuonProcessor(processor.ProcessorABC):
         self.applyttbarSF = True
 
 
+#        for ptvar in self.pt_variations:
+#            if ptvar in jec_pars["jec_variations"]:
+#                self.do_jecunc = True
+#            if ptvar in jec_pars["jer_variations"]:
+#                self.do_jerunc = True
+
+        # self.timer = Timer("global") if do_timer else None
         self.timer = None
         self._columns = self.parameters["proc_columns"]
 
@@ -109,6 +119,20 @@ class DimuonProcessor(processor.ProcessorABC):
         self.channels = ["mumu"]
 
         self.lumi_weights = self.samp_info.lumi_weights
+        # if self.do_btag_syst:
+        #    self.btag_systs = [
+        #        "jes",
+        #        "lf",
+        #        "hfstats1",
+        #        "hfstats2",
+        #        "cferr1",
+        #        "cferr2",
+        #        "hf",
+        #        "lfstats1",
+        #        "lfstats2",
+        #    ]
+        # else:
+        #    self.btag_systs = []
 
         self.prepare_lookups()
 
@@ -201,6 +225,17 @@ class DimuonProcessor(processor.ProcessorABC):
             weights.add_weight("genwgt", genweight)
             weights.add_weight("lumi", self.lumi_weights[dataset])
 
+#            if self.do_musf:
+#                muID, muIso, muTrig = musf_evaluator(
+#                    self.musf_lookup, self.year, numevents, mu1, mu2
+#                )
+#                weights.add_weight("muID", muID, how="all")
+#                weights.add_weight("muIso", muIso, how="all")
+#                weights.add_weight("muTrig", muTrig, how="all")
+#            else:
+#                weights.add_weight("muID", how="dummy_all")
+#                weights.add_weight("muIso", how="dummy_all")
+#                weights.add_weight("muTrig", how="dummy_all")
 
             if self.do_pu:
                 pu_wgts = pu_evaluator(
@@ -296,6 +331,15 @@ class DimuonProcessor(processor.ProcessorABC):
         electrons = electrons.loc[:, ~electrons.columns.duplicated()]
 
         electrons["selection"] = 0  
+#        electrons.loc[((electrons.pt > 10.)
+#                & (abs(electrons.eta) < 2.5)
+#                & (electrons[self.parameters["electron_id"]] >0)
+#                & (abs(electrons.dxy) < self.parameters["electron_dxy"])
+#                & (abs(electrons.dz) < self.parameters["electron_dz"])),
+#                "selection",
+#        ] = 1
+#
+#        nelectrons = electrons.loc[:, "selection"].groupby("entry").sum()
 
 
         # for ...
@@ -433,6 +477,7 @@ class DimuonProcessor(processor.ProcessorABC):
 
    
             muons = muons[muons.selection & (nmuons >= 2) & (abs(sum_charge) < nmuons) & (hlt > 0)  ]
+            #muons = muons[muons.selection & (nmuons >= 2) & (abs(sum_charge) < nmuons) & (hlt > 0) & (muons.overlap) ]
 
             nelectrons = muons.loc[:, "veto"].groupby("entry").sum()
 
@@ -488,10 +533,12 @@ class DimuonProcessor(processor.ProcessorABC):
                    weights.add_weight("muID", muID, how="all")
                    weights.add_weight("muISO", muISO, how="all")
                    weights.add_weight("muHLT", muHLT, how="all")
+                   #weights.add_weight("muTrig", muTrig, how="all")
                else:
                    weights.add_weight("muID", how="dummy_all")
                    weights.add_weight("muISO", how="dummy_all")
                    weights.add_weight("muHLT", how="dummy_all")
+                   #print("values are ---- ", muID, muIso, muTrig)
 
             if self.timer:
                 self.timer.add_checkpoint("back back angle calculation")
@@ -828,6 +875,22 @@ class DimuonProcessor(processor.ProcessorABC):
         if self.timer:
             self.timer.add_checkpoint("Clean jets from matched muons")
 
+        # Select particular JEC variation
+     
+        #if "_up" in variation:
+        #   unc_name = "JES_" + variation.replace("_up", "")
+
+        #   if unc_name not in jets.fields:
+        #       return
+        #   jets = jets[unc_name]["up"][jet_branches_local]
+        #elif "_down" in variation:
+        #   unc_name = "JES_" + variation.replace("_down", "")
+        #   if unc_name not in jets.fields:
+        #       return
+        #   jets = jets[unc_name]["down"][jet_branches_local]
+        #else:
+        #   jets = jets[jet_branches_local]
+
         jets = jets[jet_branches_local]
 
         # --- conversion from awkward to pandas --- #
@@ -1138,6 +1201,12 @@ class DimuonProcessor(processor.ProcessorABC):
 
 
         jets["selection"] = 0
+#        jets.loc[
+#            ((jets.pt > 20.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2) & (jets.clean) & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
+#            
+#            ),
+#            "selection",
+#        ] = 1
 
         jets.loc[
             ((jets.pt > 20.0) & (abs(jets.eta) < 2.4) & (jets.jetId >= 2) & (jets.clean) & (jets.HEMVeto >= parameters["2018HEM_veto"][self.years])
