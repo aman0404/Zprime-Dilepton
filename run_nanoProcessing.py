@@ -181,7 +181,7 @@ def submit_job(parameters):
     }
 
     if parameters["channel"] == "mu":
-        from processNano.new_dimuon_processor import DimuonProcessor as event_processor
+        from processNano.dimuon_processor import DimuonProcessor as event_processor
     elif parameters["channel"] == "el":
         from processNano.dielectron_processor import (
             DielectronProcessor as event_processor,
@@ -190,10 +190,19 @@ def submit_job(parameters):
         from processNano.dimuon_eff_processor import (
             DimuonEffProcessor as event_processor,
         )
-    elif parameters["channel"] == "preselection_mu":
-        from processNano.dimuon_preselector import (
-            DimuonProcessor as event_processor,
+    elif parameters["channel"] == "emu":
+        from processNano.emu_processor import (
+            EmuProcessor as event_processor,
         )
+    elif parameters["channel"] == "fake_mu":
+        from processNano.fake_dimuon_processor import (
+        DimuonProcessor as event_processor
+        )
+    elif parameters["channel"] == "fake_el":
+        from processNano.fake_dielectron_processor import (
+        DielectronProcessor as event_processor,
+        )
+
     else:
         print("wrong channel input")
 
