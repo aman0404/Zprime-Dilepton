@@ -85,6 +85,33 @@ variables.append(
     )
 )
 
+variables.append(
+    Variable(
+        "dielectron_mass",
+        r"$m_{\mu\mu}$ [GeV]",
+        116,
+        200,
+        6000,
+        1e-5,
+        1e8,
+        #norm_to_bin_width_=True,
+    )
+)
+
+variables.append(
+    Variable(
+        "dilepton_mass",
+        r"$m_{\mu\mu}$ [GeV]",
+        116,
+        200,
+        6000,
+        1e-5,
+        1e8,
+        #norm_to_bin_width_=True,
+    )
+)
+
+
 #variables.append(
 #    Variable(
 #        "dimuon_mass",
@@ -385,12 +412,6 @@ variables.append(
     Variable("mu2_phi", r"\mu_{2} {\phi}",16, -4.0, 4.0, 1e-5, 1e8)
 )
 
-variables.append(
-    Variable("e1_phi", r"\e_{1} {\phi}",16, -4.0, 4.0, 1e-5, 1e8)
-)
-variables.append(
-    Variable("e2_phi", r"\e_{2} {\phi}",16, -4.0, 4.0, 1e-5, 1e8)
-)
 
 
 variables.append(
@@ -401,6 +422,24 @@ variables.append(
 )
 
 
+variables.append(
+    Variable("e1_pt", r"e_{1} p_T [GeV]",100, 0, 500, 1e-5, 1e8)
+)
+variables.append(
+    Variable("e2_pt", r"e_{2) p_T [GeV]",100, 0, 500, 1e-5, 1e8)
+)
+variables.append(
+    Variable("e1_phi", r"e_{1} {\phi}",16, -4.0, 4.0, 1e-5, 1e8)
+)
+variables.append(
+    Variable("e2_phi", r"e_{2} {\phi}",16, -3.0, 3.0, 1e-5, 1e8)
+)
+variables.append(
+    Variable("e1_eta", r"e_{1} {\eta}",16, -3.0, 3.0, 1e-5, 1e8)
+)
+variables.append(
+    Variable("e2_eta", r"e_{2} {\eta}",16, -3.0, 3.0, 1e-5, 1e8)
+)
 
 
 variables_lookup = {}

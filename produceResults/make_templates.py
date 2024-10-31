@@ -26,7 +26,6 @@ def to_templates(client, parameters, hist_df=None):
             print("No templates to create!")
             return []
 
-    print(hist_df)
     argset = {
         "year": parameters["years"],
         #"region": [r for r in hist_df.r.unique() if r in parameters["regions"]

@@ -24,6 +24,16 @@ parser.add_argument(
 parser.add_argument(
     "-f", "--flavor", dest="flavor", help="lepton flavor", default="el"
 )
+
+parser.add_argument(
+    "-l",
+    "--label",
+    dest="label",
+    default="2018_analyzer_UL",
+    action="store",
+    help="Unique run label (to create output path)",
+)
+
 parser.add_argument(
     "-sl",
     "--slurm",
@@ -36,7 +46,7 @@ args = parser.parse_args()
 
 # Dask client settings
 use_local_cluster = args.slurm_port is None
-node_ip = "128.211.148.61"
+node_ip = "128.211.148.60"
 
 if use_local_cluster:
     ncpus_local = 40
@@ -54,11 +64,9 @@ parameters = {
     "years": args.years,
     # "label": "moreKiller",
     # "label": "noGenWeight",
-    "label": "elec_channel_2016",
+    "label":  args.label,
     "flavor": args.flavor,
-    "channels": ["0b"],
-    #"channels": ["inclusive", "0b", "1b", "2b"],
-#    "regions": ["inclusive"],
+    "channels": ["0b", "1b", "2b"],
     "regions": ["bb", "be"],
     # "syst_variations": ["nominal"],
     # "syst_variations": ["nominal", "resUnc", "scaleUncUp", "scaleUncDown"],
@@ -72,31 +80,7 @@ parameters = {
         #"scaleUncUp",
         #"scaleUncDown",
     ],
-    # "custom_npartitions": {
-    #     "vbf_powheg_dipole": 1,
-    # },
-    #
     # < settings for histograms >
-    "hist_vars": [
-    #    "min_bl_mass",
-        "dielectron_mass",
-    #    "dielectron_mass_gen",
-    #    "njets",
-    #    "nbjets",
-    #    "met",
-    #    "b1l1_dR",
-    #    "b1l2_dR",
-    #    "lb_angle",
-    #    "dielectron_dR",
-    #    "bjet1_pt",
-    #    "e1_pt",
-    #    "e2_pt",
-    #    "e1_eta",
-    #    "e2_eta",
-    #    "e1_phi",
-    #    "bjet1_eta",
-    ],
-    "hist_vars_2d": [["dielectron_mass", "met"]],
     "variables_lookup": variables_lookup,
     "save_hists": True,
     #
@@ -113,6 +97,40 @@ parameters = {
     "bdt_models": {},
     "mva_bins_original": mva_bins,
 }
+
+if args.flavor == "mu":
+    parameters["hist_vars"] = [
+#        "min_bl_mass",
+        "dimuon_mass",
+#        "dimuon_mass_gen",
+#        "njets",
+#        "nbjets",
+#        "met",
+#        "lb_angle",
+#        "bjet1_pt",
+#        "mu1_pt",
+#        "mu2_pt",
+#        "mu1_eta",
+#        "mu2_eta",
+#        "mu1_phi",
+#        "bjet1_eta",
+
+    ]
+    parameters["hist_vars_2d"] = [["dimuon_mass","met"]]
+
+if args.flavor == "emu":
+    parameters["hist_vars"] = [
+#        "min_bl_mass",
+        "dilepton_mass",
+#        "nbjets",
+#        "met",
+#        "lb_angle",
+#        "bjet1_pt",
+#        "bjet1_eta",
+
+    ]
+    parameters["hist_vars_2d"] = [["dilepton_mass","met"]]
+
 
 if args.flavor == "el":
     parameters["hist_vars"] = [

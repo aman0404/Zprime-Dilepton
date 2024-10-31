@@ -81,7 +81,8 @@ def on_partition(args, parameters):
     # ...
 
     # < categorization into channels (0b, 1b, etc.) >
-    split_into_channels(df, v="nominal")
+    flavor = parameters["flavor"]
+    split_into_channels(df, year, flavor, v="nominal")
 
 
     #Aman

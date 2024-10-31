@@ -42,10 +42,7 @@ parser.add_argument(
     "-l",
     "--label",
     dest="label",
-    #default="elec_channel_2018_jec",
-    default="elec_channel_2016_allCuts",
-    #default="elec_channel_2017",
-    #default="elec_channel_v1_overlap_newpu_nokFac_nonnpdf",
+    default="2018_analyzer_UL",
     action="store",
     help="Unique run label (to create output path)",
 )
@@ -78,7 +75,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-node_ip = "128.211.148.61"  # hammer-c000
+node_ip = "128.211.148.60"  # hammer-c000
 #node_ip = "128.211.148.61"  # hammer-c000
 # node_ip = "128.211.149.135"
 # node_ip = "128.211.149.140"
@@ -112,7 +109,8 @@ parameters = {
     "label": args.label,
     "global_path": global_path,
     "out_path": f"{args.year}_{args.label}_{local_time}",
-    "server": "root://eos.cms.rcac.purdue.edu/",
+    #"server": "root://eos.cms.rcac.purdue.edu/",
+    "server": "root://cms-xcache.rcac.purdue.edu/",
     #"server": "root://cmsxrootd.fnal.gov//",
     #"server": "root://cms-xrd-global.cern.ch/",
     "xrootd": True,
@@ -258,8 +256,8 @@ if __name__ == "__main__":
             "tW",
         ],
         "dy": [
-            "dyInclusive50",
-            #"dy0J_M200to400",
+            #"dyInclusive50",
+            "dy0J_M200to400",
             #"dy0J_M400to800",
             #"dy0J_M800to1400",
             #"dy0J_M1400to2300",
