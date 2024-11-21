@@ -1,0 +1,316 @@
+{
+TH2 *hresponse;
+TH1 *hmu_data_unbin;
+TH1 *hbkg_unbin;
+TH1 *hmu_gen_unbin, *hmu_reco_unbin;
+
+TH2 *hresponse_id_up;
+TH2 *hresponse_id_dn;
+TH2 *hresponse_iso_up;
+TH2 *hresponse_iso_dn;
+TH2 *hresponse_hlt_up;
+TH2 *hresponse_hlt_dn;
+TH2 *hresponse_scale_up;
+TH2 *hresponse_scale_dn;
+
+TH2 *hresponse_l1_up;
+TH2 *hresponse_l1_dn;
+
+TH2 *hresponse_pu_up;
+TH2 *hresponse_pu_dn;
+
+TH2 *hresponse_pdf_up;
+TH2 *hresponse_pdf_dn;
+
+TH2 *hresponse_res_up;
+TH2 *hresponse_res_dn;
+
+TH2 *hresponse_reco_up;
+TH2 *hresponse_reco_dn;
+
+//Double_t bins[8] = {200, 300, 400,500,700,1100,1900,6000};
+
+Double_t bins[5] = {200, 400, 700,1100,6000};
+
+TFile *f1 = TFile::Open("out_response_matrix_mu_bb_script_1b_2b.root");
+f1->GetObject("response_mu", hresponse);
+f1->GetObject("hist2dmu_id_up", hresponse_id_up);
+f1->GetObject("hist2dmu_id_dn", hresponse_id_dn);
+
+f1->GetObject("hist2dmu_iso_up", hresponse_iso_up);
+f1->GetObject("hist2dmu_iso_dn", hresponse_iso_dn);
+
+f1->GetObject("hist2dmu_hlt_up", hresponse_hlt_up);
+f1->GetObject("hist2dmu_hlt_dn", hresponse_hlt_dn);
+
+f1->GetObject("hist2dmu_scale_up", hresponse_scale_up);
+f1->GetObject("hist2dmu_scale_dn", hresponse_scale_dn);
+
+f1->GetObject("hist2dmu_l1_up", hresponse_l1_up);
+f1->GetObject("hist2dmu_l1_dn", hresponse_l1_dn);
+
+f1->GetObject("hist2dmu_pu_up", hresponse_pu_up);
+f1->GetObject("hist2dmu_pu_dn", hresponse_pu_dn);
+
+f1->GetObject("hist2dmu_pdf_up", hresponse_pdf_up);
+f1->GetObject("hist2dmu_pdf_dn", hresponse_pdf_dn);
+
+f1->GetObject("hist2dmu_res", hresponse_res_up);
+f1->GetObject("hist2dmu_res", hresponse_res_dn);
+
+f1->GetObject("hist2dmu_reco", hresponse_reco_up);
+f1->GetObject("hist2dmu_reco", hresponse_reco_dn);
+
+TH1 *hmu_data_unbin1;
+
+TFile *f22 = TFile::Open("../../../reco/mumu/1b_bb_2018.root");
+f22->GetObject("mu_data_obs", hmu_data_unbin1);
+
+TFile *f2 = TFile::Open("../../../reco/mumu/2b_bb_2018.root");
+f2->GetObject("mu_data_obs", hmu_data_unbin);
+
+hmu_data_unbin->Add(hmu_data_unbin1);
+
+TH1F *hmu_data = (TH1F*)hmu_data_unbin->Rebin(4,"hmu_data",bins);
+
+
+TH1 *hmu_gen_unbin1;
+
+TFile *f33 = TFile::Open("../../../gen/mumu/2b_bb_2018.root");
+f33->GetObject("DYJets", hmu_gen_unbin1);
+
+TFile *f3 = TFile::Open("../../../gen/mumu/1b_bb_2018.root");
+f3->GetObject("DYJets", hmu_gen_unbin);
+
+
+hmu_gen_unbin1->Add(hmu_gen_unbin);
+
+
+TH1F *hmu_gen = (TH1F*)hmu_gen_unbin1->Rebin(4,"hmu_gen",bins);
+
+TH1 *hmu_reco_unbin1;
+
+
+TFile *f44 = TFile::Open("../../../reco/mumu/1b_bb_2018.root");
+f44->GetObject("DYJets", hmu_reco_unbin1);
+
+TFile *f4 = TFile::Open("../../../reco/mumu/2b_bb_2018.root");
+f4->GetObject("DYJets", hmu_reco_unbin);
+
+hmu_reco_unbin1->Scale(1.10);
+hmu_reco_unbin->Scale(1.00);
+
+hmu_reco_unbin->Add(hmu_reco_unbin1);
+
+TH1F *hmu_reco = (TH1F*)hmu_reco_unbin->Rebin(4,"hmu_reco",bins);
+
+
+TH1 *htop, *hdiboson, *hfake;
+TH1 *htop1, *hdiboson1, *hfake1;
+
+TFile *f5fake = TFile::Open("../../../reco/mumu/fake_1b_bb_2018.root");
+f5fake->GetObject("mu_data_obs", hfake);
+
+for(int i =1; i<=hfake->GetNbinsX() ; i++){
+
+        double hfake_err = 0.50 * hfake->GetBinContent(i);
+        hfake->SetBinError(i, 0 );
+        hfake->SetBinError(i,hfake_err);
+}
+
+TFile *f5fake_2b = TFile::Open("../../../reco/mumu/fake_2b_bb_2018.root");
+f5fake_2b->GetObject("mu_data_obs", hfake1);
+
+for(int i =1; i<=hfake1->GetNbinsX() ; i++){
+
+        double hfake_err1 = 0.50 * hfake1->GetBinContent(i);
+        hfake1->SetBinError(i, 0 );
+        hfake1->SetBinError(i,hfake_err1);
+}
+
+hfake->Add(hfake1);
+
+TFile *f55 = TFile::Open("../../../reco/mumu/1b_bb_2018.root");
+f55->GetObject("Top", htop1);
+f55->GetObject("Diboson", hdiboson1);
+
+htop1->Add(hdiboson1);
+
+TFile *f5 = TFile::Open("../../../reco/mumu/2b_bb_2018.root");
+f5->GetObject("Top", htop);
+f5->GetObject("Diboson", hdiboson);
+
+htop->Add(hdiboson);
+
+htop->Add(htop1);
+htop->Add(hfake);
+
+TH1F *hbkg = (TH1F*)htop->Rebin(4,"hbkg",bins);
+
+TH1F *hmu_reco_org = (TH1F*)hmu_reco->Clone("hmu_reco_org");
+TH1F *hmu_data_org = (TH1F*)hmu_data->Clone("hmu_data_org");
+
+hmu_data->Add(hbkg, -1);
+
+std::cout<<"data - bkg/DY "<<hmu_data->GetBinContent(1)/hmu_reco_org->GetBinContent(1)<<std::endl;
+
+//float acc_eff_dy[8] = {0.17675974401327488, 0.1992257177060608, 0.22249910383869853, 0.2665568181818181, 0.3152071124950572, 0.36138115384615355, 0.4028790420560745, 0.4781710893854745};
+
+
+TUnfoldDensity unfold(hresponse, TUnfold::kHistMapOutputVert, TUnfold::kRegModeNone, TUnfold::kEConstraintNone);
+TUnfoldDensity unfoldMC(hresponse, TUnfold::kHistMapOutputVert, TUnfold::kRegModeNone, TUnfold::kEConstraintNone);
+
+unfoldMC.SetInput(hmu_reco);
+unfold.SetInput(hmu_data);
+
+unfold.AddSysError(hresponse_id_up, "Up1", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_id_dn, "Down1", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_l1_up, "Up2", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_l1_dn, "Down2", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_iso_up, "Up3", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_iso_dn, "Down3", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_hlt_up, "Up4", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_hlt_dn, "Down4", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_scale_up, "Up5", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_scale_dn, "Down5", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_pu_up, "Up6", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_pu_dn, "Down6", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_pdf_up, "Up7", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_pdf_dn, "Down7", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_res_up, "Up8", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_res_dn, "Down8", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfold.AddSysError(hresponse_reco_up, "Up9", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfold.AddSysError(hresponse_reco_dn, "Down9", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+//MC systematics
+unfoldMC.AddSysError(hresponse_id_up, "Up1", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_id_dn, "Down1", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_l1_up, "Up2", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_l1_dn, "Down2", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_iso_up, "Up3", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_iso_dn, "Down3", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_hlt_up, "Up4", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_hlt_dn, "Down4", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_scale_up, "Up5", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_scale_dn, "Down5", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_pu_up, "Up6", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_pu_dn, "Down6", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_pdf_up, "Up7", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_pdf_dn, "Down7", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_res_up, "Up8", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_res_dn, "Down8", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+unfoldMC.AddSysError(hresponse_reco_up, "Up9", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+unfoldMC.AddSysError(hresponse_reco_dn, "Down9", TUnfoldDensity::kHistMapOutputVert,  TUnfoldDensity::kSysErrModeMatrix);
+
+
+//if(unfold.SetInput(hmu_reco)>=10000) {
+//    std::cout<<"Unfolding result may be wrong\n";
+//  }
+
+unfold.DoUnfold(0.);
+unfoldMC.DoUnfold(0.);
+
+//Regularize
+//Int_t nScan = 30;
+//Double_t tauMin = 0.0;
+//Double_t tauMax = 0.0;
+//Int_t iBest = 0;
+//
+//TSpline *logTauX,*logTauY;
+//TGraph *lCurve;
+//
+//iBest=unfold.ScanLcurve(nScan,tauMin,tauMax,&lCurve,&logTauX,&logTauY);
+
+//std::cout<<"chi**2="<<unfold.GetChi2A()<<"+"<<unfold.GetChi2L()
+//           <<" / "<<unfold.GetNdf()<<"\n";
+
+std::cout<<"result smeared "<<hmu_data->Chi2Test(hmu_reco,  "UW")<<std::endl;
+
+
+TH1 *o = unfold.GetOutput("o");
+TH1 *oMC = unfoldMC.GetOutput("oMC");
+
+TH1F *hunfold = (TH1F*)o->Clone("hunfold_up");
+TH1F *hunfold_down = (TH1F*)o->Clone("hunfold_down");
+TH1F *hunfoldMC = (TH1F*)oMC->Clone("hunfoldMC");
+
+TH2 *histEmatTotal = unfold.GetEmatrixTotal("EmatTotal");
+TH2 *histEmatInput = unfold.GetEmatrixInput("EmatInput");
+TH2 *histEmatSysUncorr = unfold.GetEmatrixSysUncorr("EmatSysUncorr");
+
+TH2 *histEmatTotalMC = unfoldMC.GetEmatrixTotal("EmatTotal");
+TH2 *histEmatInputMC = unfoldMC.GetEmatrixInput("EmatInput");
+TH2 *histEmatSysUncorrMC = unfoldMC.GetEmatrixSysUncorr("EmatSysUncorr");
+
+histEmatTotal->SetName("histEmatTotal");
+histEmatInput->SetName("histEmatInput");
+histEmatSysUncorr->SetName("histEmatSysUncorr");
+
+histEmatTotalMC->SetName("histEmatTotalMC");
+histEmatInputMC->SetName("histEmatInputMC");
+histEmatSysUncorrMC->SetName("histEmatSysUncorrMC");
+
+for(int i=1; i<= o->GetNbinsX(); i++){
+
+hunfold->SetBinError(i, TMath::Sqrt(histEmatTotal->GetBinContent(i,i)));
+
+}
+
+for(int i=1; i<= oMC->GetNbinsX(); i++){
+
+hunfoldMC->SetBinError(i, TMath::Sqrt(histEmatTotalMC->GetBinContent(i,i)));
+
+}
+
+std::cout<<"result unfolded "<<o->Chi2Test(hmu_gen,  "UW")<<std::endl;
+hmu_gen->Draw("lep, same");
+hmu_gen->SetMarkerColor(kRed);
+hmu_gen->SetLineColor(kRed);
+hmu_gen->SetLineWidth(3);
+hmu_gen->SetMarkerSize(1.5);
+hmu_gen->SetMarkerStyle(20);
+
+//TFile *file1 = new TFile("unfolded_mc_muon_bb.root","RECREATE");
+TFile *file1 = new TFile("unfolded_mc_muon_bb_data_1b_2b.root","RECREATE");
+file1->cd();
+o->Write();
+oMC->Write();
+hmu_data_org->Write();
+hmu_gen->Write();
+hmu_reco_org->Write();
+hunfold->Write();
+hunfoldMC->Write();
+
+histEmatTotal->Write();
+histEmatSysUncorr->Write();
+histEmatInput->Write();
+
+histEmatTotalMC->Write();
+histEmatSysUncorrMC->Write();
+histEmatInputMC->Write();
+
+file1->Close();
+
+ //==========================================================================
+ //  // print some results
+ //    //
+//std::cout<<"tau="<<unfold.GetTau()<<"\n";
+//std::cout<<"chi**2="<<unfold.GetChi2A()<<"+"<<unfold.GetChi2L()<<" / "<<unfold.GetNdf()<<"\n";
+
+}
