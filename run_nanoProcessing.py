@@ -188,6 +188,10 @@ def submit_job(parameters):
         from processNano.dimuon_eff_processor import (
             DimuonEffProcessor as event_processor,
         )
+    elif parameters["channel"] == "eff_el":
+        from processNano.dielectron_eff_processor import (
+            DielectronEffProcessor as event_processor,
+        )
     elif parameters["channel"] == "emu":
         from processNano.emu_processor import (
             EmuProcessor as event_processor,
