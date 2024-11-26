@@ -1,0 +1,2933 @@
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton18
+btagSF_light_dilepton18
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton17
+btagSF_light_dilepton17
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_post
+btagSF_light_dilepton16_post
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+lambdas: [4, 6, 8, 10, 14, 18]
+------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda4TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%------------------------------------------| 16.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda6TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%---------------------------------| 33.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda8TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%-------------------------| 50.0% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda10TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-----------------| 66.67% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda14TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--------| 83.33% Complete------------------------------------------------
+inputFile: Name: DYJets Title:  NbinsX: 116
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+ ----  
+signalName: bbll_lambda18TeV_negRL
+ ----  
+ ----  
+ ----  
+ ----  
+mThresh 1900.0
+btagSF_bc_dilepton16_pre
+btagSF_light_dilepton16_pre
+btagSF_bc_corr_dilepton
+btagSF_light_corr_dilepton
+Progress: |%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%| 100.0% Complete
+Submitted batch job 23747996
+Submitted batch job 23747997
+Submitted batch job 23747998
+Submitted batch job 23747999
+Submitted batch job 23748000
+Submitted batch job 23748001
+args.BBLL: True
+args.expected: False
+args.redo: True
+Debugging: args.is_int = False
+args.write: False
+args.submit: True
+args.BBLL: True
+args.BSLL: False
+      
+Z' -> ll statistics tool based on Higgs Combine
+               
+------- Configuration Summary --------
+Limit calculation requested
+Calculating observed limits
+MCMC configuration: iterations 3000000 toys: 10
+Consider channels:  dimuon_2018_BB_ZeroB  dimuon_2018_BB_OneB  dimuon_2018_BB_TwoB  dimuon_2018_BE_ZeroB  dimuon_2018_BE_OneB  dimuon_2018_BE_TwoB  dimuon_2017_BB_ZeroB  dimuon_2017_BB_OneB  dimuon_2017_BB_TwoB  dimuon_2017_BE_ZeroB  dimuon_2017_BE_OneB  dimuon_2017_BE_TwoB  dimuon_2016_post_BB_ZeroB  dimuon_2016_post_BB_OneB  dimuon_2016_post_BB_TwoB  dimuon_2016_post_BE_ZeroB  dimuon_2016_post_BE_OneB  dimuon_2016_post_BE_TwoB  dimuon_2016_pre_BB_ZeroB  dimuon_2016_pre_BB_OneB  dimuon_2016_pre_BB_TwoB  dimuon_2016_pre_BE_ZeroB  dimuon_2016_pre_BE_OneB  dimuon_2016_pre_BE_TwoB 
+Systematic uncertainties:  lumi  res  massScale  zPeak  ttbarSF  pdf  ID  ISO  HLT  PU  JEC  JER  reco  btagSF_bc  btagSF_light  btagSF_bc_corr  btagSF_light_corr  l1prefiring  jets  ttbar_dnn  ttbarUncert 
+Lambda scan configuration: 
+from 4 to 18
+data cards and workspaces are saved in dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB
+Use single bin counting with threshold 1900 GeV
+--------------------------------------
+                                      
+args.write: False
+args.redo: True
+args.is_int: False
+args.expected: False
+args BBLL!
+writing datacards and workspaces for channel dimuon_2018_BB_ZeroB ....
+writing datacards and workspaces for channel dimuon_2018_BB_OneB ....
+writing datacards and workspaces for channel dimuon_2018_BB_TwoB ....
+writing datacards and workspaces for channel dimuon_2018_BE_ZeroB ....
+writing datacards and workspaces for channel dimuon_2018_BE_OneB ....
+writing datacards and workspaces for channel dimuon_2018_BE_TwoB ....
+writing datacards and workspaces for channel dimuon_2017_BB_ZeroB ....
+writing datacards and workspaces for channel dimuon_2017_BB_OneB ....
+writing datacards and workspaces for channel dimuon_2017_BB_TwoB ....
+writing datacards and workspaces for channel dimuon_2017_BE_ZeroB ....
+writing datacards and workspaces for channel dimuon_2017_BE_OneB ....
+writing datacards and workspaces for channel dimuon_2017_BE_TwoB ....
+writing datacards and workspaces for channel dimuon_2016_post_BB_ZeroB ....
+writing datacards and workspaces for channel dimuon_2016_post_BB_OneB ....
+writing datacards and workspaces for channel dimuon_2016_post_BB_TwoB ....
+writing datacards and workspaces for channel dimuon_2016_post_BE_ZeroB ....
+writing datacards and workspaces for channel dimuon_2016_post_BE_OneB ....
+writing datacards and workspaces for channel dimuon_2016_post_BE_TwoB ....
+writing datacards and workspaces for channel dimuon_2016_pre_BB_ZeroB ....
+writing datacards and workspaces for channel dimuon_2016_pre_BB_OneB ....
+writing datacards and workspaces for channel dimuon_2016_pre_BB_TwoB ....
+writing datacards and workspaces for channel dimuon_2016_pre_BE_ZeroB ....
+writing datacards and workspaces for channel dimuon_2016_pre_BE_OneB ....
+writing datacards and workspaces for channel dimuon_2016_pre_BE_TwoB ....
+done!
+writing combined channel datacards ....
+ outfile_shape  dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_4_negRL_shape.txt
+combineCards.py dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_4_negRL.txt -S > dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_4_negRL_shape.txt
+ outfile_shape  dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_6_negRL_shape.txt
+combineCards.py dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_6_negRL.txt -S > dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_6_negRL_shape.txt
+ outfile_shape  dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_8_negRL_shape.txt
+combineCards.py dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_8_negRL.txt -S > dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_8_negRL_shape.txt
+ outfile_shape  dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_10_negRL_shape.txt
+combineCards.py dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_10_negRL.txt -S > dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_10_negRL_shape.txt
+ outfile_shape  dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_14_negRL_shape.txt
+combineCards.py dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_14_negRL.txt -S > dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_14_negRL_shape.txt
+ outfile_shape  dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_18_negRL_shape.txt
+combineCards.py dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_18_negRL.txt -S > dataCards_mumu_2LB_negRL_fixed_3M_obs_singleBin_combB/mumu_2LB_combined_18_negRL_shape.txt
+createInputsBBLL done!
+submit is true
+submitting limits on slurm
+Job submission requested
+Purdue resources will be used
+submit limit for Lambda 4
+fails subcommand with expected
+testing script aman  4
+subCommand: sbatch -N1 -n1 --time=48:00:00 -A cms --reservation=CMSLOCAL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL/submission/CILimits_PURDUE.job mumu_2LB __negRL_fixed_3M_obs_singleBin_combB_negRL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL mumu_2LB_combined_4_negRL_shape.txt 3000000 10 0 4 10 20240918_1256 1 1900 
+submit limit for Lambda 6
+fails subcommand with expected
+testing script aman  6
+subCommand: sbatch -N1 -n1 --time=48:00:00 -A cms --reservation=CMSLOCAL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL/submission/CILimits_PURDUE.job mumu_2LB __negRL_fixed_3M_obs_singleBin_combB_negRL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL mumu_2LB_combined_6_negRL_shape.txt 3000000 10 0 6 10 20240918_1256 1 1900 
+submit limit for Lambda 8
+fails subcommand with expected
+testing script aman  8
+subCommand: sbatch -N1 -n1 --time=48:00:00 -A cms --reservation=CMSLOCAL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL/submission/CILimits_PURDUE.job mumu_2LB __negRL_fixed_3M_obs_singleBin_combB_negRL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL mumu_2LB_combined_8_negRL_shape.txt 3000000 10 0 8 50 20240918_1256 1 1900 
+submit limit for Lambda 10
+fails subcommand with expected
+testing script aman  10
+subCommand: sbatch -N1 -n1 --time=48:00:00 -A cms --reservation=CMSLOCAL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL/submission/CILimits_PURDUE.job mumu_2LB __negRL_fixed_3M_obs_singleBin_combB_negRL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL mumu_2LB_combined_10_negRL_shape.txt 3000000 10 0 10 50 20240918_1256 1 1900 
+submit limit for Lambda 14
+fails subcommand with expected
+testing script aman  14
+subCommand: sbatch -N1 -n1 --time=48:00:00 -A cms --reservation=CMSLOCAL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL/submission/CILimits_PURDUE.job mumu_2LB __negRL_fixed_3M_obs_singleBin_combB_negRL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL mumu_2LB_combined_14_negRL_shape.txt 3000000 10 0 14 200 20240918_1256 1 1900 
+submit limit for Lambda 18
+fails subcommand with expected
+testing script aman  18
+subCommand: sbatch -N1 -n1 --time=48:00:00 -A cms --reservation=CMSLOCAL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL/submission/CILimits_PURDUE.job mumu_2LB __negRL_fixed_3M_obs_singleBin_combB_negRL /depot/cms/private/users/kaur214/analysis_facility/limits/destructive/2018_dimuon_negRL mumu_2LB_combined_18_negRL_shape.txt 3000000 10 0 18 500 20240918_1256 1 1900 

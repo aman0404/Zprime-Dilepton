@@ -1,0 +1,9 @@
+#!/bin/bash
+# FILENAME: sleep.sub
+
+# Show this ran on a compute node by running the hostname command.
+hostname
+
+echo "Sleeping for the next 14 days..."
+touch /tmp/1.txt
+sleep 300

@@ -1,0 +1,145 @@
+#!/bin/bash
+#SBATCH --account=cms-express
+
+#echo "first arg: "$1
+DATE=`date +%Y%m%d`
+CONFIG=$1
+LABEL=$2
+SRC=$3
+DATACARDSTUB=$4
+MASS=$5
+TAG=$6
+echo ${SRC}
+echo $DATACARDSTUB
+echo $MIN
+echo $MAX
+echo $STEP
+echo $LABEL
+ARGS=("$@")
+LIBPART=""
+END=$#
+for ((i=6;i<END;i++)); do
+    LIBPART+=" --LoadLibrary "
+    echo ${ARGS[$i]}
+    LIBPART+=${ARGS[$i]}
+done
+echo $LIBPART
+
+Name=${CONFIG}${LABEL:1}
+
+
+
+
+cd $SLURM_SUBMIT_DIR
+set nonomatch
+
+echo ""
+echo "Job is running on `uname -a`"
+set processor = `sort /proc/cpuinfo | uniq | gawk -F: '(substr($1,1,10)=="model name"){print $2}'`
+set rate = `sort /proc/cpuinfo | uniq | gawk -F: '(substr($1,1,7)=="cpu MHz"){print substr($2,1,6)}'`
+echo "Processor info : " $processor $rate "MHz"
+set start = `date`
+echo "Job started on `date`"
+echo ""
+
+echo ------------------------------------------------------
+echo SLURM: qsub is running on $SLURM_SUBMIT_HOST
+echo SLURM: working directory is $SLURM_SUBMIT_DIR
+echo SLURM: job identifier is $SLURM_JOB_ID
+echo ------------------------------------------------------
+
+
+#
+#----------------------------------------------------------
+# s e t   t h e   r u n t i m e   e n v i r o n m e n t
+#----------------------------------------------------------
+#
+export SRCDIR=$SRC/dataCards_$Name
+export OUTDIR=$SRC/results_$Name
+if [[ $DATACARD == *"binned"* ]]
+then
+  export OUTDIR=$SRC/results_${Name}_binned;
+fi
+
+export ID=`echo ${SLURM_JOB_ID} | awk -F "." '{print $1}'`
+export WORKDIR=/tmp/${ID}
+
+echo " "
+echo "Input directory is " $SRCDIR
+echo "Output directory is : " $OUTDIR
+echo " "
+
+#
+#----------------------------------------------------------
+# s e t   t h e   r u n t i m e   e n v i r o n m e n t
+#----------------------------------------------------------
+#
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+#cd ${SRCDIR}/src
+#echo "Current directory is : " $SRCDIR/src
+eval `scramv1 runtime -sh`
+#source /home/sfolguer/StatsRoot/bin/thisroot.sh
+#cd ZPrimeStats
+cd ${SRCDIR}
+
+#----------------------------------------------------------
+# c o p y   e x e   a n d   c o n f i g    f i l e s
+#----------------------------------------------------------
+#
+
+mkdir ${WORKDIR}
+cd ${WORKDIR}
+mkdir dataCards_${Name}
+ls
+#
+#----------------------------------------------------------
+# e x e c u t e   j o b
+#----------------------------------------------------------
+#
+cd $SRC
+python runInterpretation.py -c $CONFIG -m $MASS -w -t ${LABEL:2} --signif
+cd ${WORKDIR}
+export DATACARD=$DATACARDSTUB${MASS}.txt
+echo $DATACARD
+for file in ${SRCDIR}/*$MASS*.root; do cp "$file" dataCards_${Name} ;done
+cp ${SRCDIR}/${DATACARD} .
+combine -M HybridNew $DATACARD -n $Name -m $MASS --signif  --pvalue --frequentist --testStat LHC -T 10000  $LIBPART
+
+
+#
+#----------------------------------------------------------
+# c o p y   o u t p u t
+#----------------------------------------------------------
+#
+if [ ! -d "$OUTDIR" ]; then
+mkdir ${OUTDIR}
+fi
+if [ ! -d "$OUTDIR/$TAG" ]; then
+mkdir ${OUTDIR}/$TAG
+fi
+echo "Finished -- ls dir: "
+pwd
+ls -lrt 
+echo "Copying to " ${OUTDIR}/$TAG
+cp ${WORKDIR}/*.root ${OUTDIR}/$TAG/
+echo "what is in " ${OUTDIR}/$TAG
+ls -lrt ${OUTDIR}/$TAG/ 
+
+#
+# show what is being left behind...
+#
+#  echo ""
+#  echo "Current directory:"
+#  pwd
+#  ls -lrt
+#
+  end=`date`
+  echo ""
+  echo "Job end `date`"
+  echo ""
+# 
+echo "=> " $SLURM_JOB_NAME $start $end `uname -n` $processor $rate
+#
+rm -r ${WORKDIR}
+exit ${status}
+

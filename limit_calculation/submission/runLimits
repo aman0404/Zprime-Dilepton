@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+import os
+    
+def cleanCMSSWDirs(envvar):
+    cmsswRelDir = os.environ["CMSSW_RELEASE_BASE"]
+    entries=envvar.split(":")
+    newEnv=""
+   # print "cmss dir ",cmsswRelDir
+    for entry in entries:
+    #    print entry
+        if entry.find(cmsswRelDir)==-1:
+    #        print "accepted"
+            if newEnv!="": newEnv=newEnv+":"
+            newEnv=newEnv+entry
+    return newEnv
+
+def setNewEnvVarWithCMSSWClean(envVarName,rootPath):
+    envVarVal=os.environ.get(envVarName)
+    newVal = cleanCMSSWDirs(envVarVal)
+
+    os.environ[envVarName]=rootPath+":"+newVal
+
+
+def appendToEnvVar(envVarName,strToAppend):
+    os.environ[envVarName]+=":"+strToAppend
+
+def setupEnv(rootPath):
+    os.environ["ROOTSYS"]=rootPath
+    os.environ["ROOFITSYS"]=rootPath
+    os.environ["ROOT_INCLUDE"]=rootPath+"/include"
+
+
+    setNewEnvVarWithCMSSWClean("PATH",rootPath+"/bin")
+    setNewEnvVarWithCMSSWClean("LD_LIBRARY_PATH",rootPath+"/lib")
+    setNewEnvVarWithCMSSWClean("PYTHONPATH",rootPath+"/lib")
+    setNewEnvVarWithCMSSWClean("ROOT_INCLUDE_PATH",rootPath+"/include")
+
+    appendToEnvVar("ROOT_INCLUDE_PATH",os.getcwd()+"/include")
+    scramArch = os.environ.get("SCRAM_ARCH")
+    releaseBase = os.environ.get("CMSSW_RELEASE_BASE")
+    appendToEnvVar("LD_LIBRARY_PATH",releaseBase+"/external/"+scramArch+"/lib")
+    appendToEnvVar("LD_LIBRARY_PATH","./libs/"+scramArch)  
+    appendToEnvVar("LD_LIBRARY_PATH","./")  
+
+    appendToEnvVar("PATH","./bin/"+scramArch)
+
+    envVarsToPrint = ["ROOTSYS","ROOFITSYS","ROOT_INCLUDE_PATH","LD_LIBRARY_PATH","PATH"]
+    for envVarName in envVarsToPrint :
+        print(envVarName,os.environ[envVarName])
+
+   # import subprocess
+   # print subprocess.Popen(["which","root"],stdout=subprocess.PIPE).communicate()[0].splitlines()
+        
+
+#import argparse
+#parser = argparse.ArgumentParser(description='turns the limit output into a nice ttree')
+#parser.add_argument('tgzFilename',type=str)
+#args = parser.parse_args()
+print("STARTING SCRIPT")
+import sys
+for arg in sys.argv:
+    print(arg)
+
+import FWCore.ParameterSet.VarParsing as VarParsing
+args = VarParsing.VarParsing ('analysis')
+args.register('tarFile',"gridPack.tar", 
+               VarParsing.VarParsing.multiplicity.singleton,
+               VarParsing.VarParsing.varType.string,          
+               "input tar file")
+args.register('outputTag',  "crabTest", 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.string,          
+              "output tag")
+args.register('config', "ICHEPDimuon", 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.string,          
+              "config name")
+args.register('mass', 4500, 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.float,          
+              "resonance mass")
+args.register('nToys', 10, 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.int,          
+              "number of limits to calculate")
+args.register('nIter', 500000, 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.int,          
+              "number of iterations")
+args.register('expected', 0, 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.int,          
+              "expected limits? ")
+args.register('inject', 0, 
+              VarParsing.VarParsing.multiplicity.singleton,
+              VarParsing.VarParsing.varType.int,          
+              "run on signal injection toys")
+
+
+
+args.parseArguments()
+
+
+import tarfile
+tar = tarfile.open(args.tarFile,"r")
+tar.extractall()
+tar.close()
+import glob, ROOT
+import subprocess
+#for f in glob.glob("userfuncs/*.cxx"):
+#        print(f.split('.')[0])
+#        subprocess.call(['rm',f.split('.')[0]+'_cxx.so'])
+#        subprocess.call(['rm',f.split('.')[0]+'_cxx.d'])
+#        subprocess.call(['rm',f.split('.')[0]+'_cxx_ACLiC_dict_rdict.pcm'])
+#        ROOT.gROOT.ProcessLine(".L "+f+"+")
+sys.path.append('cfgs/')
+configName = "scanConfiguration_%s"%args.config
+config =  __import__(configName)
+
+#from tools import getCardDir, getOutDir
+#cardDir = getCardDir(args,config)
+
+cardDir = "dataCards_%s_%s"%(args.config,args.outputTag)
+#cardDir_Gen = "dataCards_%s_%s_expGen"%(args.config,args.outputTag)
+
+if args.inject:
+        cardDir = "dataCards_" + args.config + "_%d_%.4f_%d"%(config.signalInjection["mass"],config.signalInjection["width"],config.signalInjection["nEvents"]) + "_%s"%args.outputTag
+
+print(os.listdir(os.getcwd()))
+print(os.listdir(cardDir))
+print(config.interferencess[0])
+if len(config.channels) == 1:
+        ws = "%s/%s_%s_%s_shape.root"%(cardDir,config.channels[0],str(int(args.mass)), config.interferencess[0])
+        #ws = "%s/%s_%s_%s.root"%(cardDir,config.channels[0],str(int(args.mass)), config.interferencess[0])
+else:   
+        ws = "%s/%s_combined_%s_%s_shape.root"%(cardDir,args.config,str(int(args.mass)), config.interferencess[0])
+        #ws = "%s/%s_combined_%s_%s.root"%(cardDir,args.config,str(int(args.mass)), config.interferencess[0])
+        #ws_Gen = "%s/higgsCombine%s_%s.GenerateOnly.mH%s.123456.root"%(cardDir_Gen,args.config,config.interferencess[0],str(int(args.mass)))
+
+from runInterpretation import getRange
+
+rMax = getRange(int(args.mass), True, False, BSLL=False) 
+#rMax = getRange(int(args.mass)) 
+
+libPart = []
+for lib in config.libraries:
+        libPart.append("--LoadLibrary")
+        #libPart.append("userfuncs/"+lib)
+
+
+if args.expected:
+        limitArgs=["./combine","-d","%s"%ws,"-M","MarkovChainMC", "-n" "%s"%args.config , "-m",str(int(args.mass)), "-i", str(args.nIter) , "--tries", "1",  "-t", str(args.nToys), "--prior","flat","--rMax",str(rMax),"-s","0"]
+        limitArgs += libPart
+        
+        #if args.is_int:
+        #limitArgs.append("--toysFile=%s" %ws_Gen)
+        #limitArgs.append("--toysFile="+cardDir+"_expGen"+"/higgsCombine%s%s_%s.GenerateOnly.mH%d.123456.root"%(args.config,args.tag,config.interferencess[0], (int(args.mass)))) ##didn't work
+        
+        mvCmd = ["mv higgsCombine%s.MarkovChainMC* expectedLimit_%s_%s_%d.root"%(args.config,args.config,args.outputTag,int(args.mass))]
+else:
+        massPoint = int(sys.argv[1])
+        masses = config.masses
+        massList = []
+        for massRange in masses:
+                mass = massRange[1]
+                while mass < massRange[2]:
+                        massList.append(mass)
+                        mass += massRange[0]            
+        args.mass = massList[massPoint-1]
+        rMax = getRange(int(args.mass), True, False, BSLL=False)
+        #rMax = getRange(int(args.mass)) 
+        print("calculating observed limit for mass %s"%(str(int(args.mass))))
+        ws = "%s/%s_combined_%s_shape.root"%(cardDir,args.config,str(int(args.mass)))
+        #ws = "%s/%s_combined_%s.root"%(cardDir,args.config,str(int(args.mass)))
+        
+        limitArgs=["./combine","-d","%s"%ws,"-M","MarkovChainMC", "-n" "%s"%args.config , "-m",str(int(args.mass)), "-i", str(args.nIter), "--tries", str(args.nToys) ,  "--prior","flat","--rMax",str(rMax),"-s","0"]
+        limitArgs += libPart
+        #if args.is_int:
+        #limitArgs.append("--toysFile=%s" %ws_Gen)
+        #limitArgs.append("--toysFile="+cardDir+"_expGen"+"/higgsCombine%s%s_%s.GenerateOnly.mH%d.123456.root"%(args.config,args.tag,config.interferencess[0], (int(args.mass)))) ##didn't work
+        mvCmd = ["mv higgsCombine%s.MarkovChainMC* observedLimit_%s_%s.root"%(args.config,args.config,args.outputTag)]
+print(limitArgs)
+result= subprocess.Popen(limitArgs,stdout=subprocess.PIPE).communicate()[0].splitlines()
+for line in result:
+    print(line)
+
+subprocess.call(mvCmd,shell=True)
+
+print(os.listdir(os.getcwd()))
