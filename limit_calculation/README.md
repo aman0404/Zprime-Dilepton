@@ -32,7 +32,8 @@ This repository consits of python scripts fulfilling two purposes:
 
 2) Serve as a user-friendly interface to execute combine in the appropriate configuration for limits and p-values/significance,
 
-For detailed instructions on usage, please see the manual in the wiki. 
+**For detailed instructions on usage, please see the the wiki [here](https://github.com/aman0404/Zprime-Dilepton/wiki/Limit-calculation). 
+**
 
 ## Example commands for dilepton + b-jets:
 
