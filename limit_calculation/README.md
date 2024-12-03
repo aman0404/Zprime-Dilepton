@@ -3,23 +3,20 @@ Tools to perform statistical analyses for the Z' -> ll analysis using the Higgs 
 
 ## Current combine installation recipe:
 ```
-export SCRAM_ARCH=slc7_amd64_gcc900
  
-cmsrel CMSSW_11_3_4 
+cmsrel CMSSW_14_1_0_pre4
+cd CMSSW_14_1_0_pre4/src
+cmsenv
+git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+cd HiggsAnalysis/CombinedLimit
 
-cd CMSSW_11_3_4/src 
-
-cmsenv 
-
-git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit 
-
-cd HiggsAnalysis/CombinedLimit 
-
-git fetch origin 
-
-git checkout v9.1.0 
-
+cd $CMSSW_BASE/src/HiggsAnalysis/CombinedLimit
+git fetch origin
+git checkout v10.0.2
 scramv1 b clean; scramv1 b # always make a clean build
+
+git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
+scram b
 ```
 
 ## Check out ZPrimeCombine toolkit:
