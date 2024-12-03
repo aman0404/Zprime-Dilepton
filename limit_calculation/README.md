@@ -21,10 +21,8 @@ scram b
 
 ## Check out ZPrimeCombine toolkit:
 ```
-   git clone https://USERNAME@gitlab.cern.ch/cms-zprime-dileptons/ZPrimeCombine.git
-   cd ZPrimeCombine
-   git fetch 
-   git checkout dileptonPlusB 
+   git clone https://github.com/aman0404/Zprime-Dilepton.git
+   cd limit_calculation
 ```
 
 ## General considerations:  
@@ -34,17 +32,17 @@ This repository consits of python scripts fulfilling two purposes:
 
 2) Serve as a user-friendly interface to execute combine in the appropriate configuration for limits and p-values/significance,
 
-For detailed instructions on usage, please see the manual in the documentation folder
+For detailed instructions on usage, please see the manual in the wiki. 
 
 ## Example commands for dilepton + b-jets:
 
 Write datacards for bbll model:
 
-`python runInterpretation.py -c 2LB -t test --BBLL -w`
+`python3 runInterpretation.py -c 2LB -t test --BBLL -w`
 
 Write datacards for bsll model:
 
-`python runInterpretation.py -c 2LB -t test --BSLL -w`
+`python3 runInterpretation.py -c 2LB -t test --BSLL -w`
 
  - To execute the calculation, remove the `-w`
  - To re-write the datacards and execute the calculation, add `-r`
