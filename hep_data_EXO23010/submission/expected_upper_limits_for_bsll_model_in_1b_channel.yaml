@@ -1,0 +1,172 @@
+dependent_variables:
+- header:
+    name: Expected limit dielectron $\pm$ 1 s.d.
+    units: pb
+  values:
+  - errors:
+    - asymerror:
+        minus: 0.013036
+        plus: -0.0065642
+      label: 1 s.d.
+    value: 0.0092081
+  - errors:
+    - asymerror:
+        minus: 0.013676
+        plus: -0.0067434
+      label: 1 s.d.
+    value: 0.0095173
+  - errors:
+    - asymerror:
+        minus: 0.013132
+        plus: -0.0064637
+      label: 1 s.d.
+    value: 0.0091266
+  - errors:
+    - asymerror:
+        minus: 0.012942
+        plus: -0.0064835
+      label: 1 s.d.
+    value: 0.0090165
+  - errors:
+    - asymerror:
+        minus: 0.013122
+        plus: -0.0066854
+      label: 1 s.d.
+    value: 0.0093353
+  - errors:
+    - asymerror:
+        minus: 0.013151
+        plus: -0.0065787
+      label: 1 s.d.
+    value: 0.009156
+- header:
+    name: Expected limit dielectron $\pm$ 2 s.d.
+    units: pb
+  values:
+  - errors:
+    - asymerror:
+        minus: 0.018032
+        plus: -0.0050383
+      label: 2 s.d.
+    value: 0.0092081
+  - errors:
+    - asymerror:
+        minus: 0.018571
+        plus: -0.005149
+      label: 2 s.d.
+    value: 0.0095173
+  - errors:
+    - asymerror:
+        minus: 0.018222
+        plus: -0.0048799
+      label: 2 s.d.
+    value: 0.0091266
+  - errors:
+    - asymerror:
+        minus: 0.017745
+        plus: -0.0050032
+      label: 2 s.d.
+    value: 0.0090165
+  - errors:
+    - asymerror:
+        minus: 0.018185
+        plus: -0.0051386
+      label: 2 s.d.
+    value: 0.0093353
+  - errors:
+    - asymerror:
+        minus: 0.017944
+        plus: -0.005012
+      label: 2 s.d.
+    value: 0.009156
+- header:
+    name: Expected limit dimuon $\pm$ 1 s.d.
+    units: pb
+  values:
+  - errors:
+    - asymerror:
+        minus: 0.010943
+        plus: -0.0054344
+      label: 1 s.d.
+    value: 0.0077054
+  - errors:
+    - asymerror:
+        minus: 0.010578
+        plus: -0.0052428
+      label: 1 s.d.
+    value: 0.0074256
+  - errors:
+    - asymerror:
+        minus: 0.0109
+        plus: -0.0053498
+      label: 1 s.d.
+    value: 0.0075792
+  - errors:
+    - asymerror:
+        minus: 0.010758
+        plus: -0.0053173
+      label: 1 s.d.
+    value: 0.0075242
+  - errors:
+    - asymerror:
+        minus: 0.010737
+        plus: -0.0052517
+      label: 1 s.d.
+    value: 0.0074332
+  - errors:
+    - asymerror:
+        minus: 0.010984
+        plus: -0.0052944
+      label: 1 s.d.
+    value: 0.0075087
+- header:
+    name: Expected limit dimuon $\pm$ 2 s.d.
+    units: pb
+  values:
+  - errors:
+    - asymerror:
+        minus: 0.015103
+        plus: -0.0040463
+      label: 2 s.d.
+    value: 0.0077054
+  - errors:
+    - asymerror:
+        minus: 0.014362
+        plus: -0.003969
+      label: 2 s.d.
+    value: 0.0074256
+  - errors:
+    - asymerror:
+        minus: 0.015066
+        plus: -0.0041202
+      label: 2 s.d.
+    value: 0.0075792
+  - errors:
+    - asymerror:
+        minus: 0.014802
+        plus: -0.0039648
+      label: 2 s.d.
+    value: 0.0075242
+  - errors:
+    - asymerror:
+        minus: 0.014955
+        plus: -0.0038981
+      label: 2 s.d.
+    value: 0.0074332
+  - errors:
+    - asymerror:
+        minus: 0.01517
+        plus: -0.0039924
+      label: 2 s.d.
+    value: 0.0075087
+independent_variables:
+- header:
+    name: \Lambda/g_{*}
+    units: TeV
+  values:
+  - value: 1
+  - value: 2
+  - value: 3
+  - value: 4
+  - value: 5
+  - value: 6

@@ -1,0 +1,191 @@
+dependent_variables:
+- header:
+    name: Data
+    units: Events
+  values:
+  - value: 44
+  - value: 35
+  - value: 11
+  - value: 28
+  - value: 17
+  - value: 4
+  - value: 0
+- header:
+    name: Total background estimate
+    units: Events
+  values:
+  - errors:
+    - label: total
+      symerror: 4.3
+    value: 52.8
+  - errors:
+    - label: total
+      symerror: 2.9
+    value: 31.4
+  - errors:
+    - label: total
+      symerror: 1.7
+    value: 16.0
+  - errors:
+    - label: total
+      symerror: 2.5
+    value: 20.2
+  - errors:
+    - label: total
+      symerror: 1.2
+    value: 11.4
+  - errors:
+    - label: total
+      symerror: 0.41
+    value: 2.76
+  - errors:
+    - label: total
+      symerror: 0.11
+    value: 0.28
+- header:
+    name: DY background estimate
+    units: Events
+  values:
+  - errors:
+    - label: total
+      symerror: 4.0
+    value: 44.4
+  - errors:
+    - label: total
+      symerror: 2.8
+    value: 25.8
+  - errors:
+    - label: total
+      symerror: 1.5
+    value: 12.1
+  - errors:
+    - label: total
+      symerror: 1.5
+    value: 14.8
+  - errors:
+    - label: total
+      symerror: 0.91
+    value: 9.05
+  - errors:
+    - label: total
+      symerror: 0.2
+    value: 2.26
+  - errors:
+    - label: total
+      symerror: 0.02
+    value: 0.18
+- header:
+    name: ttbar + Other background estimate
+    units: Events
+  values:
+  - errors:
+    - label: total
+      symerror: 1.4
+    value: 5.9
+  - errors:
+    - label: total
+      symerror: 0.86
+    value: 4.34
+  - errors:
+    - label: total
+      symerror: 0.93
+    value: 3.09
+  - errors:
+    - label: total
+      symerror: 2.0
+    value: 4.0
+  - errors:
+    - label: total
+      symerror: 0.84
+    value: 1.67
+  - errors:
+    - label: total
+      symerror: 0.35
+    value: 0.35
+  - errors:
+    - label: total
+      symerror: 0.09
+    value: 0.0
+- header:
+    name: VV+VVV+Higgs background estimate
+    units: Events
+  values:
+  - errors:
+    - label: total
+      symerror: 0.07
+    value: 0.83
+  - errors:
+    - label: total
+      symerror: 0.08
+    value: 0.42
+  - errors:
+    - label: total
+      symerror: 0.05
+    value: 0.36
+  - errors:
+    - label: total
+      symerror: 0.04
+    value: 0.58
+  - errors:
+    - label: total
+      symerror: 0.08
+    value: 0.36
+  - errors:
+    - label: total
+      symerror: 0.02
+    value: 0.09
+  - errors:
+    - label: total
+      symerror: 0.03
+    value: 0.03
+- header:
+    name: jet background estimate
+    units: Events
+  values:
+  - errors:
+    - label: total
+      symerror: 0.82
+    value: 1.64
+  - errors:
+    - label: total
+      symerror: 0.42
+    value: 0.83
+  - errors:
+    - label: total
+      symerror: 0.23
+    value: 0.45
+  - errors:
+    - label: total
+      symerror: 0.34
+    value: 0.68
+  - errors:
+    - label: total
+      symerror: 0.16
+    value: 0.31
+  - errors:
+    - label: total
+      symerror: 0.03
+    value: 0.07
+  - errors:
+    - label: total
+      symerror: 0.03
+    value: 0.06
+independent_variables:
+- header:
+    name: MASS
+    units: GeV
+  values:
+  - high: 300
+    low: 200
+  - high: 400
+    low: 300
+  - high: 500
+    low: 400
+  - high: 700
+    low: 500
+  - high: 1100
+    low: 700
+  - high: 1900
+    low: 1100
+  - high: 10000
+    low: 1900

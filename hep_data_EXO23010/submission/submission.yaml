@@ -1,0 +1,160 @@
+---
+additional_resources:
+- description: Created with hepdata_lib 0.17.0
+  location: https://doi.org/10.5281/zenodo.1217998
+comment: A search for nonresonant new physics phenomena in high-mass dilepton events
+  produced in association with b-tagged jets is performed using the data collected
+  by the CMS experiment at the CERN LHC at a center-of-mass energy of $13~\mathrm{TeV}$.
+  The analysis considers two EFT-based models with 6-dimensional operators involving
+  four-fermion contact interactions between two leptons (electrons and muons) and
+  $\mathrm{b}$ or $\mathrm{s}$ quarks ($\mathrm{bb\ell\ell}$ and $\mathrm{bs\ell\ell}$).
+  The analysis considers two lepton flavor combinations ($\mathrm{ee}$ and $\mu\mu$)
+  and classifies events as having 0, 1, and $\geq 2~\mathrm{b}$-tagged jets in the
+  final state. No significant excess is observed over the smoothly falling standard
+  model background. Upper limits are set on the product of production cross section
+  and branching fraction of the new physics. These translate into lower limits on
+  the energy scale $\Lambda$ of $6.9$ to $9.0~\mathrm{TeV}$ in the $\mathrm{bb\ell\ell}$
+  model, depending on model parameters, and on the ratio of energy scale and coupling
+  $\Lambda/g_{*}$ of $2.0$ to $2.6~\mathrm{TeV}$ in the $\mathrm{bs\ell\ell}$ model.
+  The latter represent the most stringent limits on this model to date. Lepton flavor
+  universality is also tested by comparing the dielectron and dimuon mass spectra
+  for different $\mathrm{b}$-tagged jet multiplicities.
+data_license:
+  description: CC0 enables reusers to distribute, remix, adapt, and build upon the
+    material in any medium or format, with no conditions.
+  name: CC0
+  url: https://creativecommons.org/publicdomain/zero/1.0/
+---
+data_file: data_and_background_yields_in_the_dielectron_0b_channel.yaml
+description: Observed and expected background yields for different mass ranges in
+  the dielectron channel in 0 b jet final state. The sum of all background contributions
+  is shown as well as a breakdown into the three main categories. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Table 10.
+name: Data and background yields in the dielectron 0b channel
+---
+data_file: data_and__background_yields_in_the_dielectron_1b_channel.yaml
+description: Observed and expected background yields for different mass ranges in
+  the dielectron channel in 1 b jet final state. The sum of all background contributions
+  is shown as well as a breakdown into the three main categories. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Table 11.
+name: Data and  background yields in the dielectron 1b channel
+---
+data_file: data_and__background_yields_in_the_dielectron_2b_channel.yaml
+description: Observed and expected background yields for different mass ranges in
+  the dielectron channel in 2 b jet final state. The sum of all background contributions
+  is shown as well as a breakdown into the three main categories. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Table 12.
+name: Data and  background yields in the dielectron 2b channel
+---
+data_file: data_and__background_yields_in_the_dimuon_0b_channel.yaml
+description: Observed and expected background yields for different mass ranges in
+  the dimuon channel in 0 b jet final state. The sum of all background contributions
+  is shown as well as a breakdown into the three main categories. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Table 10.
+name: Data and  background yields in the dimuon 0b channel
+---
+data_file: data_and__background_yields_in_the_dimuon_1b_channel.yaml
+description: Observed and expected background yields for different mass ranges in
+  the dimuon channel in 1 b jet final state. The sum of all background contributions
+  is shown as well as a breakdown into the three main categories. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Table 10.
+name: Data and  background yields in the dimuon 1b channel
+---
+data_file: data_and__background_yields_in_the_dimuon_2b_channel.yaml
+description: Observed and expected background yields for different mass ranges in
+  the dimuon channel in 2 b jet final state. The sum of all background contributions
+  is shown as well as a breakdown into the three main categories. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Table 12.
+name: Data and  background yields in the dimuon 2b channel
+---
+data_file: flavor_ratio_from_dy+jets_and_data_in_0b_channel.yaml
+description: OFlavor ratio from DY+jets and data in 0b channel. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Figure 12a
+name: Flavor ratio from DY+jets and data in 0b channel
+---
+data_file: flavor_ratio_from_dy+jets_and_data_in_1b+2b_channel.yaml
+description: OFlavor ratio from DY+jets and data in 1b+2b channel. The quoted uncertainty
+  includes both the statistical and the systematic components.
+keywords: []
+location: Data from Figure 12b.
+name: Flavor ratio from DY+jets and data in 1b+2b channel
+---
+data_file: limits_on_the_energy_scale_lambda_for_the_dielectron_channel.yaml
+description: Lower limits on the energy scale ($\Lambda$) at 95% CL for bbll signal
+  with different chirality and interference assumptions in the dielectron channel
+  combining all b jet final states. The limits are obtained for $m_{ee}>300$ GeV.
+keywords:
+- name: reactions
+  values:
+  - P P --> CI --> LEPTON+ LEPTON-
+location: Data from Figure 13.
+name: Limits on the energy scale Lambda for the dielectron channel
+---
+data_file: limits_on_the_energy_scale_lambda_for_the_dimuon_channel.yaml
+description: Lower limits on the energy scale ($\Lambda$) at 95% CL for bbll signal
+  with different chirality and interference assumptions in the dimuon channel combining
+  all b jet final states. The limits are obtained for $m_{\mu\mu}>300$ GeV.
+keywords:
+- name: reactions
+  values:
+  - P P --> CI --> LEPTON+ LEPTON-
+location: Data from Figure 13.
+name: Limits on the energy scale Lambda for the dimuon channel
+---
+data_file: limits_on_the_energy_scale_lambda_for_the_combined_channel.yaml
+description: Lower limits on the energy scale ($\Lambda$) at 95% CL for bbll signal
+  with different chirality and interference assumptions in the combined (dimuon+dielectron)
+  channel combining all b jet final states. The limits are obtained for $m_{\ell\ell}>300$
+  GeV.
+keywords:
+- name: reactions
+  values:
+  - P P --> CI --> LEPTON+ LEPTON-
+location: Data from Figure 13.
+name: Limits on the energy scale Lambda for the combined channel
+---
+data_file: observed_upper_limits_for_bsll_model_in_0b_channel.yaml
+description: Observed upper limits on the product of the production cross section
+  and the branching fraction for the bsll signal in the dielectron and dimuon channels
+  for 0 b-tagged jets.
+keywords: []
+location: Data from Figure 14 obs
+name: Observed upper limits for BSLL model in 0b channel
+---
+data_file: observed_upper_limits_for_bsll_model_in_1b_channel.yaml
+description: Observed upper limits on the product of the production cross section
+  and the branching fraction for the bsll signal in the dielectron and dimuon channels
+  for 1 b-tagged jets.
+keywords: []
+location: Data from Figure 15 obs
+name: Observed upper limits for BSLL model in 1b channel
+---
+data_file: expected_upper_limits_for_bsll_model_in_0b_channel.yaml
+description: Expected upper limits on the product of the production cross section
+  and the branching fraction for the bsll signal in the dielectron and dimuon channels
+  for 0 b-tagged jets.
+keywords: []
+location: Data from Figure 14 exp
+name: Expected upper limits for BSLL model in 0b channel
+---
+data_file: expected_upper_limits_for_bsll_model_in_1b_channel.yaml
+description: Expected upper limits on the product of the production cross section
+  and the branching fraction for the bsll signal in the dielectron and dimuon channels
+  for 1 b-tagged jets.
+keywords: []
+location: Data from Figure 15 exp
+name: Expected upper limits for BSLL model in 1b channel

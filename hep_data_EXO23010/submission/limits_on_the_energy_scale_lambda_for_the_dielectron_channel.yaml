@@ -1,0 +1,129 @@
+dependent_variables:
+- header:
+    name: Observed limit
+    units: TeV
+  values:
+  - value: 9.1
+  - value: 7.9
+  - value: 8.3
+  - value: 8.6
+  - value: 6.9
+  - value: 7.5
+  - value: 7.2
+  - value: 7.4
+- header:
+    name: Expected limit $\pm$ 1 s.d.
+    units: TeV
+  values:
+  - errors:
+    - asymerror:
+        minus: -0.9
+        plus: 1.2
+      label: 1 s.d.
+    value: 9.8
+  - errors:
+    - asymerror:
+        minus: -0.7
+        plus: 0.6
+      label: 1 s.d.
+    value: 8.4
+  - errors:
+    - asymerror:
+        minus: -0.8
+        plus: 0.8
+      label: 1 s.d.
+    value: 8.9
+  - errors:
+    - asymerror:
+        minus: -0.8
+        plus: 0.8
+      label: 1 s.d.
+    value: 9.2
+  - errors:
+    - asymerror:
+        minus: -0.6
+        plus: 0.5
+      label: 1 s.d.
+    value: 7.4
+  - errors:
+    - asymerror:
+        minus: -0.7
+        plus: 0.9
+      label: 1 s.d.
+    value: 8.1
+  - errors:
+    - asymerror:
+        minus: -0.6
+        plus: 0.8
+      label: 1 s.d.
+    value: 7.7
+  - errors:
+    - asymerror:
+        minus: -0.7
+        plus: 0.6
+      label: 1 s.d.
+    value: 7.9
+- header:
+    name: Expected limit $\pm$ 2 s.d.
+    units: TeV
+  values:
+  - errors:
+    - asymerror:
+        minus: -1.6
+        plus: 2.2
+      label: 2 s.d.
+    value: 9.8
+  - errors:
+    - asymerror:
+        minus: -1.2
+        plus: 1.2
+      label: 2 s.d.
+    value: 8.4
+  - errors:
+    - asymerror:
+        minus: -1.4
+        plus: 2.1
+      label: 2 s.d.
+    value: 8.9
+  - errors:
+    - asymerror:
+        minus: -1.5
+        plus: 1.8
+      label: 2 s.d.
+    value: 9.2
+  - errors:
+    - asymerror:
+        minus: -1.0
+        plus: 1.1
+      label: 2 s.d.
+    value: 7.4
+  - errors:
+    - asymerror:
+        minus: -1.2
+        plus: 1.6
+      label: 2 s.d.
+    value: 8.1
+  - errors:
+    - asymerror:
+        minus: -1.0
+        plus: 1.6
+      label: 2 s.d.
+    value: 7.7
+  - errors:
+    - asymerror:
+        minus: -1.1
+        plus: 1.1
+      label: 2 s.d.
+    value: 7.9
+independent_variables:
+- header:
+    name: BBLL Model dielectron channel
+  values:
+  - value: LL Const
+  - value: LR Const
+  - value: RL Const
+  - value: RR Const
+  - value: LL Dest
+  - value: LR Dest
+  - value: RL Dest
+  - value: RR Dest

@@ -1,0 +1,54 @@
+dependent_variables:
+- header:
+    name: Flavor ratio from DY+jets MC
+    units: ratio
+  values:
+  - errors:
+    - label: total
+      symerror: 0.088
+    value: 1.0
+  - errors:
+    - label: total
+      symerror: 0.093
+    value: 0.93
+  - errors:
+    - label: total
+      symerror: 0.11
+    value: 0.978
+  - errors:
+    - label: total
+      symerror: 0.11
+    value: 0.942
+- header:
+    name: Flavor ratio from data
+    units: ratio
+  values:
+  - errors:
+    - label: total
+      symerror: 0.239
+    value: 1.0
+  - errors:
+    - label: total
+      symerror: 0.239
+    value: 0.738
+  - errors:
+    - label: total
+      symerror: 0.31
+    value: 0.682
+  - errors:
+    - label: total
+      symerror: 0.547
+    value: 0.789
+independent_variables:
+- header:
+    name: MASS
+    units: GeV
+  values:
+  - high: 400
+    low: 200
+  - high: 700
+    low: 400
+  - high: 1100
+    low: 700
+  - high: 10000
+    low: 1100

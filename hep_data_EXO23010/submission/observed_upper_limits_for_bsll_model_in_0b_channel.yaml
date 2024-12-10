@@ -1,0 +1,32 @@
+dependent_variables:
+- header:
+    name: Observed limit dielectron 0 b-tagged jets
+    units: pb
+  values:
+  - value: 0.01021072
+  - value: 0.01094965
+  - value: 0.0109817
+  - value: 0.01079408
+  - value: 0.01060404
+  - value: 0.01056393
+- header:
+    name: Observed limit dimuon 0 b-tagged jets
+    units: pb
+  values:
+  - value: 0.009508905
+  - value: 0.008546409
+  - value: 0.009046931
+  - value: 0.009232464
+  - value: 0.009235527
+  - value: 0.009167818
+independent_variables:
+- header:
+    name: \Lambda/g_{*}
+    units: TeV
+  values:
+  - value: 1
+  - value: 2
+  - value: 3
+  - value: 4
+  - value: 5
+  - value: 6
